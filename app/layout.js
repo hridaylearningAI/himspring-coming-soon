@@ -1,18 +1,28 @@
-import { Playfair_Display, Montserrat } from "next/font/google";
+import { Tinos } from "next/font/google";
+import localFont from "next/font/local";
+import Intro from "./Intro";
 import "./globals.css";
 
-const playfair = Playfair_Display({
+// Headings — Tinos is metrically identical to Times New Roman and renders the
+// same on every device (incl. Linux/Android, which don't ship Times New Roman).
+const times = Tinos({
   subsets: ["latin"],
-  weight: ["500", "600"],
+  weight: ["400", "700"],
   style: ["normal", "italic"],
-  variable: "--font-playfair",
+  variable: "--font-times",
   display: "swap",
 });
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-montserrat",
+// Body — real Gotham, loaded from the local .otf files in public/fonts/Gotham.
+const gotham = localFont({
+  src: [
+    { path: "../public/fonts/Gotham/Gotham Light/Gotham Light.otf", weight: "300", style: "normal" },
+    { path: "../public/fonts/Gotham/Gotham Book/Gotham Book.otf", weight: "400", style: "normal" },
+    { path: "../public/fonts/Gotham/Gotham Italic/Gotham Italic.otf", weight: "400", style: "italic" },
+    { path: "../public/fonts/Gotham/Gotham Medium/Gotham Medium.otf", weight: "500", style: "normal" },
+    { path: "../public/fonts/Gotham/Gotham Bold/Gotham Bold.otf", weight: "600", style: "normal" },
+  ],
+  variable: "--font-gotham",
   display: "swap",
 });
 
@@ -34,7 +44,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${montserrat.variable} ${playfair.variable}`}>
+      <body className={`${gotham.variable} ${times.variable}`}>
+        <Intro />
         {children}
       </body>
     </html>

@@ -1,25 +1,11 @@
+import HeroBackground from "./HeroBackground";
 import SignupForm from "./SignupForm";
 
 export default function Home() {
   return (
     <main className="stage">
-      <div className="bg-still" aria-hidden="true"></div>
-      <video
-        className="bg-video"
-        autoPlay
-        muted
-        loop
-        playsInline
-        poster="/hero-poster.png"
-        aria-hidden="true"
-      >
-        <source src="/hero-bg.mp4" type="video/mp4" />
-      </video>
+      <HeroBackground />
       <div className="overlay" aria-hidden="true"></div>
-      <div className="logo-mark" aria-hidden="true">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/golden-logo.png" alt="" />
-      </div>
 
       <div className="frame">
         {/* TOP BAR */}
@@ -51,7 +37,8 @@ export default function Home() {
         <section className="hero">
           <p className="eyebrow">Pure by nature. Perfected by Himspring.</p>
           <h1>
-            Something Pure<span className="line-2">Is Coming Soon.</span>
+            <span className="line-1">Something Pure</span>
+            <span className="line-2">Is Coming Soon.</span>
           </h1>
           <p className="lede">
             Much like a masterpiece, true luxury cannot be rushed. Sourced from
@@ -109,11 +96,11 @@ export default function Home() {
         {/* FOOTER */}
         <footer className="footer">
           <div className="footer__brand">
-            <div className="name">HIMSPRING</div>
+            <div className="name"><span className="wm-italic">HIM</span>SPRING</div>
             <div className="tag">Purity for the world&apos;s elite.</div>
           </div>
           <div className="footer__copy">
-            © 2025 Himspring. All rights reserved.
+            © 2026 Himspring. All rights reserved.
           </div>
           <div className="footer__legal">
             <a href="#">Privacy Policy</a>

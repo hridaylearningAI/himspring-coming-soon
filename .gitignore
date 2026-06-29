@@ -22,3 +22,7 @@ yarn-error.log*
 
 # legacy static source (pre-Next.js)
 /_legacy
+
+# Claude Code tooling
+/.claude/skills/
+/skills-lock.json
