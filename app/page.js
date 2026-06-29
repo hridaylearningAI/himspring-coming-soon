@@ -1,10 +1,12 @@
 import HeroBackground from "./HeroBackground";
 import SignupForm from "./SignupForm";
+import PremiumAnimations from "./PremiumAnimations";
 
 export default function Home() {
   return (
     <main className="stage">
       <HeroBackground />
+      <PremiumAnimations />
       <div className="overlay" aria-hidden="true"></div>
 
       <div className="frame">
