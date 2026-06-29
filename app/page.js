@@ -15,6 +15,7 @@ export default function Home() {
           <a className="logo" href="#" aria-label="Himspring home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/golden-logo.png" alt="Himspring" />
+            <span className="logo__dwk">DWK</span>
           </a>
           <div className="social">
             <span className="social__label">Follow our journey</span>
@@ -60,7 +61,7 @@ export default function Home() {
               </svg>
             </div>
             <h3 className="feat__title">
-              Sourced from<br />the Himalayas
+              <em>Sourced</em> from<br />the <em>Himalayas</em>
             </h3>
             <p className="feat__copy">
               Naturally filtered through ancient minerals for unmatched purity.
@@ -74,7 +75,7 @@ export default function Home() {
               </svg>
             </div>
             <h3 className="feat__title">
-              Sustainable<br />by Nature
+              <em>Sustainable</em><br />by <em>Nature</em>
             </h3>
             <p className="feat__copy">
               Eco-conscious production for a better tomorrow.
@@ -87,7 +88,7 @@ export default function Home() {
               </svg>
             </div>
             <h3 className="feat__title">
-              Naturally Rich<br />in Minerals
+              Naturally <em>Rich</em><br /><em>in Minerals</em>
             </h3>
             <p className="feat__copy">
               Essential electrolytes for daily energy and vitality.
