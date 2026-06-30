@@ -38,7 +38,7 @@ export default function Home() {
 
         {/* HERO */}
         <section className="hero">
-          <p className="eyebrow">Pure by nature. Perfected by Himspring.</p>
+          <p className="eyebrow">Nature&rsquo;s finest, reserved for the few.</p>
           <h1>
             <span className="line-1">Something Pure</span>
             <span className="line-2">Is Coming Soon.</span>

@@ -24,6 +24,14 @@ export default function PremiumAnimations() {
     // Reduced motion: leave everything in its natural, fully-visible state.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    // The intro always starts the page at the top. On reload, though, the browser
+    // restores the previous scroll position — which can land past the mobile
+    // feature cards, so their scroll-reveal start point is never crossed and they
+    // stay hidden / never animate. Pin every (re)load to the top for a consistent
+    // start, and stop the browser from restoring scroll on future reloads.
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+
     const isMobile = window.matchMedia("(max-width: 880px)").matches;
     const heroEls = [".eyebrow", "h1 .line-1", "h1 .line-2", ".lede", ".signup"];
 
@@ -54,6 +62,45 @@ export default function PremiumAnimations() {
         .to(".footer", { autoAlpha: 1, y: 0, duration: 0.8 }, "-=0.5");
     }
 
+    // Mobile only: reveal the feature cards based on where they actually sit once
+    // the intro has finished. Cards already on the first screen animate in as a
+    // continuation of the entrance (so they don't sit there static while the hero
+    // composes in); cards below the fold fade-rise as they're scrolled into view.
+    // Wrapped with contextSafe so the tweens/ScrollTriggers it creates after the
+    // setup pass are still tracked + cleaned up by useGSAP.
+    const revealMobileFeatures = contextSafe(() => {
+      const feats = gsap.utils.toArray(".feat");
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const inView = feats.filter((el) => el.getBoundingClientRect().top < vh * 0.9);
+      const below = feats.filter((el) => !inView.includes(el));
+
+      if (inView.length) {
+        gsap.to(inView, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.9,
+          ease: "power3.out",
+          stagger: 0.14,
+          delay: 0.9, // trail the hero entrance
+          overwrite: true,
+        });
+      }
+      if (below.length) {
+        ScrollTrigger.batch(below, {
+          start: "top 88%",
+          onEnter: (els) =>
+            gsap.to(els, {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power3.out",
+              stagger: 0.12,
+              overwrite: true,
+            }),
+        });
+      }
+    });
+
     let played = false;
     const play = () => {
       if (played) return;
@@ -61,8 +108,13 @@ export default function PremiumAnimations() {
       reveal.play();
       // The intro kept the page scroll-locked while it ran, so any ScrollTriggers
       // were measured against a locked scroller. Now that the slide is done and
-      // scrolling is unlocked, recalculate their positions.
-      ScrollTrigger.refresh();
+      // scrolling is unlocked, recalculate positions — and decide the mobile card
+      // reveal — on the next frame so the unlock/layout has settled before we
+      // measure (otherwise the cards are measured against a stale layout).
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+        if (isMobile) revealMobileFeatures();
+      });
     };
     window.addEventListener("himspring:intro-done", play);
     const fallback = window.setTimeout(play, 5200); // safety net if the event is missed
@@ -78,20 +130,10 @@ export default function PremiumAnimations() {
       stagger: { each: 0.45, from: "start" },
     });
 
-    // Mobile: cards + footer fade-rise as they scroll into view.
+    // Mobile: the feature cards are revealed by revealMobileFeatures() once the
+    // intro finishes (in-view ones with the entrance, below-fold ones on scroll).
+    // The footer always lives below the fold, so it just fade-rises on scroll.
     if (isMobile) {
-      ScrollTrigger.batch(".feat", {
-        start: "top 88%",
-        onEnter: (els) =>
-          gsap.to(els, {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            stagger: 0.12,
-            overwrite: true,
-          }),
-      });
       ScrollTrigger.create({
         trigger: ".footer",
         start: "top 96%",

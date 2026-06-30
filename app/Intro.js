@@ -7,7 +7,7 @@ import HimspringLogo from "./HimspringLogo";
 // stretch; then we flip on `intro-sliding`, which transitions BOTH the overlay
 // and the main page upward together (see globals.css). The overlay unmounts
 // once that slide finishes.
-const SLIDE_AT = 3200; // clouds have parted + held — start the slide
+const SLIDE_AT = 3800; // clouds have parted + held — start the slide
 const SLIDE_MS = 1200; // must match the transition duration in globals.css
 const TOTAL = SLIDE_AT + SLIDE_MS + 200; // + small buffer before unmount
 

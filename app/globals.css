@@ -387,14 +387,21 @@ h1 .line-2 {
     height: 24px;
 }
 .feat__title {
-    font-family: var(--font-times), "Times New Roman", Times, serif;
-    font-size: clamp(13px, 1vw, 14.5px);
-    letter-spacing: 0.08em;
+    /* same type styling as the "Be the first to know" signup label (Gotham),
+       but kept in white per client request */
+    font-family: var(--font-gotham), system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.28;
     margin-bottom: 4px;
     color: #fff;
+}
+/* the <em> accent words inherit the label styling too — drop the default italic
+   so the headings read as one uniform style like the signup label */
+.feat__title em {
+    font-style: normal;
 }
 .feat__copy {
     font-size: 13px;
@@ -490,7 +497,11 @@ h1 .line-2 {
         top: 0;
         left: 0;
         width: 100vw;
+        /* size to the portrait asset's aspect so the orb isn't cropped sideways,
+           but never let it fall short of the viewport — otherwise a navy strip
+           shows below the media (the "video cut off from below" seam) */
         height: calc(100vw * 1928 / 1076);
+        min-height: 100lvh;
     }
     .bg-video {
         object-fit: cover;
@@ -562,7 +573,13 @@ h1 .line-2 {
         gap: 30px;
     }
     h1 {
-        font-size: clamp(42px, 12vw, 60px);
+        /* slightly smaller so the headline doesn't crowd the orb on phones, and
+           sized so "Something Pure" fits on a single line */
+        font-size: clamp(30px, 9.6vw, 54px);
+    }
+    /* keep "Something Pure" on one line on phones */
+    h1 .line-1 {
+        white-space: nowrap;
     }
     .field input {
         padding: 16px 64px 16px 22px;
@@ -660,7 +677,9 @@ body.intro-sliding .intro {
     background-position: center;
     background-size: contain;
     will-change: transform, opacity;
-    animation: cloudPart 1.9s cubic-bezier(0.65, 0.04, 0.36, 1) forwards;
+    /* easeInOutSine: soft start, low peak speed, soft stop — the gentlest curve,
+       so the clouds drift apart instead of bursting out (client: felt too fast) */
+    animation: cloudPart 2.8s cubic-bezier(0.37, 0, 0.63, 1) forwards;
     animation-delay: var(--d, 0.5s);
 }
 @keyframes cloudPart {
