@@ -6,26 +6,49 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function SignupForm() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | error | done
+  const [status, setStatus] = useState("idle"); // idle | sending | error | done
+  const [errorMsg, setErrorMsg] = useState("Please enter a valid email address.");
 
-  function submit() {
+  async function submit() {
+    if (status === "sending") return;
     const value = email.trim();
     if (!EMAIL_RE.test(value)) {
+      setErrorMsg("Please enter a valid email address.");
       setStatus("error");
       return;
     }
-    setStatus("done");
-    // → here is where a real backend / Mailchimp / API call would go
+
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: value }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setErrorMsg(data.error || "Something went wrong. Please try again.");
+        setStatus("error");
+        return;
+      }
+      setStatus("done");
+    } catch {
+      setErrorMsg("Network error. Please try again.");
+      setStatus("error");
+    }
   }
 
   const note =
     status === "error"
-      ? "Please enter a valid email address."
-      : "You're on the list — we'll be in touch the moment we launch.";
+      ? errorMsg
+      : status === "sending"
+        ? "Sending…"
+        : "You're on the list — we'll be in touch the moment we launch.";
 
   const className =
     "signup" +
     (status === "done" ? " is-done" : "") +
+    (status === "sending" ? " is-sending" : "") +
     (status === "error" ? " is-error" : "");
 
   return (
@@ -39,12 +62,18 @@ export default function SignupForm() {
           placeholder="Enter your email address"
           aria-label="Email address"
           value={email}
+          disabled={status === "sending"}
           onChange={(e) => setEmail(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") submit();
           }}
         />
-        <button type="button" aria-label="Notify me" onClick={submit}>
+        <button
+          type="button"
+          aria-label="Notify me"
+          onClick={submit}
+          disabled={status === "sending"}
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"

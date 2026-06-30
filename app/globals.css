@@ -338,7 +338,8 @@ h1 .line-2 {
         opacity 0.4s ease,
         transform 0.4s ease;
 }
-.signup.is-done .signup__note {
+.signup.is-done .signup__note,
+.signup.is-sending .signup__note {
     opacity: 1;
     transform: none;
 }
@@ -573,13 +574,8 @@ h1 .line-2 {
         gap: 30px;
     }
     h1 {
-        /* slightly smaller so the headline doesn't crowd the orb on phones, and
-           sized so "Something Pure" fits on a single line */
+        /* slightly smaller so the headline doesn't crowd the orb on phones */
         font-size: clamp(30px, 9.6vw, 54px);
-    }
-    /* keep "Something Pure" on one line on phones */
-    h1 .line-1 {
-        white-space: nowrap;
     }
     .field input {
         padding: 16px 64px 16px 22px;

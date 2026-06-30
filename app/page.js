@@ -40,8 +40,8 @@ export default function Home() {
         <section className="hero">
           <p className="eyebrow">Nature&rsquo;s finest, reserved for the few.</p>
           <h1>
-            <span className="line-1">Something Pure</span>
-            <span className="line-2">Is Coming Soon.</span>
+            <span className="line-1">Essence of Elevation</span>
+            <span className="line-2">Coming Soon</span>
           </h1>
           <p className="lede">
             Much like a masterpiece, true luxury cannot be rushed. Sourced from
