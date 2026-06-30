@@ -1,5 +1,6 @@
 import { Tinos } from "next/font/google";
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/next";
 import Intro from "./Intro";
 import "./globals.css";
 
@@ -47,6 +48,7 @@ export default function RootLayout({ children }) {
       <body className={`${gotham.variable} ${times.variable}`}>
         <Intro />
         {children}
+        <Analytics />
       </body>
     </html>
   );
