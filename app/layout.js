@@ -31,11 +31,11 @@ export const metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://himspring.com"
   ),
-  title: "Himspring — Something Pure Is Coming Soon",
+  title: "Himspring | The Purest Expression of Himalayan Water",
   description:
-    "Himspring is born from the untouched purity of the Himalayas — crafted to bring balance, clarity, and life to every drop.",
+    "From untouched springs high in the Himalayas, Himspring brings you nature in its purest form. Born above. Pure by nature.",
   openGraph: {
-    title: "Himspring — Something Pure Is Coming Soon",
+    title: "Himspring | The Purest Expression of Himalayan Water",
     description: "Pure by nature. Perfected by Himspring.",
     images: ["/hero-poster.png"],
     type: "website",

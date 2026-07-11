@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-11T21:30:00Z",
+  "title": "Design System: Himspring",
+  "extensions": {
+    "colorMeta": {
+      "himalayan-ink": { "role": "primary", "displayName": "Himalayan Ink", "canonical": "#0E2338", "tonalRamp": ["#060F18", "#0E2338", "#1B3A56", "#2E5273", "#4A6E8F", "#7292AC", "#A3BACB", "#D4E0E9"] },
+      "himalayan-gold": { "role": "primary", "displayName": "Himalayan Gold", "canonical": "#A8813F", "tonalRamp": ["#3D2E14", "#6B5228", "#8A6A33", "#A8813F", "#BD9A5C", "#CFB483", "#E1CEAC", "#F1E7D5"] },
+      "gold-text": { "role": "secondary", "displayName": "Text Gold", "canonical": "#82612B", "tonalRamp": ["#2E2210", "#4E3A1B", "#684E23", "#82612B", "#9C7C45", "#B69B68", "#D0BC94", "#EADFC8"] },
+      "gold-soft": { "role": "secondary", "displayName": "Gold Soft", "canonical": "#C9B77E", "tonalRamp": ["#4A4128", "#776A44", "#A08F5F", "#C9B77E", "#D5C697", "#E1D5B1", "#EDE4CC", "#F8F3E7"] },
+      "snow-white": { "role": "neutral", "displayName": "Snow White", "canonical": "#FAFBFC", "tonalRamp": ["#20262C", "#3D464F", "#5F6B76", "#87929D", "#AFB8C1", "#D2D8DE", "#EAEEF1", "#FAFBFC"] },
+      "mist": { "role": "neutral", "displayName": "Mist", "canonical": "#EEF0F2", "tonalRamp": ["#1E2225", "#3A4147", "#5A646C", "#818C95", "#A9B2BA", "#CBD2D8", "#E0E4E8", "#EEF0F2"] },
+      "art-field": { "role": "neutral", "displayName": "Art Field", "canonical": "#F4F5F6", "tonalRamp": ["#212324", "#3E4245", "#5F656A", "#868D93", "#ADB3B9", "#CED3D7", "#E4E7E9", "#F4F5F6"] },
+      "banner-field": { "role": "neutral", "displayName": "Banner Field", "canonical": "#E9EBED", "tonalRamp": ["#1D1F21", "#393E41", "#585F64", "#7F878D", "#A7AEB4", "#C8CED2", "#DCE0E3", "#E9EBED"] },
+      "stone": { "role": "neutral", "displayName": "Stone", "canonical": "#4D5C6A", "tonalRamp": ["#141920", "#28323C", "#3A4755", "#4D5C6A", "#6B7A88", "#8F9CA8", "#B5BEC8", "#DCE1E6"] },
+      "navy-deep": { "role": "neutral", "displayName": "Navy Deep", "canonical": "#0A1D33", "tonalRamp": ["#050F1B", "#0A1D33", "#16324F", "#28486B", "#426288", "#6884A5", "#9AAEC3", "#CFDAE5"] },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "rgba(14, 35, 56, 0.12)", "tonalRamp": [] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headline only." },
+      "headline": { "displayName": "Headline", "purpose": "Section headings, max 20ch, balanced wrap." },
+      "title": { "displayName": "Title", "purpose": "Feature and journey item titles — serif, never uppercase." },
+      "kicker": { "displayName": "Kicker", "purpose": "Gold serif-italic section lead-in; the brand's one flourish. Text Gold (#82612B) on light fields." },
+      "logotype": { "displayName": "Logotype", "purpose": "The 30px italic footer brand mark; display size, off the body ramp by design." },
+      "body": { "displayName": "Body", "purpose": "Paragraphs, max 52ch, Stone color." },
+      "label": { "displayName": "Label", "purpose": "Buttons, nav, and text links only — uppercase tracked Gotham." }
+    },
+    "shadows": [
+      { "name": "float", "value": "0 10px 30px rgba(14, 35, 56, 0.18)", "purpose": "True floaters only — the story play button." },
+      { "name": "focus-ring-gold", "value": "0 0 0 3px rgba(168, 129, 63, 0.14)", "purpose": "Input focus glow." }
+    ],
+    "motion": [
+      { "name": "ease-reveal", "value": "ease 0.8s", "purpose": "Scroll reveals: rise 22px + fade, staggered via --rd delay." },
+      { "name": "ease-image", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Imagery: blur-condense reveals and hover scale (0.7-1.1s)." },
+      { "name": "ease-intro", "value": "cubic-bezier(0.76, 0, 0.24, 1) 1.2s", "purpose": "Cloud intro slide." }
+    ],
+    "breakpoints": [
+      { "name": "xl", "value": "1100px" },
+      { "name": "md", "value": "880px" },
+      { "name": "sm", "value": "640px" },
+      { "name": "xs", "value": "440px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The ink pill — hero CTA and form submit.",
+      "html": "<button class=\"ds-btn-ink\">Discover Our Story</button>",
+      "css": ".ds-btn-ink { display: inline-flex; align-items: center; gap: 12px; font-family: Gotham, system-ui, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: #fff; background: #0e2338; border: 1px solid #0e2338; border-radius: 999px; padding: 15px 28px; cursor: pointer; transition: background 0.25s ease, transform 0.25s ease; } .ds-btn-ink:hover { background: #0a1d33; transform: translateY(-1px); } .ds-btn-ink:focus-visible { outline: 2px solid #a8813f; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "White pill with hairline; hover answers in gold.",
+      "html": "<button class=\"ds-btn-ghost\">Notify Me</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 12px; font-family: Gotham, system-ui, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: #0e2338; background: #fff; border: 1px solid rgba(14,35,56,0.12); border-radius: 999px; padding: 15px 28px; cursor: pointer; box-shadow: 0 1px 2px rgba(14,35,56,0.05); transition: border-color 0.25s ease, transform 0.25s ease; } .ds-btn-ghost:hover { border-color: #a8813f; transform: translateY(-1px); } .ds-btn-ghost:focus-visible { outline: 2px solid #a8813f; outline-offset: 3px; }"
+    },
+    {
+      "name": "Email Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Waitlist capture — white pill, gold focus ring.",
+      "html": "<input class=\"ds-input\" type=\"email\" placeholder=\"Your email address\" />",
+      "css": ".ds-input { font-family: Gotham, system-ui, sans-serif; font-size: 14px; font-weight: 300; color: #0e2338; background: #fff; border: 1px solid rgba(14,35,56,0.12); border-radius: 999px; padding: 16px 26px; outline: none; min-width: 280px; transition: border-color 0.25s ease, box-shadow 0.25s ease; } .ds-input::placeholder { color: #4d5c6a; } .ds-input:focus { border-color: #a8813f; box-shadow: 0 0 0 3px rgba(168,129,63,0.14); }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "label",
+      "description": "Header navigation — uppercase tracked, gold underline on hover.",
+      "html": "<a class=\"ds-nav-link\" href=\"#\">The Source</a>",
+      "css": ".ds-nav-link { font-family: Gotham, system-ui, sans-serif; font-size: 10.5px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #0e2338; text-decoration: none; padding: 6px 0; border-bottom: 1px solid transparent; transition: color 0.25s ease, border-color 0.25s ease; } .ds-nav-link:hover { color: #a8813f; border-bottom-color: #a8813f; }"
+    },
+    {
+      "name": "Kicker",
+      "kind": "custom",
+      "refersTo": "kicker",
+      "description": "The signature gold serif-italic section lead-in.",
+      "html": "<p class=\"ds-kicker\">Born above. Pure by nature.</p>",
+      "css": ".ds-kicker { font-family: Tinos, 'Times New Roman', Times, serif; font-style: italic; font-size: 17px; letter-spacing: 0.02em; color: #82612b; margin: 0; }"
+    },
+    {
+      "name": "Text Link",
+      "kind": "custom",
+      "refersTo": "label",
+      "description": "Uppercase tracked link with sliding arrow.",
+      "html": "<a class=\"ds-textlink\" href=\"#\">Learn More <svg class=\"ds-textlink-arrow\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"16\" height=\"16\"><path d=\"M4 12h15M13 6l6 6-6 6\"/></svg></a>",
+      "css": ".ds-textlink { display: inline-flex; align-items: center; gap: 10px; font-family: Gotham, system-ui, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: #0e2338; text-decoration: none; transition: color 0.25s ease; } .ds-textlink:hover { color: #a8813f; } .ds-textlink-arrow { transition: transform 0.25s ease; } .ds-textlink:hover .ds-textlink-arrow { transform: translateX(5px); }"
+    },
+    {
+      "name": "Journey Item",
+      "kind": "card",
+      "refersTo": "title",
+      "description": "Frameless image + caption stack with italic gold number — the no-card card.",
+      "html": "<figure class=\"ds-journey\"><span class=\"ds-journey-img\"></span><span class=\"ds-journey-num\">01</span><figcaption class=\"ds-journey-title\">The Himalayas</figcaption><p class=\"ds-journey-copy\">Untouched and pure.</p></figure>",
+      "css": ".ds-journey { margin: 0; width: 200px; } .ds-journey-img { display: block; aspect-ratio: 1; border-radius: 16px; border: 1px solid rgba(14,35,56,0.12); background: linear-gradient(160deg, #f4f5f6, #dde1e4); } .ds-journey-num { display: block; margin: 16px 0 4px; font-family: Tinos, 'Times New Roman', Times, serif; font-style: italic; font-size: 14px; color: #82612b; } .ds-journey-title { font-family: Tinos, 'Times New Roman', Times, serif; font-size: 19px; color: #0e2338; margin-bottom: 6px; } .ds-journey-copy { font-family: Gotham, system-ui, sans-serif; font-size: 13.5px; line-height: 1.65; font-weight: 300; color: #4d5c6a; margin: 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The White Silence",
+    "overview": "The page is a near-white gallery at altitude. Whisper-gray monochrome illustrations — mountains, valleys, a single falling drop — sit frameless in fields of their own tone, so the artwork and the page share one atmosphere rather than being pictures in boxes. Negative space is the primary material; brand navy ink and a rare gold flourish are the only voices that speak above the silence. Sophistication comes from restraint executed precisely, never from ornament.",
+    "keyCharacteristics": [
+      "Near-white monochrome canvas; artwork blends into the page",
+      "Serif-led hierarchy (Tinos/Times) with Gotham for quiet utility text",
+      "One recurring flourish: the gold serif-italic kicker",
+      "Flat surfaces, hairline borders, tonal section fields",
+      "Vast, varied section spacing — the page breathes like thin air"
+    ],
+    "rules": [
+      { "name": "The One Gold Rule", "body": "Gold speaks in exactly one voice: the serif-italic text family (kicker, journey numbers, status notes — one visual system). Icons and other graphics stay ink; if a second gold system appears in a fold, demote it to ink. Text gold on light fields is always Text Gold (#82612B), never Himalayan Gold.", "section": "colors" },
+      { "name": "The Field-Match Rule", "body": "Any full-bleed artwork sits on a section background sampled from the artwork's own field, so crops and overflow are invisible.", "section": "colors" },
+      { "name": "The Serif-Speaks Rule", "body": "Anything expressive is serif; Gotham is reserved for utility (body, labels, nav). If a heading is set in Gotham, it's wrong.", "section": "typography" },
+      { "name": "The Flat-At-Rest Rule", "body": "If an element isn't floating above the page in z-space (play button, fixed header), it gets a hairline, not a shadow.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do blend artwork into the page: match section backgrounds to the image's own field (#F4F5F6, #E9EBED) and keep images frameless behind a 1px hairline.",
+      "Do keep gold under 10% of any viewport — the serif-italic text voice only, with Text Gold (#82612B) whenever gold is text on a light field.",
+      "Do use serif for every expressive moment and reserve Gotham for utility text.",
+      "Do honor prefers-reduced-motion with instant alternatives for the intro, reveals, and smooth scroll.",
+      "Do hold body text at Stone (#4D5C6A) or darker — AA contrast is the floor."
+    ],
+    "donts": [
+      "Don't drift toward mass-market water brands — no loud labels, badges, price flashes, or shelf-shouting compositions.",
+      "Don't borrow sporty energy branding: no splashy action shots, aggressive saturation, or dynamic slants.",
+      "Don't build generic startup-landing-page furniture: no gradient blobs, identical icon-card grids, hero-metric rows, or stock people.",
+      "Don't indulge luxury clichés: no gold foil textures, black-and-gold drenches, or ornate serif excess — if gold covers more than an accent, it's costume.",
+      "Don't put shadows on resting surfaces or colored side-stripe borders on anything.",
+      "Don't use cream/beige warmth — the cold is the brand; neutrals stay cool."
+    ]
+  }
+}
