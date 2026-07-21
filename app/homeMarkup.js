@@ -274,9 +274,9 @@ const HOME_MARKUP = `<div style="--navy:#1B2C58; --glacier:#267EBE; --mist:#B4D2
   <section id="journey" class="hs-jr" data-slide data-slide-label="Journey" data-screen-label="Journey" style="position:relative; background:var(--snow); padding:0; overflow:hidden;">
     <div class="hs-jr__cols" aria-hidden="true">
       <div class="hs-jr__col hs-jr__col--up" style="--dur:42s;">
-        <div class="hs-jr__card" style="height:300px;"><img src="/home-ref/uploads/Bottle_and_towel_on_deck_202607210146.jpeg" alt="HIMSPRING on a teak yacht deck at golden hour"></div>
+        <div class="hs-jr__card" style="height:300px;"><img src="/home-ref/uploads/prod-deck.jpg" alt="HIMSPRING bottle and white towel on a teak yacht deck at golden hour"></div>
         <div class="hs-jr__card" style="height:240px;"><img src="/home-ref/assets/journey-club.png" alt="A private members' club interior"></div>
-        <div class="hs-jr__card" style="height:300px;"><img src="/home-ref/uploads/Fine_dining_table_setting_restau..._202607210155.jpeg" alt="HIMSPRING as the centerpiece of a fine dining table"></div>
+        <div class="hs-jr__card" style="height:300px;"><img src="/home-ref/uploads/prod-dining.jpg" alt="HIMSPRING bottle on a candlelit fine dining table"></div>
       </div>
       <div class="hs-jr__col hs-jr__col--down" style="--dur:50s;">
         <div class="hs-jr__card" style="height:240px;"><img src="/home-ref/assets/journey-speedboat.png" alt="Aerial view of a classic wooden speedboat"></div>
@@ -284,18 +284,18 @@ const HOME_MARKUP = `<div style="--navy:#1B2C58; --glacier:#267EBE; --mist:#B4D2
         <div class="hs-jr__card" style="height:300px;"><img src="/home-ref/assets/journey-yacht.png" alt="A sailing yacht at sea"></div>
       </div>
       <div class="hs-jr__col hs-jr__col--up" style="--dur:58s;">
-        <div class="hs-jr__card" style="height:280px;"><img src="/home-ref/uploads/Reference_bottle_on_marble_table_202607210157.jpeg" alt="HIMSPRING beside a chess set on a marble table"></div>
+        <div class="hs-jr__card" style="height:280px;"><img src="/home-ref/uploads/prod-marble.jpg" alt="HIMSPRING bottle beside rolled linen on a marble ledge"></div>
         <div class="hs-jr__card" style="height:300px;"><img src="/home-ref/assets/journey-boatman.png" alt="A boatman on calm mountain water"></div>
         <div class="hs-jr__card" style="height:240px;"><img src="/home-ref/assets/journey-flag.png" alt="Nautical club flags aboard a sailing yacht"></div>
       </div>
       <div class="hs-jr__col hs-jr__col--down" style="--dur:46s;">
-        <div class="hs-jr__card" style="height:260px;"><img src="/home-ref/uploads/Fine_dining_table_setting_restau..._202607210155.jpeg" alt="Fine dining table setting"></div>
+        <div class="hs-jr__card" style="height:260px;"><img src="/home-ref/uploads/prod-chalet.jpg" alt="HIMSPRING bottle on slate before a snowy mountain chalet window"></div>
         <div class="hs-jr__card" style="height:300px;"><img src="/home-ref/assets/journey-club.png" alt="A private members' club interior"></div>
         <div class="hs-jr__card hs-jr__card--label" style="height:210px; background:linear-gradient(160deg,#267EBE,#1B2C58);"><span class="ser">Born above<br>the noise</span></div>
       </div>
       <div class="hs-jr__col hs-jr__col--up" style="--dur:52s;">
         <div class="hs-jr__card" style="height:280px;"><img src="/home-ref/assets/journey-yacht.png" alt="A sailing yacht at sea"></div>
-        <div class="hs-jr__card" style="height:240px;"><img src="/home-ref/uploads/Bottle_and_towel_on_deck_202607210146.jpeg" alt="HIMSPRING on a teak yacht deck at golden hour"></div>
+        <div class="hs-jr__card" style="height:240px;"><img src="/home-ref/uploads/prod-deck.jpg" alt="HIMSPRING bottle and towel on a teak yacht deck"></div>
         <div class="hs-jr__card" style="height:300px;"><img src="/home-ref/assets/journey-speedboat.png" alt="Aerial view of a classic wooden speedboat"></div>
       </div>
     </div>
