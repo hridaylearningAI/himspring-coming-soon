@@ -9,7 +9,6 @@ const HOME_MARKUP = `<div style="--navy:#1B2C58; --glacier:#267EBE; --mist:#B4D2
   <nav data-nav style="position:fixed; top:0; left:0; right:0; z-index:120; display:flex; align-items:center; justify-content:space-between; padding:22px 48px; transition:background .4s ease, padding .4s ease, box-shadow .4s ease;">
     <a href="#top" style="display:flex; align-items:baseline; gap:10px; color:var(--navy);">
       <span class="ser" style="font-size:26px; font-weight:700; letter-spacing:.04em;">HIMSPRING</span>
-      <span style="font-size:9px; letter-spacing:.28em; font-weight:600; text-transform:uppercase; opacity:.6;">1% Club</span>
     </a>
     <div data-navlinks style="display:flex; align-items:center; gap:34px;">
       <a href="#story" style="font-size:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:500; color:var(--navy);">Our Story</a>
@@ -18,7 +17,6 @@ const HOME_MARKUP = `<div style="--navy:#1B2C58; --glacier:#267EBE; --mist:#B4D2
       <a href="#purity" style="font-size:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:500; color:var(--navy);">Purity</a>
       <a href="#sustainability" style="font-size:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:500; color:var(--navy);">Our Commitment</a>
       <a href="#contact" style="font-size:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:500; color:var(--navy);">Contact</a>
-      <a href="#join" style="font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; color:var(--snow); background:var(--navy); padding:11px 20px; border-radius:2px; transition:background .3s ease;" style-hover="background:#0f1c3d; color:#FEFEF6;">Join the 1% Club</a>
     </div>
     <button data-menubtn aria-label="Menu" style="display:none; background:none; border:1px solid var(--navy); border-radius:2px; padding:9px 12px; cursor:pointer; flex-direction:column; gap:4px; align-items:center; justify-content:center;">
       <span style="display:block; width:18px; height:2px; background:var(--navy);"></span>
@@ -57,15 +55,15 @@ const HOME_MARKUP = `<div style="--navy:#1B2C58; --glacier:#267EBE; --mist:#B4D2
     <div data-reveal style="position:relative; z-index:3; max-width:1180px; margin:0 auto; width:100%; opacity:0; transform:translateY(30px); transition:opacity 1s ease, transform 1s ease;">
       <div style="font-size:12px; letter-spacing:.42em; text-transform:uppercase; font-weight:600; color:var(--glacier); margin-bottom:26px;">Natural Himalayan Water</div>
       <h1 class="ser" style="font-size:clamp(52px,8.4vw,124px); line-height:.94; font-weight:400; color:var(--navy); letter-spacing:-.01em;">
-        Purity <span style="font-style:italic;">for the</span><br>World's <span style="font-style:italic;">Elite.</span>
+        Purity <span style="font-style:italic;">for the</span><br>World’s <span style="font-style:italic;">Elite</span>
       </h1>
-      <div class="ser" style="margin-top:24px; font-size:clamp(21px,2.4vw,30px); font-style:italic; color:var(--glacier);">Nature's Finest, Reserved for the Few.</div>
+      <div class="ser" style="margin-top:24px; font-size:clamp(21px,2.4vw,30px); font-style:italic; color:var(--glacier);">Nature’s Finest, Reserved for the Few</div>
       <p style="margin-top:22px; max-width:460px; font-size:16px; line-height:1.75; font-weight:400; color:#41506f;">
-        Born in the pristine Himalayas and naturally enriched over time, HIMSPRING delivers exceptional purity for those who value rarity, authenticity and uncompromising quality.
+        Born in the pristine Himalayas and naturally enriched over time, HIMSPRING brings timeless purity to those who seek rarity and authentic quality.
       </p>
       <div style="margin-top:40px; display:flex; align-items:center; gap:20px;">
         <a href="#join" style="font-size:12px; letter-spacing:.16em; text-transform:uppercase; font-weight:600; color:var(--snow); background:var(--navy); padding:16px 30px; border-radius:2px;" style-hover="background:#0f1c3d;">Join the 1% Club</a>
-        <a href="#story" style="font-size:12px; letter-spacing:.16em; text-transform:uppercase; font-weight:600; color:var(--navy); border-bottom:1px solid var(--navy); padding-bottom:3px;">Discover the source</a>
+        <a href="#story" style="font-size:12px; letter-spacing:.16em; text-transform:uppercase; font-weight:600; color:var(--navy); border-bottom:1px solid var(--navy); padding-bottom:3px;">Discover our story</a>
       </div>
     </div>
 
@@ -82,35 +80,55 @@ const HOME_MARKUP = `<div style="--navy:#1B2C58; --glacier:#267EBE; --mist:#B4D2
   </header>
 
   <!-- FEATURE STRIP -->
-  <section data-slide data-slide-label="Essence" data-screen-label="Essence" style="position:relative; background:var(--snow); padding:90px 48px; border-bottom:1px solid #e7edf3; overflow:hidden;">
-    <div data-parallax="0.1" style="position:absolute; inset:-10% 0; z-index:0;">
+  <section data-slide data-slide-label="Essence" data-screen-label="Essence" style="position:relative; background:var(--snow); padding:96px 48px; overflow:hidden;">
+    <div data-parallax="0.08" style="position:absolute; inset:-10% 0; z-index:0;">
       <img src="/home-ref/uploads/frame_025.jpg" alt="" style="width:100%; height:100%; object-fit:cover; object-position:center; display:block;">
-      <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(254,254,246,0) 0%, rgba(254,254,246,.35) 55%, rgba(254,254,246,.9) 100%);"></div>
-      <div style="position:absolute; left:0; right:0; top:0; height:100px; background:linear-gradient(180deg, var(--snow), rgba(254,254,246,0));"></div>
+      <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(254,254,246,.34) 0%, rgba(254,254,246,.06) 42%, rgba(254,254,246,.20) 74%, rgba(254,254,246,.5) 100%);"></div>
     </div>
-    <div data-reveal style="position:relative; z-index:2; max-width:1180px; margin:0 auto; opacity:0; transform:translateY(30px); transition:opacity .9s ease, transform .9s ease; display:grid; grid-template-columns:repeat(4,1fr); gap:40px;">
-      <div>
-        <div class="ser" style="font-size:22px; color:var(--navy); margin-bottom:12px;">High Altitude Source</div>
-        <p style="font-size:14px; line-height:1.7; color:#41506f;">Sourced from the pristine Shivalik ranges, over 6,000 ft above sea level.</p>
+    <div style="position:relative; z-index:2; max-width:1160px; margin:0 auto; width:100%;">
+      <div data-reveal style="text-align:center; opacity:0; transform:translateY(30px); transition:opacity .9s ease, transform .9s ease;">
+        <div style="display:flex; align-items:center; justify-content:center; gap:18px;">
+          <span style="display:block; width:92px; height:1px; background:linear-gradient(90deg, rgba(27,44,88,0), rgba(27,44,88,.4));"></span>
+          <svg width="15" height="19" viewBox="0 0 24 30" fill="none"><path d="M12 2C12 2 3 12 3 19a9 9 0 0 0 18 0C21 12 12 2 12 2Z" stroke="#1B2C58" stroke-width="1.3"></path></svg>
+          <span style="display:block; width:92px; height:1px; background:linear-gradient(270deg, rgba(27,44,88,0), rgba(27,44,88,.4));"></span>
+        </div>
+        <div style="margin-top:16px; font-size:12px; letter-spacing:.42em; text-transform:uppercase; font-weight:600; color:#42568099;">Crafted by Nature</div>
+        <svg width="16" height="9" viewBox="0 0 16 9" fill="none" style="display:block; margin:12px auto 0;"><path d="M1 1l7 6 7-6" stroke="#1B2C58" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <h2 class="ser" style="margin-top:26px; font-size:clamp(38px,5vw,66px); line-height:1.02; font-weight:400; color:var(--navy);">Every drop is a journey of purity.</h2>
+        <p style="margin:24px auto 0; max-width:520px; font-size:16px; line-height:1.75; color:#41506f;">Born in the untouched heights of the Himalayas, naturally purified by ancient rock formations, and preserved in its truest form.</p>
       </div>
-      <div>
-        <div class="ser" style="font-size:22px; color:var(--navy); margin-bottom:12px;">Naturally Pure</div>
-        <p style="font-size:14px; line-height:1.7; color:#41506f;">Naturally filtered through ancient Himalayan rock formations.</p>
-      </div>
-      <div>
-        <div class="ser" style="font-size:22px; color:var(--navy); margin-bottom:12px;">Rich in Minerals</div>
-        <p style="font-size:14px; line-height:1.7; color:#41506f;">Rich in essential minerals, delivering exceptional balance and smoothness.</p>
-      </div>
-      <div>
-        <div class="ser" style="font-size:22px; color:var(--navy); margin-bottom:12px;">Protected &amp; Pristine</div>
-        <p style="font-size:14px; line-height:1.7; color:#41506f;">Protected at its origin, where purity remains uncompromised.</p>
+      <div data-reveal style="margin-top:70px; display:grid; grid-template-columns:repeat(4,1fr); opacity:0; transform:translateY(30px); transition:opacity .9s ease .1s, transform .9s ease .1s;">
+        <div style="text-align:center; padding:0 34px; border-right:1px solid rgba(27,44,88,.14);">
+          <img src="/icon-high.svg" alt="" style="width:116px; height:116px; margin:0 auto 20px; display:block;">
+          <div class="ser" style="font-size:22px; color:var(--navy);">High-Altitude Origin</div>
+          <span style="display:block; width:4px; height:4px; border-radius:50%; background:var(--glacier); margin:16px auto;"></span>
+          <p style="font-size:14px; line-height:1.7; color:#41506f;">Sourced from pristine Shivalik peaks, high above environmental disruption.</p>
+        </div>
+        <div style="text-align:center; padding:0 34px; border-right:1px solid rgba(27,44,88,.14);">
+          <img src="/icon-pure.svg" alt="" style="width:116px; height:116px; margin:0 auto 20px; display:block;">
+          <div class="ser" style="font-size:22px; color:var(--navy);">Natural Filtration</div>
+          <span style="display:block; width:4px; height:4px; border-radius:50%; background:var(--glacier); margin:16px auto;"></span>
+          <p style="font-size:14px; line-height:1.7; color:#41506f;">Slowly filtered through subterranean Himalayan rock over centuries.</p>
+        </div>
+        <div style="text-align:center; padding:0 34px; border-right:1px solid rgba(27,44,88,.14);">
+          <img src="/icon-minerals.svg" alt="" style="width:116px; height:116px; margin:0 auto 20px; display:block;">
+          <div class="ser" style="font-size:22px; color:var(--navy);">Essential Balance</div>
+          <span style="display:block; width:4px; height:4px; border-radius:50%; background:var(--glacier); margin:16px auto;"></span>
+          <p style="font-size:14px; line-height:1.7; color:#41506f;">Enriched with vital minerals, imparting a remarkably smooth palate finish.</p>
+        </div>
+        <div style="text-align:center; padding:0 34px;">
+          <img src="/icon-shield.svg" alt="" style="width:116px; height:116px; margin:0 auto 20px; display:block;">
+          <div class="ser" style="font-size:22px; color:var(--navy);">Protected &amp; Pristine</div>
+          <span style="display:block; width:4px; height:4px; border-radius:50%; background:var(--glacier); margin:16px auto;"></span>
+          <p style="font-size:14px; line-height:1.7; color:#41506f;">Protected at its origin, where purity remains uncompromised.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- STORY -->
   <section id="story" data-slide data-slide-label="Our Story" data-screen-label="Our Story" style="position:relative; background:var(--navy); color:var(--snow); padding:130px 48px; overflow:hidden;">
-    <div data-parallax="0.12" style="position:absolute; right:-60px; bottom:-40px; width:520px; height:520px; opacity:.5; z-index:0;">
+    <div data-parallax="0.12" style="position:absolute; right:-60px; bottom:-40px; width:520px; height:520px; opacity:.08; z-index:0;">
       <svg viewBox="0 0 500 500" style="width:100%;height:100%;">
         <circle cx="250" cy="250" r="240" fill="#243a6e"/>
         <polygon points="60,430 220,150 320,320 400,200 470,430" fill="#2f4a86"/>
@@ -120,14 +138,13 @@ const HOME_MARKUP = `<div style="--navy:#1B2C58; --glacier:#267EBE; --mist:#B4D2
     <div style="position:relative; z-index:2; max-width:1180px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center;">
       <div data-reveal style="opacity:0; transform:translateY(30px); transition:opacity .9s ease, transform .9s ease;">
         <div style="font-size:12px; letter-spacing:.34em; text-transform:uppercase; font-weight:600; color:var(--mist); margin-bottom:22px;">Our Story</div>
-        <h2 class="ser" style="font-size:clamp(40px,5vw,72px); line-height:1; font-weight:400;">Where Purity <span style="font-style:italic;">Meets Purpose.</span></h2>
-        <div class="ser" style="margin-top:26px; font-size:22px; font-style:italic; color:var(--mist); line-height:1.4; max-width:400px;">Every bottle reflects a belief that true luxury begins with authenticity.</div>
+        <h2 class="ser" style="font-size:clamp(40px,5vw,72px); line-height:1; font-weight:400;">Where Purity <span style="font-style:italic;">Meets Purpose</span></h2>
+        <div class="ser" style="margin-top:26px; font-size:22px; font-style:italic; color:var(--mist); line-height:1.4; max-width:400px;">True luxury begins with authenticity</div>
       </div>
       <div data-reveal style="opacity:0; transform:translateY(30px); transition:opacity .9s ease .12s, transform .9s ease .12s;">
-        <p style="font-size:16px; line-height:1.85; color:#d3dcec; font-weight:300;">HIMSPRING was created with a simple philosophy: the finest experiences begin with the finest origins.</p>
-        <p style="margin-top:20px; font-size:16px; line-height:1.85; color:#d3dcec; font-weight:300;">Drawn from pristine Himalayan aquifers in the Shivalik ranges, our water is patiently filtered through ancient rock formations, developing its balanced mineral profile and remarkably smooth character over centuries.</p>
-        <p style="margin-top:20px; font-size:16px; line-height:1.85; color:#d3dcec; font-weight:300;">Rather than altering what nature has perfected, we preserve it. Every bottle captures the purity, provenance and timeless heritage of its Himalayan source.</p>
-        <p style="margin-top:20px; font-size:16px; line-height:1.85; color:#d3dcec; font-weight:300;">Crafted for those who value authenticity over excess, HIMSPRING represents a new expression of luxury — one defined by purpose, quality and enduring excellence.</p>
+        <p style="font-size:16px; line-height:1.7; color:#e6ecf6; font-weight:400;">HIMSPRING was created with a singular philosophy: the finest culinary and lifestyle experiences begin at the source.</p>
+        <p style="margin-top:22px; font-size:16px; line-height:1.7; color:#e6ecf6; font-weight:400;">Drawn from protected Himalayan aquifers in the Shivalik ranges, the water filters through ancient rock formations over centuries, naturally shaping a balanced mineral profile and remarkably smooth palate.</p>
+        <p style="margin-top:22px; font-size:16px; line-height:1.7; color:#e6ecf6; font-weight:400;">Rather than altering what nature has perfected, we preserve it. Crafted for those who value substance over excess, HIMSPRING represents a modern expression of luxury – defined by provenance, purpose, and enduring quality.</p>
       </div>
     </div>
   </section>
@@ -140,8 +157,8 @@ const HOME_MARKUP = `<div style="--navy:#1B2C58; --glacier:#267EBE; --mist:#B4D2
       </div>
       <div data-reveal style="opacity:0; transform:translateY(30px); transition:opacity .9s ease .12s, transform .9s ease .12s;">
         <div style="font-size:12px; letter-spacing:.34em; text-transform:uppercase; font-weight:600; color:var(--glacier); margin-bottom:22px;">The Source</div>
-        <h2 class="ser" style="font-size:clamp(38px,4.6vw,64px); line-height:1.02; font-weight:400; color:var(--navy);">Where Nature Preserves Its <span style="font-style:italic;">Finest Creation.</span></h2>
-        <p style="margin-top:28px; font-size:16px; line-height:1.85; color:#41506f; font-weight:400; max-width:460px;">High in the pristine Shivalik ranges of the Himalayas, over 6,000 feet above sea level, HIMSPRING begins its journey in one of nature's most protected environments. Untouched by human intervention and shaped over centuries, every drop carries the purity, balance and character that only time can create.</p>
+        <h2 class="ser" style="font-size:clamp(38px,4.6vw,64px); line-height:1.02; font-weight:400; color:var(--navy);">Where Nature Preserves Its <span style="font-style:italic;">Finest Creation</span></h2>
+        <p style="margin-top:28px; font-size:16px; line-height:1.85; color:#41506f; font-weight:400; max-width:460px;">High in the protected Shivalik ranges of the Himalayas, over 12,000 feet above sea level, HIMSPRING begins its journey in a sanctuary untouched by time. Naturally filtered through subterranean rock over centuries, every drop acquires the balance, clarity, and smooth character that only patience can create.</p>
         <div style="margin-top:40px; display:flex; gap:48px;">
           <div><div class="ser" style="font-size:52px; color:var(--navy); line-height:1;">7.6</div><div style="font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#41506f; margin-top:6px;">pH Balance</div></div>
           <div><div class="ser" style="font-size:52px; color:var(--navy); line-height:1;">158</div><div style="font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#41506f; margin-top:6px;">TDS mg/L</div></div>
@@ -152,18 +169,18 @@ const HOME_MARKUP = `<div style="--navy:#1B2C58; --glacier:#267EBE; --mist:#B4D2
     <div data-reveal style="max-width:1180px; margin:56px auto 0; opacity:0; transform:translateY(30px); transition:opacity .9s ease, transform .9s ease; display:grid; grid-template-columns:repeat(5,1fr); gap:0; border-top:1px solid #d9e2ec;">
       <div style="padding:34px 24px 0; border-right:1px solid #eef2f6;">
         <div class="ser" style="font-size:40px; color:var(--mistgrey); line-height:1;">01</div>
-        <div style="font-size:15px; font-weight:600; color:var(--navy); margin-top:16px; letter-spacing:.01em;">The Shivalik Himalayas</div>
-        <p style="font-size:13px; line-height:1.7; color:#41506f; margin-top:8px;">Where purity begins.</p>
+        <div style="font-size:15px; font-weight:600; color:var(--navy); margin-top:16px; letter-spacing:.01em;">The Shivalik Peaks</div>
+        <p style="font-size:13px; line-height:1.7; color:#41506f; margin-top:8px;">Originating in untouched high-altitude ranges.</p>
       </div>
       <div style="padding:34px 24px 0; border-right:1px solid #eef2f6;">
         <div class="ser" style="font-size:40px; color:var(--mistgrey); line-height:1;">02</div>
-        <div style="font-size:15px; font-weight:600; color:var(--navy); margin-top:16px; letter-spacing:.01em;">Protected Mountain Aquifers</div>
-        <p style="font-size:13px; line-height:1.7; color:#41506f; margin-top:8px;">Hidden deep beneath untouched mountains.</p>
+        <div style="font-size:15px; font-weight:600; color:var(--navy); margin-top:16px; letter-spacing:.01em;">Subterranean Aquifers</div>
+        <p style="font-size:13px; line-height:1.7; color:#41506f; margin-top:8px;">Sheltered deep beneath ancient rock layers.</p>
       </div>
       <div style="padding:34px 24px 0; border-right:1px solid #eef2f6;">
         <div class="ser" style="font-size:40px; color:var(--mistgrey); line-height:1;">03</div>
-        <div style="font-size:15px; font-weight:600; color:var(--navy); margin-top:16px; letter-spacing:.01em;">Nature's Filtration</div>
-        <p style="font-size:13px; line-height:1.7; color:#41506f; margin-top:8px;">Refined by ancient rock over centuries.</p>
+        <div style="font-size:15px; font-weight:600; color:var(--navy); margin-top:16px; letter-spacing:.01em;">Natural Filtration</div>
+        <p style="font-size:13px; line-height:1.7; color:#41506f; margin-top:8px;">Patiently filtered through mineral-rich strata.</p>
       </div>
       <div style="padding:34px 24px 0; border-right:1px solid #eef2f6;">
         <div class="ser" style="font-size:40px; color:var(--mistgrey); line-height:1;">04</div>
@@ -173,13 +190,13 @@ const HOME_MARKUP = `<div style="--navy:#1B2C58; --glacier:#267EBE; --mist:#B4D2
       <div style="padding:34px 24px 0;">
         <div class="ser" style="font-size:40px; color:var(--glacier); line-height:1;">05</div>
         <div style="font-size:15px; font-weight:600; color:var(--navy); margin-top:16px; letter-spacing:.01em;">HIMSPRING</div>
-        <p style="font-size:13px; line-height:1.7; color:#41506f; margin-top:8px;">Preserved exactly as nature intended.</p>
+        <p style="font-size:13px; line-height:1.7; color:#41506f; margin-top:8px;">Bottled directly at the source to preserve terroir.</p>
       </div>
     </div>
   </section>
 
-  <!-- THE DIFFERENCE -->
-  <section data-slide data-slide-label="The Difference" data-screen-label="The Difference" style="position:relative; background:linear-gradient(160deg,#22366a,#16274d); color:var(--snow); padding:120px 48px; overflow:hidden;">
+  <!-- THE DIFFERENCE — hidden for now (re-enable: data-slide-off → data-slide, remove display:none) -->
+  <section data-slide-off data-slide-label="The Difference" data-screen-label="The Difference" style="display:none; position:relative; background:linear-gradient(160deg,#22366a,#16274d); color:var(--snow); padding:120px 48px; overflow:hidden;">
     <div data-reveal style="max-width:1180px; margin:0 auto; opacity:0; transform:translateY(30px); transition:opacity .9s ease, transform .9s ease;">
       <div style="text-align:center; margin-bottom:70px;">
         <div style="font-size:12px; letter-spacing:.34em; text-transform:uppercase; font-weight:600; color:#C9A24B; margin-bottom:22px;">The HIMSPRING Difference</div>
@@ -194,8 +211,8 @@ const HOME_MARKUP = `<div style="--navy:#1B2C58; --glacier:#267EBE; --mist:#B4D2
     </div>
   </section>
 
-  <!-- 1% CLUB -->
-  <section data-slide data-slide-label="Philosophy" data-screen-label="Philosophy" style="position:relative; background:linear-gradient(180deg,#1B2C58,#12203f); color:var(--snow); padding:150px 48px; overflow:hidden; text-align:center;">
+  <!-- 1% CLUB — hidden for now (re-enable: data-slide-off → data-slide, remove display:none) -->
+  <section data-slide-off data-slide-label="Philosophy" data-screen-label="Philosophy" style="display:none; position:relative; background:linear-gradient(180deg,#1B2C58,#12203f); color:var(--snow); padding:150px 48px; overflow:hidden; text-align:center;">
     <div style="position:absolute; top:-80px; left:50%; transform:translateX(-50%); width:340px; height:340px; opacity:.14; z-index:0;">
       <svg viewBox="0 0 300 300" style="width:100%;height:100%;"><circle cx="150" cy="150" r="148" fill="none" stroke="#C9A24B" stroke-width="1"/><polygon points="60,240 150,80 200,170 240,110 250,240" fill="#C9A24B"/></svg>
     </div>
