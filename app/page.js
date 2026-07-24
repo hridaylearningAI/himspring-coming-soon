@@ -10,6 +10,7 @@
 import { useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText as GSAPSplitText } from "gsap/SplitText";
 import HOME_MARKUP from "./homeMarkup";
 
 /* Base rules + keyframes from the reference <helmet>, scoped under .hs-home so
@@ -62,6 +63,12 @@ class Deck {
     this.reduce = () => (this.props.motionIntensity || "Rich") === "Calm";
     this.idx = 0; this.animating = false; this._mode = null; this._cool = 0;
     this.slides = Array.from(document.querySelectorAll("[data-slide]"));
+    // Give each "generic" slide its own entrance direction so the deck doesn't
+    // read as a uniform vertical carousel. hero + journey own bespoke intros and
+    // the 0↔1 pair owns the frame-bridge, so they're excluded from the rotation.
+    const ENTER = ["zoom", "left", "right", "up", "scaleUp", "down"];
+    let _ei = 0;
+    this.slides.forEach(s => { if (s.id === "top" || s.id === "journey") return; s.__enter = ENTER[_ei++ % ENTER.length]; });
     this.viewport = document.querySelector("[data-viewport]");
     this.track = document.querySelector("[data-track]");
     this._saved = new Map();
@@ -254,7 +261,7 @@ class Deck {
     const nf = form.querySelector("[data-newsletter]");
     if (input && input.value && input.value.includes("@")) {
       if (nf) nf.style.display = "none";
-      if (ok) { ok.style.display = "block"; ok.textContent = "You're on the list. Welcome to the 1% Club."; }
+      if (ok) { ok.style.display = "block"; ok.textContent = "You're on the list. Welcome to HIMSPRING."; }
     }
   }
 
@@ -284,6 +291,7 @@ class Deck {
     if (this._gt) clearTimeout(this._gt);
     if (this._safety) clearTimeout(this._safety);
     if (this._io) this._io.disconnect();
+    this._heroReset();
     if (this._ctx) this._ctx.revert();
     if (this._items) this._items.forEach(el => { el.style.opacity = 1; el.style.transform = "none"; }); // never leave hidden
   }
@@ -358,7 +366,7 @@ class Deck {
       this.viewport.style.height = "100vh"; this.viewport.style.overflow = "hidden";
       if (dots) dots.style.display = "flex";
       window.scrollTo(0, 0);
-      this._items.forEach(el => { el.style.opacity = 0; el.style.transform = "translateY(30px)"; });
+      this._items.forEach(el => { el.style.opacity = 0; el.style.transform = this._revealHidden(el); });
       this.layout();
       this.revealSlide(this.slides[this.idx]);
       this._updateDots(); this._navState();
@@ -377,6 +385,8 @@ class Deck {
         if (el.hasAttribute("data-slide-full") && el.firstElementChild) el.firstElementChild.style.height = "";
       });
       if (dots) dots.style.display = "none";
+      this._journeyReset();
+      this._heroReset();
       if (this._insetSaved) { this._insetSaved.forEach(r => { r.el.style.inset = r.v || ""; }); }
       if (this.reduce() || !this._io) { this._revealAll(); }
       else {
@@ -468,7 +478,8 @@ class Deck {
     this.animating = false;
     this._cool = Date.now();
     if (this._prev && this._prev !== this.slides[this.idx]) {
-      this._prev.querySelectorAll("[data-reveal]").forEach(r => { r.style.opacity = 0; r.style.transform = "translateY(30px)"; });
+      this._prev.querySelectorAll("[data-reveal]").forEach(r => { r.style.opacity = 0; r.style.transform = this._revealHidden(r); });
+      if (this._prev.id === "journey") this._journeyReset();
     }
     this._prev = null;
   }
@@ -567,9 +578,23 @@ class Deck {
   revealSlide(el) {
     if (!el) return;
     const calm = this.reduce();
+    // The Journey slide runs its own "train departs / centre card dissolves"
+    // choreography (see _journeyIntro); the generic reveal must not touch its panel.
+    const journey = el.id === "journey" && this._mode && window.gsap && !calm;
+    const hero = el.id === "top" && this._mode && window.gsap && window.SplitText && !calm;
     Array.from(el.querySelectorAll("[data-reveal]")).forEach((r, k) => {
+      if (journey && r.classList.contains("hs-jr__panel")) return;
       setTimeout(() => { r.style.opacity = 1; r.style.transform = "none"; }, calm ? 0 : 380 + k * 150);
     });
+    if (journey) this._journeyIntro(el);
+    if (hero) this._heroIntro(el);
+    // Cinematic depth: the incoming slide's backdrop eases from a slight zoom to
+    // rest, so slides settle into view rather than snap in with a flat push.
+    // Generic slides only — hero, journey and the 0↔1 frame-bridge own their motion.
+    if (!journey && !hero && this._mode && window.gsap && !calm) {
+      const bgImg = el.querySelector("[data-parallax] img");
+      if (bgImg) window.gsap.fromTo(bgImg, { scale: 1.14 }, { scale: 1, duration: 1.9, ease: "power2.out", overwrite: "auto", onComplete: () => window.gsap.set(bgImg, { clearProps: "scale" }) });
+    }
     const c = el.querySelector("[data-count]");
     if (c && !c._hsDone) {
       c._hsDone = true;
@@ -581,6 +606,194 @@ class Deck {
         if (p < 1) requestAnimationFrame(tick);
       };
       requestAnimationFrame(tick);
+    }
+  }
+
+  /* HERO entrance (slide mode, GSAP, motion allowed): the title reveals
+     character-by-character via GSAP SplitText — the same technique the Journey
+     panel uses — with the tagline fading up just behind it. */
+  _heroIntro(section) {
+    const gsap = window.gsap, ST = window.SplitText;
+    if (!gsap || !ST || this._heroSplitDone) return;
+    const heading = section.querySelector("[data-hero-heading]");
+    if (!heading) return;
+    const container = section.querySelector("[data-reveal]");
+    const tagline = heading.nextElementSibling;
+    this._heroSplitDone = true;
+
+    // The container fades in (opacity only) — the character stagger supplies the
+    // motion, so the whole block doesn't slide while the letters also travel.
+    if (container) { container.style.transition = "opacity 1s ease"; container.style.transform = "none"; }
+
+    const split = new ST(heading, { type: "chars", charsClass: "split-char", reduceWhiteSpace: false });
+    this._heroSplit = split;
+    // Park the letters (and tagline) in their hidden from-state immediately so
+    // nothing flashes while we wait — then play the reveal on cue.
+    gsap.set(split.chars, { opacity: 0, y: 40 });
+    if (tagline) gsap.set(tagline, { autoAlpha: 0, y: 14 });
+
+    const play = () => {
+      if (this._heroPlayed) return;
+      this._heroPlayed = true;
+      if (this._heroSafety) { clearTimeout(this._heroSafety); this._heroSafety = null; }
+      if (this._heroPlayOnIntro) { window.removeEventListener("himspring:intro-done", this._heroPlayOnIntro); this._heroPlayOnIntro = null; }
+      const tl = gsap.timeline({ delay: 0.35 });
+      this._heroTl = tl;
+      tl.to(split.chars, { opacity: 1, y: 0, duration: 1.25, ease: "power3.out", stagger: 0.05, force3D: true, willChange: "transform, opacity" }, 0);
+      if (tagline) tl.to(tagline, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.55);
+    };
+
+    // If the preloader is still covering the hero, hold the reveal until it slides
+    // away (Intro dispatches `himspring:intro-done`), so the letters animate on the
+    // fully-revealed hero rather than out of sight behind the overlay. The
+    // `intro-active` class is only present for the animated intro, so the
+    // reduced-motion / no-intro paths fall straight through and play at once.
+    if (document.body.classList.contains("intro-active")) {
+      this._heroPlayOnIntro = () => play();
+      window.addEventListener("himspring:intro-done", this._heroPlayOnIntro, { once: true });
+      this._heroSafety = setTimeout(play, 7000); // fail-safe: never leave the hero hidden
+    } else {
+      play();
+    }
+  }
+
+  /* Restore the hero heading (un-split) when slide mode ends, so the entrance
+     replays cleanly on re-entry. */
+  _heroReset() {
+    if (this._heroPlayOnIntro) { window.removeEventListener("himspring:intro-done", this._heroPlayOnIntro); this._heroPlayOnIntro = null; }
+    if (this._heroSafety) { clearTimeout(this._heroSafety); this._heroSafety = null; }
+    if (this._heroTl) { this._heroTl.kill(); this._heroTl = null; }
+    if (this._heroSplit) { try { this._heroSplit.revert(); } catch (_) { /* noop */ } this._heroSplit = null; }
+    this._heroSplitDone = false;
+    this._heroPlayed = false;
+  }
+
+  /* THE JOURNEY entrance (slide mode, GSAP, motion allowed):
+     the slide opens empty — only the centre card animates in first. Then the
+     gallery "trains in": every column streams into place from off-screen, each
+     in its own travel direction, decelerating to rest like a train arriving.
+     Once the gallery is full it begins its perpetual drift and the centre card
+     dissolves away, leaving the pure moving deck. */
+  _journeyIntro(section) {
+    const gsap = window.gsap;
+    if (!gsap || this._jrTweens) return; // already running this entrance
+    const cols = Array.from(section.querySelectorAll(".hs-jr__col"));
+    if (!cols.length) return;
+    const SPEED = 46; // px/second — matches the original marquee cruise
+    const vh = window.innerHeight || 900;
+
+    // A frozen, seamless loop per column, parked (paused) at its marquee start so
+    // it captures the correct from-value only once we play it, after arrival.
+    const meta = cols.map((col) => {
+      const setH = col.scrollHeight / 2 || 1; // _buildJourneyLoop duplicated one set
+      const up = col.classList.contains("hs-jr__col--up");
+      col.style.animation = "none"; // take over from the CSS marquee
+      const startY = up ? 0 : -setH;
+      const loop = gsap.to(col, { y: up ? -setH : 0, duration: setH / SPEED, ease: "none", repeat: -1, paused: true });
+      return { col, up, startY, loop };
+    });
+    this._jrTweens = meta.map((m) => m.loop);
+
+    const panel = section.querySelector(".hs-jr__panel");
+    // revealSlide fires the moment the deck STARTS sliding here (the track tween
+    // runs ~1.05s), so the whole choreography must wait out that transition or it
+    // plays off-screen and looks "already there" on arrival. The from-states below
+    // are set immediately (via gsap.set), so the slide still slides in blank; only
+    // the animated timeline is held back by this lead.
+    const LEAD = 1.2;
+    const tl = gsap.timeline({ delay: LEAD });
+    this._jrIntroTl = tl;
+
+    // 1) Empty slide — only the centre card animates in. The heading reveals
+    //    character-by-character via GSAP SplitText (React Bits SplitText technique:
+    //    split into chars, from {opacity:0,y:40} → {opacity:1,y:0}, power3.out,
+    //    staggered ~delay/1000), driven by this timeline rather than ScrollTrigger.
+    if (panel) {
+      panel.style.transition = "none"; // GSAP owns the panel now, not the CSS reveal
+      const eyebrow = panel.children[0];
+      const heading = panel.querySelector("h2");
+      const para = panel.querySelector("p");
+
+      gsap.set(panel, { autoAlpha: 0, scale: 1.03, filter: "blur(12px)" });
+      tl.to(panel, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 1.0, ease: "power3.out" }, 0);
+
+      const ST = window.SplitText;
+      if (heading && ST) {
+        const split = new ST(heading, { type: "chars", charsClass: "split-char", reduceWhiteSpace: false });
+        this._jrSplit = split;
+        gsap.set(split.chars, { opacity: 0, y: 40 });
+        tl.to(split.chars, { opacity: 1, y: 0, duration: 1.25, ease: "power3.out", stagger: 0.05, force3D: true, willChange: "transform, opacity" }, 0.35);
+      } else if (heading) {
+        gsap.set(heading, { autoAlpha: 0, y: 16 });
+        tl.to(heading, { autoAlpha: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.35);
+      }
+
+      // Eyebrow above, paragraph below — a quiet fade-up bracketing the heading.
+      [eyebrow, para].forEach((elx, k) => {
+        if (!elx) return;
+        gsap.set(elx, { autoAlpha: 0, y: 14 });
+        tl.to(elx, { autoAlpha: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.2 + k * 0.55);
+      });
+    }
+
+    // 2) The gallery trains in — each column slides in from off-screen (up-columns
+    //    rise from below, down-columns descend from above) and brakes into place.
+    const START = 0.8, ARRIVE = 5.25, STAGGER = 0.12;
+    meta.forEach((m, i) => {
+      const offset = (m.up ? 1 : -1) * vh * 1.15;
+      gsap.set(m.col, { y: m.startY + offset, autoAlpha: 0 });
+      const at = START + i * STAGGER;
+      tl.to(m.col, { autoAlpha: 1, duration: 0.45, ease: "power1.out" }, at)
+        .to(m.col, { y: m.startY, duration: ARRIVE, ease: "power3.out" }, at);
+    });
+
+    // 3) Gallery full — hand off to the perpetual drift and dissolve the centre card.
+    const arrived = START + (meta.length - 1) * STAGGER + ARRIVE;
+    tl.add(() => this._jrTweens.forEach((loop) => { loop.timeScale(0); loop.play(); }), arrived);
+    this._jrTweens.forEach((loop) => {
+      tl.to(loop, { timeScale: 1, duration: 1.2, ease: "power2.inOut" }, arrived);
+    });
+    if (panel) {
+      tl.to(panel, { autoAlpha: 0, y: -12, scale: 0.955, filter: "blur(9px)", duration: 0.9, ease: "power2.inOut" }, arrived + 0.05);
+    }
+  }
+
+  /* Restore the Journey to its default (CSS marquee + hidden reveal panel) when
+     the slide is left or slide mode ends, so the entrance replays on re-entry. */
+  _journeyReset() {
+    if (this._jrIntroTl) { this._jrIntroTl.kill(); this._jrIntroTl = null; }
+    if (this._jrTweens) { this._jrTweens.forEach((t) => t.kill()); this._jrTweens = null; }
+    const section = document.getElementById("journey");
+    if (!section) return;
+    section.querySelectorAll(".hs-jr__col").forEach((col) => {
+      col.style.animation = "";
+      if (window.gsap) window.gsap.set(col, { clearProps: "transform,y,opacity,visibility" });
+    });
+    if (this._jrSplit) { try { this._jrSplit.revert(); } catch (_) { /* noop */ } this._jrSplit = null; }
+    const panel = section.querySelector(".hs-jr__panel");
+    if (panel) {
+      if (window.gsap) window.gsap.set(panel, { clearProps: "all" });
+      panel.style.opacity = 0;
+      panel.style.transform = "translateY(30px)";
+      panel.style.transition = "opacity 1s ease, transform 1s ease";
+    }
+  }
+
+  /* The from-state a reveal rests in while hidden — its slide's entrance variant.
+     Feeding this into the same CSS-transition reveal the deck already uses (set
+     transform → "none" to play) gives each slide a distinct arrival direction
+     with zero extra animation machinery. hero/journey keep the neutral rise. */
+  _revealHidden(r) {
+    const s = r && r.closest ? r.closest("[data-slide]") : null;
+    const id = s && s.id;
+    if (id === "top" || id === "journey") return "translateY(30px)";
+    switch (s && s.__enter) {
+      case "zoom":    return "scale(1.08)";
+      case "left":    return "translateX(-56px)";
+      case "right":   return "translateX(56px)";
+      case "down":    return "translateY(-40px)";
+      case "scaleUp": return "translateY(46px) scale(1.04)";
+      default:        return "translateY(40px)";
     }
   }
 
@@ -625,7 +838,8 @@ export default function Home() {
     if (typeof window !== "undefined") {
       window.gsap = gsap;
       window.ScrollTrigger = ScrollTrigger;
-      try { gsap.registerPlugin(ScrollTrigger); } catch (e) { /* already registered */ }
+      window.SplitText = GSAPSplitText;
+      try { gsap.registerPlugin(ScrollTrigger, GSAPSplitText); } catch (e) { /* already registered */ }
     }
     const deck = new Deck({ scrollMode: "Slides", motionIntensity: "Rich", showGrain: true, showMarquee: true });
     deck.mount();

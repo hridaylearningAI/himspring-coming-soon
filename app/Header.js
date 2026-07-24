@@ -16,20 +16,29 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
-  // an off-screen sentinel at the top of the page drives the scrolled state;
-  // IntersectionObserver avoids per-frame scroll listeners entirely
+  // the frosted-white state waits until the page's dark ground has fully
+  // passed: over the hero film ([data-header-dark]) the header must stay
+  // transparent on dark. Pages without a film fall back to a top sentinel.
   useEffect(() => {
-    const sentinel = document.createElement("div");
-    sentinel.style.cssText =
-      "position:absolute;top:0;left:0;width:1px;height:9px;pointer-events:none;visibility:hidden;";
-    document.body.prepend(sentinel);
-    const io = new IntersectionObserver(([entry]) =>
-      setScrolled(!entry.isIntersecting),
+    const film = document.querySelector("[data-header-dark]");
+    let sentinel;
+    let target = film;
+    if (!film) {
+      sentinel = document.createElement("div");
+      sentinel.style.cssText =
+        "position:absolute;top:0;left:0;width:1px;height:9px;pointer-events:none;visibility:hidden;";
+      document.body.prepend(sentinel);
+      target = sentinel;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => setScrolled(!entry.isIntersecting),
+      // shrink the top edge so the flip happens as the film slides under the header
+      film ? { rootMargin: "-72px 0px 0px 0px" } : undefined,
     );
-    io.observe(sentinel);
+    io.observe(target);
     return () => {
       io.disconnect();
-      sentinel.remove();
+      sentinel?.remove();
     };
   }, []);
 

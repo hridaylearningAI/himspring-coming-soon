@@ -356,4 +356,24 @@ export const Icon = {
       <path d="M12 3c2.5 2.5 4 5.5 4 9s-1.5 6.5-4 9" />
     </svg>
   ),
+  instagram: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17" cy="7" r="0.8" fill="currentColor" stroke="none" />
+    </svg>
+  ),
+  linkedin: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="7" y1="10" x2="7" y2="17" />
+      <circle cx="7" cy="6.2" r="0.9" fill="currentColor" stroke="none" />
+      <path d="M11 17v-4.2a2.3 2.3 0 0 1 4.6 0V17" />
+      <line x1="11" y1="10" x2="11" y2="17" />
+    </svg>
+  ),
+  x: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <path d="M6 6l12 12M18 6 6 18" />
+    </svg>
+  ),
 };
