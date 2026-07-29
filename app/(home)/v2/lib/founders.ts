@@ -41,9 +41,10 @@ export type Founder = {
      name as it is actually written, which is what a screen reader announces and
      what anyone copying it off the page gets; only the rendering shouts. */
   readonly name: string;
-  /* the initials some of the team are known by, set small after the name — only
-     Rajdev has one, and inventing one for anybody else would be putting words in
-     a real person's mouth */
+  /* the initials someone is known by, set small after the name. No founder
+     carries one at present — Rajdev's "RSB" came off with the middle initial it
+     was drawn from — and inventing one for anybody would be putting words in a
+     real person's mouth, so this stays optional and unused rather than filled. */
   readonly alias?: string;
   readonly role: string;
   readonly portrait: string;
@@ -73,8 +74,12 @@ export const FOUNDERS: readonly Founder[] = [
        carried is now nowhere on the board. */
     role: "Co-Founder & Director, Himspring",
     portrait: "/ABDULRAHMAN%20RASHED.PNG",
+    /* The supplied line had an em dash at the break: "in the details—in
+       providing". Removed by instruction, with a comma in its place rather than
+       nothing — a bare deletion leaves "lies in the details in providing", where
+       "in" reads as attaching to "details" before the sentence corrects itself. */
     quote:
-      "True luxury lies in the details—in providing an experience that is refined, authentic, and uncompromising in quality.",
+      "True luxury lies in the details, in providing an experience that is refined, authentic, and uncompromising in quality.",
     bio: [
       "Mr. Abdulrahman Rashed Matar Rashed Al Jabri represents a dynamic force in the UAE’s luxury and corporate landscape. A forward-thinking entrepreneur, Abdulrahman has built an exceptional track record of driving innovation and setting new standards across high-end service industries.",
       "As the CEO of Royal Smart Limousine (RSL), a flagship entity under the Rashid Al Jabri Group of Companies. He has spearheaded the growth of premium transportation solutions across Dubai and Abu Dhabi and his visionary leadership has elevated RSL into a benchmark for luxury mobility, corporate travel, and bespoke client experiences.",
@@ -83,12 +88,13 @@ export const FOUNDERS: readonly Founder[] = [
   },
   {
     id: "brahmbhatt",
-    /* The supplied copy heads this write-up "Rajdev Brahmbhatt", without the
-       middle initial this entry has carried since the original brief. Kept as
-       the fuller form because it is not contradicted by the shorter one, and
-       because the alias below is only an alias of the name with the S in it. */
-    name: "Rajdev S. Brahmbhatt",
-    alias: "RSB",
+    /* As the supplied write-up heads it, and now by instruction: no middle
+       initial. The entry carried "Rajdev S. Brahmbhatt" with an "RSB" alias
+       since the original brief; the alias goes with the S, since initials that
+       do not appear in the name beside them read as a typo rather than as a
+       shorthand. Nothing on the board uses `alias` now — the field and its
+       markup still work, they are simply unexercised. */
+    name: "Rajdev Brahmbhatt",
     /* Extended from "Founder & Chairman" to match the supplied line, which also
        matches Abdulrahman's — both roles now name the company. */
     role: "Founder & Chairman, Himspring",
