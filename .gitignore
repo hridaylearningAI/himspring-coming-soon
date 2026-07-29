@@ -27,3 +27,30 @@ yarn-error.log*
 # Claude Code tooling
 /.claude/skills/
 /skills-lock.json
+
+# typescript incremental build cache
+tsconfig.tsbuildinfo
+
+# ---- heavy working material, deliberately not in the repo ----
+#
+# Everything below is either regenerable, over GitHub's limits, or should not be
+# on a public origin. Git keeps every blob it has ever seen, so a large file
+# pushed once stays in the history's weight forever and only comes out by
+# rewriting it — which is why these are excluded up front rather than committed
+# and tidied later.
+
+# 323MB of extracted video frames. Regenerable with ffmpeg from the source mp4,
+# which IS committed alongside them.
+/Animate_image_preserve_compositi__1080p_202607251223_frames/
+/Animate_image_preserve_compositi__1080p_202607251223_frames 2/
+
+# 231MB of reference material. reference.zip is 115MB on its own, which GitHub
+# rejects outright — its hard per-file ceiling is 100MB.
+/reference/
+/reference.zip
+
+# 127MB of brand book, and it is sitting under public/. Anything in public/ is
+# served by Next at its own path, so committing this would publish the whole
+# brand book as a downloadable file at /BRAND%20BOOK.zip on the live site.
+/public/BRAND BOOK/
+/public/BRAND BOOK.zip

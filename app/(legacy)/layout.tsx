@@ -1,0 +1,54 @@
+import { Tinos } from "next/font/google";
+import localFont from "next/font/local";
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import Intro from "./Intro";
+import "./globals.css";
+
+/* The pre-redesign site. Kept routable so the old pages stay comparable while
+   the new design lands; superseded by app/(home). Fonts and globals.css are
+   scoped to this group, so the new homepage never downloads them. */
+
+// Headings — Tinos is metrically identical to Times New Roman and renders the
+// same on every device (incl. Linux/Android, which don't ship Times New Roman).
+const times = Tinos({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-times",
+  display: "swap",
+});
+
+// Body — real Gotham, loaded from the local .otf files in public/fonts/Gotham.
+const gotham = localFont({
+  src: [
+    { path: "../../public/fonts/Gotham/Gotham Light/Gotham Light.otf", weight: "300", style: "normal" },
+    { path: "../../public/fonts/Gotham/Gotham Book/Gotham Book.otf", weight: "400", style: "normal" },
+    { path: "../../public/fonts/Gotham/Gotham Italic/Gotham Italic.otf", weight: "400", style: "italic" },
+    { path: "../../public/fonts/Gotham/Gotham Medium/Gotham Medium.otf", weight: "500", style: "normal" },
+    { path: "../../public/fonts/Gotham/Gotham Bold/Gotham Bold.otf", weight: "600", style: "normal" },
+  ],
+  variable: "--font-gotham",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: "Himspring | The Purest Expression of Himalayan Water",
+  description:
+    "From untouched springs high in the Himalayas, Himspring brings you nature in its purest form. Born above. Pure by nature.",
+  openGraph: {
+    title: "Himspring | The Purest Expression of Himalayan Water",
+    description: "Pure by nature. Perfected by Himspring.",
+    images: ["/hero-poster.png"],
+    type: "website",
+  },
+};
+
+export default function LegacyLayout({ children }: { children: ReactNode }) {
+  return (
+    <div className={`${gotham.variable} ${times.variable}`}>
+      <Intro />
+      {children}
+    </div>
+  );
+}

@@ -1,0 +1,971 @@
+/* ============================================================
+   HIMSPRING — homepage stylesheet
+
+   Ported verbatim from the standalone index_1.html design direction. The
+   selectors, the calibration comments and the measured values are all kept as
+   authored: this sheet is the record of a lot of measuring (headline widths in
+   em, bottle centring in vh, veil stops tuned against specific plates), and
+   rewriting it into CSS Modules would mean re-deriving all of it for no gain.
+
+   Two things changed in the move:
+     - the @font-face block is gone; next/font/local declares Gotham in
+       app/(home)/layout.tsx and exposes it as --font-gotham.
+     - asset paths are rooted at / , since they are served from public/.
+
+   Scoped by import: only app/(home)/layout.tsx pulls this in, so the legacy
+   route group never downloads it.
+   ============================================================ */
+
+/* ============================================================
+   HIMSPRING — tokens
+   ============================================================ */
+:root {
+  --hs-white: #ffffff;
+  --hs-cream: #f5f2ec;
+  --hs-mist: #f1f4f8;
+  --hs-gold: #b8933f;
+  --hs-gold-deep: #96762d;
+  --hs-gold-pale: #e5dac0;
+  --hs-navy: #0b1a2a;
+  --hs-navy-soft: #1e3a5f;
+  --hs-ink: #16191c;
+  --hs-ink-soft: #5e656b;
+
+  /* Brand book p.19: Times New Roman (Regular + Italic) and Gotham (Book + Bold
+     Italic) are the two brand faces. Times carries the wordmark and everything
+     read; Gotham carries labels, navigation and captions.
+
+     Gotham is self-hosted from the supplied files, subset to Latin plus
+     typographic punctuation: 32KB for all three faces against ~300KB of source
+     OTF. --font-gotham is the variable next/font/local generates.
+
+     --hs-sans is NOT declared here: it references --font-gotham, and a custom
+     property's own var() references resolve against the element the property is
+     declared on. Declared at :root it would resolve before next/font's variable
+     exists (that lands on .hs-root) and inherit down already broken. It lives in
+     the .hs-root block below instead. */
+  /* Three roles, one face each — headings, body, accents.
+
+     What was here before was three tokens (--hs-serif, --hs-script, --hs-text)
+     all resolving to the same Times stack, which meant the distinction between
+     a headline, a signature and a paragraph was carried entirely by size. The
+     names promised a system the values did not deliver.
+
+     --hs-display is NOT declared here: it references --font-devasia, and a
+     custom property's own var() references resolve against the element the
+     property is declared on. At :root that would resolve before next/font's
+     variable exists — the variable lands on .hs-root — and inherit down already
+     broken. It lives in the .hs-root block below, next to --hs-sans, for the
+     same reason and with the same consequence if moved.
+
+     A caveat on the accent face: "Times New Roman Condensed" is not web-safe
+     and ships with no OS by default. On almost every machine this stack will
+     fall through to regular Times New Roman, which is a reasonable outcome but
+     is not the condensed cut. Getting the real thing means supplying the font
+     file the way Gotham and Devasia are supplied. */
+  --hs-accent: "Times New Roman Condensed", "TimesNewRomanCondensed",
+    "Times New Roman", Times, "Liberation Serif", Georgia, serif;
+
+  --hs-shell: 1360px;
+  --hs-gut: clamp(1.5rem, 6vw, 5.5rem);
+  --hs-band: clamp(4.5rem, 10vw, 8rem);
+  --hs-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth }
+body {
+  margin: 0; background: var(--hs-white);
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+/* The wrapper app/(home)/layout.tsx renders, carrying next/font's --font-gotham
+   and --font-devasia. Base typography sits here rather than on body so both
+   font tokens resolve against an element that actually has those variables in
+   scope — see the note in :root.
+
+   --hs-text is an alias rather than its own stack: body is Gotham, and pointing
+   the old token at --hs-sans repoints every paragraph, input and caption that
+   already asks for it without touching two dozen rules. It used to be Times,
+   which is why the live homepage set its prose in a serif. */
+.hs-root {
+  --hs-sans: var(--font-gotham), "Helvetica Neue", Arial, sans-serif;
+  --hs-display: var(--font-devasia), "Times New Roman", Times, Georgia, serif;
+  --hs-text: var(--hs-sans);
+  color: var(--hs-ink);
+  font-family: var(--hs-sans); font-weight: 400; font-size: 15px; line-height: 1.8;
+}
+img, svg { display: block; max-width: 100% }
+a { color: inherit; text-decoration: none }
+h1, h2, h3, p, figure, blockquote, dl, dd { margin: 0 }
+ul { margin: 0; padding: 0; list-style: none }
+button, input { font: inherit; color: inherit }
+:focus-visible { outline: 1px solid var(--hs-gold); outline-offset: 4px }
+
+.hs-vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap }
+.hs-skip {
+  position: absolute; left: 1rem; top: -100px; z-index: 200; background: #fff; border: 1px solid var(--hs-gold);
+  padding: .75rem 1.25rem; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; transition: top .3s var(--hs-ease);
+}
+.hs-skip:focus { top: 1rem }
+
+.hs-shell { max-width: var(--hs-shell); margin-inline: auto; padding-inline: var(--hs-gut) }
+.hs-band { padding-block: var(--hs-band) }
+
+/* ---- type roles ---- */
+.hs-eyebrow { font-size: 10px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase; color: var(--hs-gold); margin-bottom: 1.5rem }
+.hs-h2 { font-family: var(--hs-display); font-weight: 400; font-size: clamp(1.9rem, 3.4vw, 2.9rem); line-height: 1.18; letter-spacing: -.01em }
+.hs-body {
+  font-family: var(--hs-text); color: var(--hs-ink-soft); font-size: 16px; line-height: 1.66;
+  letter-spacing: .005em; max-width: 42ch;
+}
+/* Drop cap, the way a feature opens in print — sunk three lines.
+
+   It used to be described as a display serif against a text serif. Both halves
+   of that are now false: the cap is Devasia and the paragraph it opens is
+   Gotham, so the contrast is display-against-sans rather than one Times against
+   another. That is a sharper opening than the original, which relied on size
+   alone to separate two settings of the same face. */
+.hs-body--lead::first-letter {
+  float: left; font-family: var(--hs-display); font-size: 3.4em; line-height: .84;
+  padding: .04em .1em 0 0; color: var(--hs-ink);
+}
+.hs-body + .hs-body { margin-top: 1.25rem }
+
+.hs-link {
+  position: relative; display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: .2em;
+  text-transform: uppercase; padding-bottom: .6rem;
+}
+.hs-link::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; background: var(--hs-gold);
+  transform-origin: left; transition: transform .45s var(--hs-ease);
+}
+.hs-link:hover::after { transform: scaleX(.4) }
+.hs-link .hs-arw { display: inline-block; margin-left: .7rem; transition: transform .45s var(--hs-ease) }
+.hs-link:hover .hs-arw { transform: translateX(7px) }
+
+.hs-btn {
+  position: relative; display: inline-block; overflow: hidden; isolation: isolate;
+  border: 1px solid var(--hs-gold); background: transparent; cursor: pointer;
+  padding: .75rem 1.6rem; font-size: 9px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase;
+  transition: color .45s var(--hs-ease);
+}
+.hs-btn::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--hs-gold);
+  transform: scaleY(0); transform-origin: bottom; transition: transform .5s var(--hs-ease);
+}
+.hs-btn:hover { color: #fff }
+.hs-btn:hover::before { transform: scaleY(1) }
+
+/* ---- wordmark ----
+
+   Sized by height, because height is what a logo has to hold constant: it sits
+   in a bar of a fixed depth and beside type of a fixed size, and the two cuts
+   have different ratios (8.09:1 and 5.22:1) so matching them on width would
+   make the nav mark and the footer mark two different sizes of the same thing.
+   Width follows from the artwork.
+
+   --hs-logo-h is the whole interface. Nothing else here needs overriding. */
+.hs-logo { display: inline-block; line-height: 0 }
+.hs-logo img {
+  display: block; height: var(--hs-logo-h, 20px); width: auto;
+  /* Guard, not a layout rule. Height alone can overflow a narrow column, and
+     max-width on its own would win against width:auto and squash the mark;
+     object-fit makes the same clamp letterbox instead. If this ever engages,
+     --hs-logo-h is too large for that breakpoint — fix it there. */
+  max-width: 100%; object-fit: contain; object-position: left center;
+}
+/* The reversed mark, for navy grounds. Same file taken to pure white rather
+   than a second asset: one artwork means the two can never drift, and the
+   filter preserves the keyed alpha so the serifs stay as clean as the navy. */
+.hs-logo--light img { filter: brightness(0) invert(1) }
+
+/* ---- photo slot: the plate fades in over its own SVG placeholder ---- */
+.hs-photo { position: relative; overflow: hidden; background: var(--hs-mist) }
+.hs-photo > svg,
+.hs-photo > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover }
+.hs-photo > img { z-index: 2; opacity: 0; transition: opacity .8s var(--hs-ease) }
+.hs-photo.has-photo > img { opacity: 1 }
+
+/* ============================================================
+   travelling bottle rig
+   ============================================================ */
+.hs-rig { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden }
+/* left margin = half the rendered width: 64vh x (342/1440 photo aspect) / 2 = 7.6vh.
+   Recompute this whenever the bottle artwork changes, or the rig sits off-centre
+   and every station's x offset is silently wrong. */
+.hs-rig__bottle {
+  position: absolute; left: 50%; top: 50%; height: 64vh; width: auto;
+  margin: calc(-32vh) 0 0 calc(-7.6vh);
+  translate: var(--bx, 0) var(--by, 0); rotate: var(--br, 0deg); scale: var(--bs, 1); opacity: var(--bo, 1);
+  filter: drop-shadow(0 30px 40px rgba(20, 44, 72, .20)); will-change: translate, rotate, scale;
+}
+.hs-rig__glow {
+  position: absolute; left: 50%; top: 50%; width: 52vh; aspect-ratio: 1;
+  margin: -26vh 0 0 -26vh; translate: var(--bx, 0) var(--by, 0); opacity: var(--bg, 0);
+  background: radial-gradient(circle, rgba(184, 147, 63, .34) 0%, rgba(184, 147, 63, 0) 66%);
+}
+/* Parked again above 900px, and this time for a reason that stuck: the bottle is
+   composited into the plates themselves, standing on real rock with real contact
+   shadow. A DOM bottle over a distant vista has no ground to stand on and reads
+   as a cut-out pasted on the sky — which is exactly how it looked when it was
+   briefly switched on here.
+
+   Below 900px the plates are cropped hard by object-fit and the composited
+   bottle falls outside the frame, so the rules further down bring these back. */
+.hs-bottle-static { display: none }
+
+/* stage = a band that gives the travelling bottle a lane */
+.hs-stage { position: relative; min-height: 96vh; display: flex; align-items: center }
+.hs-stage__grid {
+  width: 100%; max-width: var(--hs-shell); margin-inline: auto;
+  padding: var(--hs-band) var(--hs-gut); display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 6vw, 6rem); align-items: center;
+}
+.hs-stage__copy { max-width: 44ch }
+.hs-stage--right .hs-stage__copy { grid-column: 2 }
+
+/* ============================================================
+   [01] navigation
+   ============================================================ */
+.hs-nav {
+  position: fixed; inset: 0 0 auto; z-index: 100; border-bottom: 1px solid transparent;
+  transition: background .5s var(--hs-ease), border-color .5s var(--hs-ease);
+}
+.hs-nav.is-stuck { background: rgba(255, 255, 255, .95); border-bottom-color: var(--hs-gold-pale); backdrop-filter: blur(10px) }
+.hs-nav__inner {
+  max-width: var(--hs-shell); margin-inline: auto; padding: 1.1rem var(--hs-gut);
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem;
+}
+/* The full lockup, descriptor included, so 46px is the floor rather than a
+   preference — below it "NATURAL HIMALAYAN WATER" stops resolving as letters.
+   See the note in Logo.tsx.
+
+   That sets the depth of the bar: 58px of artwork inside 1.1rem of padding
+   makes the header about 93px, against roughly 50px for the monogram this
+   replaced. The mark is tall and condensed rather than wide, so a legible
+   descriptor costs height here in a way it would not under a wide wordmark;
+   this is the trade, taken deliberately. Everything fixed-positioned that
+   clears the nav is measured off it — the deck's --hsv-nav-h in deck.css is the
+   one to keep in step.
+
+   Width at the 58px ceiling is only 123px (2.12:1), so the centre column of the
+   `1fr auto 1fr` grid is narrower than it was and the section links gain room
+   rather than losing it. */
+.hs-nav .hs-logo { --hs-logo-h: clamp(46px, 4.4vw, 58px) }
+.hs-nav__set { display: flex; gap: 2rem; align-items: center }
+.hs-nav__set--end { justify-content: flex-end }
+.hs-navlink { position: relative; font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; padding-block: .4rem }
+.hs-navlink::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; background: var(--hs-gold);
+  transform: scaleX(0); transform-origin: left; transition: transform .45s var(--hs-ease);
+}
+.hs-navlink:hover::after { transform: scaleX(1) }
+.hs-burger { display: none; background: none; border: 0; padding: .5rem; cursor: pointer }
+.hs-burger span { display: block; width: 22px; height: 1px; background: var(--hs-ink); margin: 6px 0; transition: transform .4s var(--hs-ease), opacity .3s }
+.hs-nav.is-open .hs-burger span:nth-child(1) { transform: translateY(7px) rotate(45deg) }
+.hs-nav.is-open .hs-burger span:nth-child(2) { opacity: 0 }
+.hs-nav.is-open .hs-burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg) }
+
+.hs-drawer {
+  position: fixed; inset: 0; z-index: 99; background: #fff; display: flex; flex-direction: column;
+  justify-content: center; gap: .25rem; padding: 0 var(--hs-gut); opacity: 0; visibility: hidden;
+  transition: opacity .5s var(--hs-ease), visibility .5s;
+}
+.hs-drawer.is-open { opacity: 1; visibility: visible }
+.hs-drawer a {
+  font-family: var(--hs-display); font-size: clamp(1.75rem, 8vw, 2.5rem); padding-block: .7rem;
+  border-bottom: 1px solid var(--hs-gold-pale); opacity: 0; transform: translateY(18px);
+  transition: opacity .6s var(--hs-ease) var(--delay, 0ms), transform .6s var(--hs-ease) var(--delay, 0ms);
+}
+.hs-drawer.is-open a { opacity: 1; transform: none }
+
+/* ============================================================
+   [02] hero
+   ============================================================ */
+.hs-hero { position: relative; min-height: 100svh; display: flex; align-items: stretch; overflow: hidden }
+.hs-hero__scene { position: absolute; inset: 0; z-index: 0 }
+.hs-hero__scene > svg,
+.hs-hero__scene > img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  /* object-position, not the default 50%, because the bottle is composited into
+     the plate at ~83% across. The plate is 2.36:1 and the hero box is nearer
+     1.5:1, so `cover` throws away roughly a fifth of the width from each side and
+     the default centre crop cuts the bottle in half. Biasing right keeps it whole
+     and still holds the snow line, which runs the full width. */
+  object-position: 72% center;
+  transform-origin: 58% 62%; animation: hs-ken 30s ease-out forwards;
+}
+@keyframes hs-ken { from { transform: scale(1) } to { transform: scale(1.02) } }
+/* lifts the plate under the headline and the closing line, and stays out of the
+   way through the middle where the bottle and the far peak carry the picture */
+.hs-hero__veil {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .80) 0%, rgba(255, 255, 255, .44) 30%,
+    rgba(255, 255, 255, .10) 52%, rgba(255, 255, 255, .40) 84%, rgba(255, 255, 255, .62) 100%);
+}
+
+/* The stage is the one number that sets the bottle's prominence: the photo is
+   height-driven off this box. At 94% it stood ~83% of the hero, dead centre, and
+   the valley was scenery behind a product shot. At 56% it stands ~49% — a little
+   over a third smaller.
+
+   It also moves off the centre line to 80%, onto the open riverbed on the right.
+   Centred it ran straight through the closing line and the CTA, which the old
+   composition got away with only because the copy was written to split around a
+   bottle that size. Off-centre, the copy column is clear at every width. */
+.hs-hero__stage { position: absolute; z-index: 2; left: 80%; translate: -50% 0; bottom: 0; width: min(30vw, 360px); height: 56%; pointer-events: none }
+/* height-driven, not width-driven: the bottle photo is 612x1954, so a width of
+   100% would force a height several times the stage's own and run it up behind
+   the copy. Only ever shown when the travelling rig is off. */
+.hs-hero__bottle {
+  position: absolute; left: 50%; translate: -50% 0; bottom: 10%; width: auto; height: 88%;
+  filter: drop-shadow(0 26px 34px rgba(24, 52, 84, .22));
+}
+/* a near snow bank cut from the plate itself, so grain and colour match by
+   construction. Sits above the bottle (z 5) and below the copy (z 7): the
+   bottle is buried in the scene, the words stay clear of it. */
+.hs-hero__fg { position: absolute; left: 0; bottom: -1px; z-index: 6; width: 100%; display: block; pointer-events: none }
+
+/* copy splits around the bottle — title above, closing line below — so the
+   words only ever cross clear glass, never the printed label */
+.hs-hero__inner {
+  position: relative; z-index: 7; width: 100%; max-width: var(--hs-shell); margin-inline: auto;
+  /* padding in vh, matching the bottle's own vh geometry, so the copy and the
+     bottle track each other as viewport height changes instead of sliding apart */
+  /* bottom padding is tight on purpose: the bottle is composited into the plate
+     now, so the closing line has to clear its printed gold mountain rather than
+     being positioned against a station we control */
+  padding: clamp(5rem, 16.8vh, 12rem) var(--hs-gut) clamp(2.5rem, 5vh, 4rem);
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  gap: 2rem; text-align: center;
+}
+/* unconstrained: the headline runs on one line, so the shell's own inner width
+   (max-width minus gutters) is the only limit it should answer to */
+.hs-hero__copy { max-width: 100% }
+.hs-hero__foot { max-width: min(34ch, 90%) }
+/* the pale plate washes out the lighter gold, so the eyebrow takes the deep tone.
+   The wide gap floats it clear above the bottle's cap — set tight to the headline
+   it lands on the gold, where small letterforms disappear. */
+.hs-hero__copy .hs-eyebrow { color: var(--hs-gold-deep); margin-bottom: clamp(2rem, 7vh, 5.5rem) }
+/* Set on one line, so width is the binding constraint. Re-measured after the move
+   to the brand faces: the string is 10.284em in Times New Roman at this tracking,
+   against 11.254em in Playfair — about 9% narrower, so it carries more size. The
+   shell leaves 0.88vw after gutters; 8.1vw stays inside it, the vh bound holds the
+   headline down on short viewports, and 7rem stops it outgrowing the 1360px shell. */
+.hs-hero__title {
+  font-family: var(--hs-display); font-weight: 400; font-size: min(8.1vw, 12vh, 7rem);
+  line-height: 1.06; letter-spacing: -.02em; margin-bottom: 0; white-space: nowrap;
+}
+/* the standfirst: italic text serif, the way a magazine sets a deck under a title.
+   Full ink, not the soft grey, because it sits on the plate rather than flat white. */
+.hs-hero__foot p {
+  font-family: var(--hs-text); font-style: italic; color: var(--hs-ink);
+  font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.5; letter-spacing: .01em;
+  margin: 0 auto 2.2rem; max-width: 30ch;
+}
+
+/* hidden: the closing line now sits low enough to occupy this space */
+.hs-scrollcue {
+  display: none; position: absolute; left: 50%; bottom: 2rem; z-index: 8; translate: -50% 0; width: 1px; height: 56px;
+  background: linear-gradient(var(--hs-gold), rgba(184, 147, 63, 0)); overflow: hidden;
+}
+.hs-scrollcue::after {
+  content: ""; display: block; width: 1px; height: 16px; background: var(--hs-gold-deep);
+  animation: hs-drop 2.8s var(--hs-ease) infinite;
+}
+@keyframes hs-drop { 0% { transform: translateY(-18px) } 70%, 100% { transform: translateY(56px) } }
+
+/* ============================================================
+   [03] provenance bar
+   ============================================================ */
+.hs-prov { border-bottom: 1px solid var(--hs-gold-pale); background: #fff }
+.hs-prov__grid { display: grid; grid-template-columns: repeat(4, 1fr) }
+.hs-prov__cell { padding: 2.4rem 1rem; text-align: center; border-left: 1px solid var(--hs-gold-pale) }
+.hs-prov__cell:first-child { border-left: 0 }
+.hs-prov__val { font-family: var(--hs-accent); font-size: clamp(1.35rem, 2.2vw, 1.9rem); line-height: 1.1; letter-spacing: .01em }
+.hs-prov__val sup { font-size: .46em; vertical-align: super; letter-spacing: .06em; margin-left: .1em }
+.hs-prov__val--word { font-size: clamp(1rem, 1.5vw, 1.25rem); letter-spacing: .05em }
+.hs-prov__key { margin-top: .7rem; font-size: 8.5px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; color: var(--hs-gold) }
+
+/* ============================================================
+   split band (story / experience / sustainability)
+   ============================================================ */
+.hs-story { position: relative; background: var(--hs-cream); overflow: hidden }
+.hs-story__scene { position: absolute; inset: 0; z-index: 0 }
+/* lifts the plate under the copy column on the right and stays clear on the left,
+   where the bottle flies in and the ice wall carries the picture */
+.hs-story__veil {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(265deg, rgba(255, 255, 255, .90) 0%, rgba(255, 255, 255, .72) 20%,
+    rgba(255, 255, 255, .46) 38%, rgba(255, 255, 255, .18) 52%, rgba(255, 255, 255, 0) 68%);
+}
+/* a near ice bank cut from the plate itself, so grain and colour match by
+   construction. Above the bottle (z 5) and below the copy (z 7): the bottle is
+   buried in the scene as it arrives, exactly as in the hero. */
+.hs-story__fg { position: absolute; left: 0; bottom: -1px; z-index: 6; width: 100%; display: block; pointer-events: none }
+.hs-story .hs-stage__grid { position: relative; z-index: 7 }
+.hs-sign { margin-top: 2.75rem }
+.hs-sign__name { font-family: var(--hs-accent); font-style: italic; font-size: 1.85rem; color: var(--hs-gold-deep); line-height: 1 }
+.hs-sign__role { margin-top: .7rem; font-size: 9px; letter-spacing: .24em; text-transform: uppercase; color: var(--hs-ink-soft) }
+
+/* ============================================================
+   [05] the source
+   ============================================================ */
+.hs-src { position: relative; background: #fff; overflow: hidden; border-block: 1px solid var(--hs-gold-pale) }
+/* height tracks viewport width so the band stays near the map's 2:1 ratio —
+   keeps the compass in the bottom-right corner from being cropped away */
+.hs-src__inner {
+  position: relative; z-index: 2; min-height: clamp(560px, 48vw, 820px); max-width: var(--hs-shell); margin-inline: auto;
+  padding: clamp(3rem, 7vw, 5rem) var(--hs-gut);
+}
+/* the relief map carries its own contours, source pin and compass */
+/* oversized so the parallax shift never exposes an edge */
+.hs-src__media {
+  position: absolute; left: 0; top: -4%; z-index: 0; width: 100%; height: 108%;
+  translate: 0 var(--par, 0px); will-change: translate;
+}
+/* still and film share framing so the handoff between them is invisible */
+.hs-src__bg,
+.hs-src__vid {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 64%;
+}
+/* The still carries the motion on its own until the film has buffered. Its
+   origin matches the film's own expansion centre — a true dolly forward, which
+   grows from near the pin — so the crossfade between them shows no jump. */
+.hs-src__bg { transform: scale(var(--zoom, 1)); transform-origin: 50% 45%; will-change: transform }
+.hs-src__vid { opacity: 0; transition: opacity .9s var(--hs-ease) }
+.hs-src__vid.is-ready { opacity: 1 }
+/* keeps the copy legible over the lighter left flank of the map */
+.hs-src__veil {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(100deg, rgba(255, 255, 255, .94) 0%, rgba(255, 255, 255, .66) 30%, rgba(255, 255, 255, 0) 58%);
+}
+.hs-src__copy { position: relative; z-index: 3; max-width: 34ch }
+.hs-src__cta { position: absolute; z-index: 3; left: var(--hs-gut); bottom: clamp(3rem, 7vw, 5rem) }
+
+.hs-card {
+  position: absolute; z-index: 4; right: var(--hs-gut); top: 50%; translate: 0 -50%;
+  width: min(230px, 26%); border: 1px solid var(--hs-gold-pale); background: rgba(255, 255, 255, .9); padding: 1.5rem 1.6rem;
+}
+.hs-card dt { font-size: 8.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--hs-gold) }
+.hs-card dd { font-family: var(--hs-accent); font-size: 15px; line-height: 1.5; margin-top: .4rem }
+.hs-card dd + dt { margin-top: 1.15rem; padding-top: 1.15rem; border-top: 1px solid var(--hs-gold-pale) }
+.hs-card__coord { font-family: var(--hs-accent); font-size: 15px; line-height: 1.6 }
+
+.hs-src__facts { display: none; margin-top: 2.5rem; border-top: 1px solid var(--hs-gold-pale) }
+.hs-src__facts div { display: flex; justify-content: space-between; gap: 1rem; padding: .85rem 0; border-bottom: 1px solid var(--hs-gold-pale) }
+.hs-src__facts dt { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--hs-ink-soft) }
+.hs-src__facts dd { font-family: var(--hs-accent) }
+
+/* ============================================================
+   [06] purity
+   ============================================================ */
+/* the only band that isn't flat white. It gives the disc somewhere to settle
+   into and hands the section off to the navy Experience plate below without a
+   flat white edge meeting it. */
+.hs-pur { background: linear-gradient(180deg, var(--hs-white) 0%, var(--hs-white) 42%, #f7f9fb 74%, var(--hs-mist) 100%) }
+.hs-pur__shell { width: 100% }
+.hs-pur__eyebrow { text-align: center }
+
+.hs-pur__grid {
+  /* --gut is the connector's runway as well as the grid gap: the dot lands at
+     the disc's edge, and the disc is exactly as wide as the centre track, so the
+     hairline has precisely this much gutter to cross. Declared once so the two
+     can't drift apart. */
+  --gut: clamp(2rem, 7vw, 6.5rem);
+  display: grid; grid-template-columns: 1fr minmax(300px, 34%) 1fr;
+  gap: var(--gut); margin-top: clamp(2.5rem, 5vw, 4rem); align-items: center;
+}
+/* the centre lane was the travelling bottle's flight path. With the rig parked
+   it holds the bottle directly, over a disc of the source valley — the plate is
+   the left third of assets/sustain-valley.jpg, cropped square well clear of the
+   bottle in that shot. It stands in for the rig's own glow, which fired at .16
+   on this station. */
+.hs-pur__lane { position: relative; display: flex; align-items: center; justify-content: center }
+.hs-pur__halo {
+  position: absolute; left: 50%; top: 50%; translate: -50% -50%;
+  width: 100%; max-width: 440px; height: auto; aspect-ratio: 1; object-fit: cover;
+  border-radius: 50%; opacity: .6; pointer-events: none;
+  /* the crop is a hard square; this is what makes it a disc that dissolves into
+     the page rather than a photo with a circular border. The long tail matters
+     more than the radius — stopping much short of transparent leaves a visible
+     rim wherever the plate's sky is darker than the page. */
+  mask-image: radial-gradient(circle, #000 30%, rgba(0, 0, 0, .62) 58%, rgba(0, 0, 0, .18) 72%, transparent 80%);
+}
+/* contact shadow — the bottle is a cut-out with no ground of its own, and
+   without this it hovers in the middle of the disc */
+.hs-pur__pool {
+  /* the lane's height is the bottle's, so its floor is the bottle's base */
+  position: absolute; left: 50%; bottom: -9px; translate: -50% 0;
+  width: min(58%, 250px); height: 38px; pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(24, 52, 84, .20) 0%, rgba(24, 52, 84, .07) 45%, rgba(24, 52, 84, 0) 72%);
+}
+/* height-driven: this artwork is 342x1440, so a width-driven rule would blow its
+   height far past the lane */
+.hs-pur__bottle {
+  position: relative; width: auto; height: clamp(300px, 44vh, 480px);
+  filter: drop-shadow(0 26px 34px rgba(24, 52, 84, .18));
+}
+
+.hs-pur__side { display: grid; gap: clamp(2.5rem, 5vw, 4.25rem) }
+.hs-pur__side:first-child { text-align: right }
+.hs-pur__side:last-child { text-align: left }
+.hs-pur__side:first-child .hs-pur__badge { margin-left: auto; margin-right: 0 }
+.hs-pur__side:last-child .hs-pur__badge { margin-left: 0; margin-right: auto }
+.hs-pur__side:first-child .hs-pur__rule { margin-left: auto; margin-right: 0 }
+.hs-pur__side:last-child .hs-pur__rule { margin-left: 0; margin-right: auto }
+.hs-pur__side:first-child .hs-pur__col p { margin-left: auto; margin-right: 0 }
+.hs-pur__side:last-child .hs-pur__col p { margin-left: 0; margin-right: auto }
+
+.hs-pur__col { position: relative }
+/* medallion: the icons used to sit bare on the page, which left each pillar
+   starting on a thin gold squiggle. The disc gives all four the same silhouette
+   and the same weight as the bottle's own circle. */
+.hs-pur__badge {
+  display: grid; place-items: center; width: 78px; height: 78px; border-radius: 50%;
+  margin: 0 auto 1.4rem; background: var(--hs-white);
+  box-shadow: 0 12px 30px rgba(24, 52, 84, .09), inset 0 0 0 1px rgba(184, 147, 63, .20);
+}
+.hs-pur__badge svg {
+  width: 34px; height: 34px; stroke: var(--hs-gold); stroke-width: 1.6; fill: none;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.hs-pur__col h3 { font-family: var(--hs-display); font-weight: 400; font-size: 1.3rem; line-height: 1.25 }
+.hs-pur__rule { position: relative; display: block; width: 44px; height: 1px; margin: 1.1rem 0; background: var(--hs-gold-pale) }
+/* the spoke. Both halves hang off the rule so they inherit its baseline: ::after
+   is the hairline across the gutter, ::before the dot that stops it at the disc.
+   -1px on the runway keeps the dot's centre on the disc's edge rather than its
+   leading edge. */
+.hs-pur__rule::after,
+.hs-pur__rule::before { content: ""; position: absolute; top: 50%; pointer-events: none }
+.hs-pur__rule::after {
+  width: calc(var(--gut) - 18px); height: 1px; translate: 0 -50%;
+  background: linear-gradient(90deg, rgba(184, 147, 63, 0) 0%, rgba(184, 147, 63, .55) 42%, rgba(184, 147, 63, .55) 100%);
+}
+.hs-pur__rule::before { width: 5px; height: 5px; border-radius: 50%; background: var(--hs-gold); translate: 0 -50% }
+.hs-pur__side:first-child .hs-pur__rule::after { left: calc(100% + 18px) }
+.hs-pur__side:first-child .hs-pur__rule::before { left: calc(100% + var(--gut) - 1px) }
+.hs-pur__side:last-child .hs-pur__rule::after { right: calc(100% + 18px); rotate: 180deg }
+.hs-pur__side:last-child .hs-pur__rule::before { right: calc(100% + var(--gut) - 1px) }
+
+.hs-pur__col p {
+  font-family: var(--hs-text); font-size: 14.5px; line-height: 1.62; color: var(--hs-ink-soft);
+  max-width: 26ch; margin-inline: auto;
+}
+
+/* ============================================================
+   [07] experience
+   ============================================================ */
+.hs-exp { background: var(--hs-navy); color: #e8ebee }
+
+.hs-exp__rule { width: 56px; height: 1px; background: var(--hs-gold); margin-bottom: 2rem }
+.hs-exp h2 { color: #f4f1ea }
+/* lifted from #9CA6B0: a text serif is finer-stroked than the sans it replaced,
+   so it needs more contrast to hold on the dark plate */
+.hs-exp p {
+  font-family: var(--hs-text); color: #b6bfc8; font-size: 15.5px; line-height: 1.62;
+  margin-top: 1.6rem; max-width: 32ch;
+}
+/* full opacity now: the plate is generated at its final darkness. Halving it over
+   navy would also halve the bottle composited into it, which needs to read as the
+   brightest thing in the frame. */
+.hs-exp__bg { position: absolute; inset: 0; z-index: 0; opacity: 1 }
+.hs-exp__bg > svg,
+.hs-exp__bg > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover }
+/* near water cut from the plate, with this section's own .5-over-navy blend
+   baked into the pixels — a foreground element renders at full opacity, so an
+   unblended cut would sit visibly lighter than the background it continues.
+   Above the bottle (z 5), below the copy: the bottle stands in the lake. */
+.hs-exp__fg { position: absolute; left: 0; bottom: -1px; z-index: 6; width: 100%; display: block; pointer-events: none }
+.hs-exp .hs-stage__grid { position: relative; z-index: 7 }
+/* the copy takes column 2 here, so the bottle stands in the open left third,
+   down on the shore where the plate's stones are. Height is a share of the band
+   rather than a vh figure so it holds its proportion against the plate. */
+.hs-exp > .hs-bottle-static {
+  left: 27%; translate: -50% 0; bottom: 13%; height: 44%;
+  filter: drop-shadow(0 26px 36px rgba(0, 0, 0, .45));
+}
+
+/* ============================================================
+   [08] sustainability
+   ============================================================ */
+.hs-sus { position: relative; overflow: hidden }
+.hs-sus__scene { position: absolute; inset: 0; z-index: 0 }
+/* lifts the plate under the copy column on the left; clear on the right where
+   the bottle flies in and the stream carries the picture */
+.hs-sus__veil {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(100deg, rgba(255, 255, 255, .86) 0%, rgba(255, 255, 255, .58) 26%,
+    rgba(255, 255, 255, .16) 52%, rgba(255, 255, 255, 0) 72%);
+}
+/* near snow cut from the plate itself. Above the bottle (z 5) and below the
+   copy (z 7), so the bottle is buried in the scene as it arrives. */
+.hs-sus__fg { position: absolute; left: 0; bottom: -1px; z-index: 6; width: 100%; display: block; pointer-events: none }
+.hs-sus .hs-stage__grid { position: relative; z-index: 7 }
+/* the right third the veil above deliberately leaves clear — that gap was cut
+   for the travelling rig's arrival and it is the same lane this uses */
+.hs-sus__bottle {
+  right: 15%; bottom: 14%; height: 42%;
+  filter: drop-shadow(0 26px 34px rgba(24, 52, 84, .22));
+}
+.hs-sus__list { margin-top: 2.5rem }
+.hs-sus__item {
+  display: grid; grid-template-columns: auto 1fr; gap: clamp(1.25rem, 2.5vw, 2.25rem);
+  padding: 1.6rem 0; border-bottom: 1px solid var(--hs-gold-pale);
+}
+.hs-sus__item:first-child { border-top: 1px solid var(--hs-gold-pale) }
+.hs-sus__num { font-family: var(--hs-accent); font-size: 1.85rem; color: var(--hs-gold); opacity: .75; line-height: 1 }
+.hs-sus__item h3 { font-family: var(--hs-display); font-weight: 400; font-size: 1.2rem; margin-bottom: .35rem }
+.hs-sus__item p { font-family: var(--hs-text); font-size: 14.5px; line-height: 1.6; color: var(--hs-ink-soft) }
+
+/* ============================================================
+   [09] gallery
+   ============================================================ */
+.hs-gal { background: #fff; border-top: 1px solid var(--hs-gold-pale) }
+.hs-gal__head { max-width: 44ch; margin-bottom: clamp(2.5rem, 5vw, 4rem) }
+.hs-gal__head p { margin-top: 1.5rem }
+/* Columns of images drifting past a fading window. Each column is duplicated in
+   the markup and travels exactly -50%, so the seam lands on the copy and the loop
+   never shows a join. Alternating columns run the other way and every column has
+   its own duration, so the field never visibly repeats a pattern. */
+.hs-gal__rail {
+  --gal-gap: clamp(.75rem, 1.6vw, 1.5rem);
+  display: flex; justify-content: center; gap: var(--gal-gap);
+  height: clamp(520px, 72vh, 760px); overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
+}
+.hs-gal__col {
+  flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--gal-gap);
+  padding-bottom: var(--gal-gap); will-change: transform;
+  animation: hs-gal-up var(--dur, 40s) linear infinite;
+}
+.hs-gal__col--down { animation-name: hs-gal-down }
+@keyframes hs-gal-up { from { transform: translateY(0) } to { transform: translateY(-50%) } }
+@keyframes hs-gal-down { from { transform: translateY(-50%) } to { transform: translateY(0) } }
+/* pause on hover so a viewer can actually look at one */
+.hs-gal__rail:hover .hs-gal__col { animation-play-state: paused }
+/* flex:0 0 auto is load-bearing — without it the column shrinks every frame to
+   fit its own height and the pictures collapse into slivers. They must keep 3:2
+   and overflow, because the overflow is what scrolls. */
+.hs-gal__frame { flex: 0 0 auto; position: relative; aspect-ratio: 3/2; overflow: hidden; background: var(--hs-mist) }
+/* transform only — the frame is fixed, the picture drifts inside it */
+.hs-gal__frame img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  transition: transform 1.4s var(--hs-ease);
+}
+.hs-gal__frame:hover img { transform: scale(1.045) }
+/* captions dropped with the static grid: unreadable on a moving column, and the
+   section head already frames what the pictures are */
+
+/* ============================================================
+   [09b] contact
+
+   Replaces the launch list's single email field. The band keeps the cream it had
+   — it is still the last thing before the footer, and the seam the gallery's
+   moving pictures stop against — but the content is now a white panel floating
+   on it, because a form this long needs its own edges to sit inside.
+   ============================================================ */
+.hs-contact { background: var(--hs-cream) }
+.hs-contact__head { text-align: center; max-width: 620px; margin: 0 auto clamp(2.5rem, 5vw, 3.5rem) }
+/* .hs-body caps itself at 42ch and is left-aligned by default; both have to go
+   for a lede sitting under a centred head */
+.hs-contact__lede { max-width: none; margin-top: 1.5rem; text-align: center }
+
+.hs-contact__panel {
+  max-width: 940px; margin-inline: auto; background: var(--hs-white);
+  padding: clamp(1.75rem, 4vw, 3.25rem);
+  box-shadow: 0 24px 60px rgba(24, 52, 84, .07), inset 0 0 0 1px var(--hs-gold-pale);
+}
+
+/* ---- the queue picker ----
+
+   Was four cards in a row. They cost about 130px of panel height and repeated
+   three blurbs nobody selected, so they collapsed to one select carrying the
+   blurb of whatever is chosen. It inherits .hs-contact__field, so the label, the
+   rule and the chevron are the same ones every other field uses — it is only set
+   larger, because it is the control that decides what the rest of the form is. */
+.hs-contact__pick { max-width: 27rem; margin-bottom: clamp(2rem, 4vw, 2.75rem) }
+.hs-contact__pick > label { color: var(--hs-gold) }
+.hs-contact__pick select {
+  font-family: var(--hs-accent); font-size: 1.25rem; line-height: 1.3;
+  padding-bottom: .55rem; border-bottom-color: var(--hs-gold); background-size: 13px;
+}
+.hs-contact__pickBlurb { font-size: 12px; line-height: 1.5; color: var(--hs-ink-soft) }
+
+/* ---- fields ---- */
+/* align-items:start is load-bearing: stretched to the row height, a field's
+   input takes all the slack between its label and its rule, and one wrapped
+   label opposite would push every underline on that row 20px down */
+.hs-contact__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem 1.75rem; align-items: start }
+.hs-contact__field { display: flex; flex-direction: column; gap: .5rem; min-width: 0 }
+.hs-contact__field--full { grid-column: 1 / -1 }
+.hs-contact__field > label {
+  font-size: 9.5px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--hs-ink-soft);
+}
+.hs-contact__opt { letter-spacing: .12em; text-transform: none; opacity: .7 }
+/* underlines, not boxes — the launch list's one field looked like this and the
+   whole sheet is built on hairlines rather than outlines */
+.hs-contact__field input,
+.hs-contact__field select,
+.hs-contact__field textarea {
+  width: 100%; background: none; border: 0; border-bottom: 1px solid var(--hs-gold-pale);
+  border-radius: 0; padding: .45rem 0; font-family: var(--hs-text); font-size: 15px;
+  /* .hs-root's 1.8 is a reading line-height; on a one-line control it is 12px of
+     dead space above each rule, seven times over, and once more per field when
+     the grid unstacks on mobile */
+  line-height: 1.4; transition: border-color .4s var(--hs-ease);
+}
+.hs-contact__field textarea { resize: vertical; line-height: 1.6; min-height: 6.5rem }
+.hs-contact__field input::placeholder,
+.hs-contact__field textarea::placeholder { color: #9aa0a5 }
+.hs-contact__field input:focus,
+.hs-contact__field select:focus,
+.hs-contact__field textarea:focus { outline: none; border-bottom-color: var(--hs-gold) }
+.hs-contact__field [aria-invalid="true"] { border-bottom-color: #8c3b2e }
+/* the native arrow is a raised chrome widget on a control with no box; this
+   replaces it with a chevron that matches the hairline it sits on */
+.hs-contact__field select {
+  appearance: none; cursor: pointer; padding-right: 1.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%23b8933f' stroke-width='1.4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right .1rem center; background-size: 11px;
+}
+.hs-contact__err { margin-top: -.15rem; font-size: 11px; letter-spacing: .04em; color: #8c3b2e }
+
+/* ---- the CV drop, careers only ---- */
+.hs-contact__drop {
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  padding: 1rem 1.15rem; border: 1px dashed var(--hs-gold-pale); background: var(--hs-cream);
+}
+.hs-contact__drop.is-filled { border-style: solid; border-color: var(--hs-gold) }
+/* a <label> pointing at the visually hidden file input: it opens the picker with
+   no JS, and the input it points at is what takes the focus ring */
+.hs-contact__choose,
+.hs-contact__drop button {
+  cursor: pointer; border: 1px solid var(--hs-gold); background: none; padding: .55rem 1.1rem;
+  font-size: 9.5px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--hs-gold-deep); transition: background-color .4s var(--hs-ease), color .4s var(--hs-ease);
+}
+.hs-contact__choose:hover,
+.hs-contact__drop button:hover { background: var(--hs-gold); color: var(--hs-white) }
+.hs-contact__field input[type="file"]:focus-visible + .hs-contact__drop { outline: 1px solid var(--hs-gold); outline-offset: 3px }
+.hs-contact__drop button { margin-left: auto; border-color: var(--hs-gold-pale); color: var(--hs-ink-soft) }
+.hs-contact__fileName { font-family: var(--hs-text); font-size: 15px; overflow-wrap: anywhere }
+.hs-contact__fileSize { font-size: 11px; letter-spacing: .05em; color: var(--hs-ink-soft) }
+
+/* ---- consent and send ---- */
+.hs-contact__foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem 2.5rem;
+  flex-wrap: wrap; margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+.hs-contact__consent { display: flex; align-items: flex-start; gap: .7rem; max-width: 46ch }
+.hs-contact__consent input { flex: 0 0 auto; width: 15px; height: 15px; margin-top: .25rem; accent-color: var(--hs-gold-deep) }
+.hs-contact__consent label { font-size: 12px; line-height: 1.55; color: var(--hs-ink-soft); cursor: pointer }
+.hs-contact__consent.is-error label { color: #8c3b2e }
+/* .hs-btn already carries the gold border, the cursor and the wipe-up fill; this
+   only stops the button stretching in the flex row and marks the sending state */
+.hs-contact__send { flex: 0 0 auto }
+.hs-contact__send[disabled] { opacity: .5; cursor: default }
+.hs-contact__send[disabled]:hover { color: inherit }
+.hs-contact__send[disabled]:hover::before { transform: scaleY(0) }
+/* empty until something fails, so it must not hold a blank line open under the
+   button on every render */
+.hs-contact__status:not(:empty) { margin-top: 1.5rem; font-size: 12px; letter-spacing: .04em; color: #8c3b2e }
+
+/* ---- sent ---- */
+.hs-contact__panel--done { text-align: center; padding-block: clamp(3rem, 7vw, 4.5rem) }
+.hs-contact__doneMark svg { width: 46px; height: 46px; margin: 0 auto 1.75rem; fill: none; stroke: var(--hs-gold); stroke-width: 1.2 }
+.hs-contact__panel--done h3 { font-family: var(--hs-display); font-weight: 400; font-size: clamp(1.4rem, 2.4vw, 1.85rem) }
+.hs-contact__panel--done p { margin-top: 1rem; font-family: var(--hs-text); color: var(--hs-ink-soft) }
+.hs-contact__doneNote { max-width: 44ch; margin-inline: auto; font-size: 13px; overflow-wrap: anywhere }
+
+/* ============================================================
+   [10] footer
+   ============================================================ */
+.hs-foot { border-top: 1px solid var(--hs-gold-pale); background: #fff }
+.hs-foot__grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr; padding-block: clamp(3rem, 6vw, 4.5rem) }
+.hs-foot__col { padding-inline: clamp(1.25rem, 3vw, 2.75rem); border-left: 1px solid var(--hs-gold-pale) }
+.hs-foot__col:first-child { border-left: 0; padding-left: 0; display: flex; flex-direction: column; align-items: flex-start }
+/* Larger than the nav's, because this column has the room the bar does not and
+   the descriptor is the one thing on the page that states what the water is.
+   86px x 2.12 = 182px inside a column that is 1.5fr of a 1360px shell. */
+.hs-foot .hs-logo { --hs-logo-h: clamp(64px, 6.4vw, 86px) }
+.hs-foot h3 { font-size: 8.5px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase; color: var(--hs-gold); margin-bottom: 1.35rem }
+.hs-foot li { margin-bottom: .75rem }
+.hs-foot li a,
+.hs-foot__col a[href^="mailto"] { font-size: 12.5px; color: var(--hs-ink-soft); transition: color .35s var(--hs-ease) }
+.hs-foot li a:hover,
+.hs-foot__col a[href^="mailto"]:hover { color: var(--hs-ink) }
+.hs-foot__ig {
+  display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
+  margin-top: 1.5rem; border: 1px solid var(--hs-gold-pale); transition: border-color .4s var(--hs-ease);
+}
+.hs-foot__ig svg { width: 15px; height: 15px; stroke: var(--hs-ink-soft); fill: none; stroke-width: 1.2; transition: stroke .4s var(--hs-ease) }
+.hs-foot__ig:hover { border-color: var(--hs-gold) }
+.hs-foot__ig:hover svg { stroke: var(--hs-gold-deep) }
+.hs-foot__base {
+  display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+  padding-block: 1.4rem; border-top: 1px solid var(--hs-gold-pale); font-size: 11px; color: var(--hs-ink-soft);
+}
+.hs-foot__base a { margin-left: 2rem }
+.hs-foot__base a:hover { color: var(--hs-ink) }
+
+/* ============================================================
+   reveal
+   ============================================================ */
+.reveal {
+  opacity: 0; transform: translateY(22px);
+  transition: opacity .9s var(--hs-ease) var(--delay, 0ms), transform .9s var(--hs-ease) var(--delay, 0ms);
+}
+.reveal.is-visible { opacity: 1; transform: none }
+
+/* ============================================================
+   responsive
+   ============================================================ */
+@media (max-width: 1080px) {
+  .hs-nav__set--start { display: none }
+  .hs-nav__set--end .hs-navlink { display: none }
+  .hs-nav__inner { grid-template-columns: 1fr auto 1fr }
+  .hs-burger { display: block }
+  .hs-hero__foot { max-width: min(32ch, 92%) }
+  /* drop to three columns */
+  .hs-gal__col--lg { display: none }
+  .hs-card { width: min(210px, 32%) }
+  /* the gutter is the connector's runway, and below this it is too short for the
+     hairline to read as a run to the disc — it just becomes a dash */
+  .hs-pur__rule::after,
+  .hs-pur__rule::before { display: none }
+  /* with no hairline to run, the gutter has no job left, so it gives its width
+     to the centre track: the disc is sized off that track, and left at the wide
+     layout's 34% it shrinks to well under the bottle's height and stops reading
+     as the ground the bottle stands on */
+  .hs-pur__grid { --gut: clamp(1.5rem, 3vw, 2.5rem); grid-template-columns: 1fr minmax(280px, 38%) 1fr }
+  .hs-pur__bottle { height: clamp(280px, 36vh, 400px) }
+}
+@media (max-width: 900px) {
+  .hs-rig { display: none }
+  .hs-bottle-static { display: block }
+  /* the overlay hero depends on the travelling rig to place the bottle behind the
+     words. With the rig off there is nothing keeping the copy clear of the label,
+     so the hero stacks instead: copy above, bottle standing in the snow below. */
+  .hs-hero { min-height: 100svh; padding-top: 5.5rem }
+  .hs-hero__inner { padding-block: 4rem min(52vh, 400px); gap: 1.5rem }
+  .hs-hero__stage { left: 50%; translate: -50% 0; bottom: 0; width: min(56vw, 240px); height: min(46vh, 360px) }
+  /* the wide gap only exists to clear the bottle's cap; nothing to clear here */
+  .hs-hero__copy .hs-eyebrow { margin-bottom: 1.5rem }
+  /* nothing to cue past a stacked hero, and it lands under the bottle as a drip */
+  .hs-scrollcue { display: none }
+  .hs-stage { min-height: 0; flex-direction: column }
+  /* the other stages collapse to their copy, but this one carries a full-bleed
+     plate: without its own height the picture is squashed into a strip and the
+     signature lands on the foreground bank */
+  .hs-story { min-height: 82svh }
+  .hs-story .hs-stage__grid { padding-bottom: clamp(9rem, 26vw, 15rem) }
+  .hs-stage__grid { grid-template-columns: 1fr; padding-block: clamp(3rem, 9vw, 5rem) }
+  /* stacked and rig-less, the copy sits over the plate rather than beside it, so
+     the veils turn vertical to lift the whole column */
+  .hs-story__veil {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .88) 0%,
+      rgba(255, 255, 255, .62) 45%, rgba(255, 255, 255, .30) 75%, rgba(255, 255, 255, .10) 100%);
+  }
+  /* full-width copy runs straight over the meltwater stream, so this one lifts
+     evenly rather than raking to one side */
+  .hs-sus__veil {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .88) 0%,
+      rgba(255, 255, 255, .80) 55%, rgba(255, 255, 255, .66) 100%);
+  }
+  .hs-stage--right .hs-stage__copy { grid-column: 1 }
+  .hs-exp > .hs-bottle-static {
+    order: -1; position: relative; z-index: 2; height: 44vh; width: auto;
+    margin: clamp(2.5rem, 8vw, 4rem) auto 0; filter: drop-shadow(0 24px 32px rgba(0, 0, 0, .35));
+  }
+  /* stacked, this band is a numbered list over a plate with no lane left for a
+     bottle: the veil turns vertical here and the copy runs the full width */
+  .hs-sus__bottle { display: none }
+  /* two columns; the rail also shortens so it stays a band, not a wall */
+  .hs-gal__col--md { display: none }
+  .hs-gal__rail { height: clamp(420px, 62vh, 560px) }
+  /* the lane goes, but the two sides stay side by side as a 2x2 rather than
+     unrolling into a four-high stack — the pillars are peers, and a column of
+     four reads as a ranking */
+  .hs-pur__grid { grid-template-columns: 1fr 1fr; gap: clamp(2.25rem, 5vw, 3rem) }
+  .hs-pur__lane { display: none }
+  .hs-pur__side,
+  .hs-pur__side:first-child,
+  .hs-pur__side:last-child { text-align: center }
+  /* :first-child/:last-child are repeated rather than dropped for brevity: the
+     rules being overridden are all qualified that way, and a plainer selector
+     loses on specificity and leaves the copy edge-aligned under a centred head */
+  .hs-pur__side:first-child .hs-pur__badge,
+  .hs-pur__side:last-child .hs-pur__badge,
+  .hs-pur__side:first-child .hs-pur__rule,
+  .hs-pur__side:last-child .hs-pur__rule,
+  .hs-pur__side:first-child .hs-pur__col p,
+  .hs-pur__side:last-child .hs-pur__col p { margin-inline: auto }
+}
+@media (max-width: 768px) {
+  .hs-hero__copy,
+  .hs-hero__foot { max-width: none }
+  .hs-hero__veil { background: linear-gradient(180deg, rgba(255, 255, 255, .9) 0%, rgba(255, 255, 255, .55) 45%, rgba(255, 255, 255, .15) 70%) }
+  .hs-scrollcue { display: none }
+  .hs-prov__grid { grid-template-columns: 1fr 1fr }
+  .hs-pur__grid { grid-template-columns: 1fr }
+  /* two 15px fields side by side leave under 20 characters visible each */
+  .hs-contact__grid { grid-template-columns: 1fr }
+  /* the panel's inset hairline is the only thing separating it from the cream at
+     this width, and it reads as a stray line once it runs the full bleed */
+  .hs-contact__panel { padding-inline: clamp(1.1rem, 5vw, 1.75rem) }
+  /* full-width so the tap target is the row, not a chip at one end */
+  .hs-contact__foot { align-items: stretch; flex-direction: column }
+  .hs-contact__consent { max-width: none }
+  .hs-prov__cell { padding: 1.6rem .75rem; border-top: 1px solid var(--hs-gold-pale) }
+  .hs-prov__cell:nth-child(-n+2) { border-top: 0 }
+  .hs-prov__cell:nth-child(odd) { border-left: 0 }
+  .hs-src__inner { min-height: 0; padding-bottom: clamp(2rem, 6vw, 4rem); display: flex; flex-direction: column }
+  .hs-src__copy { order: 1 }
+  .hs-src__facts { order: 3 }
+  .hs-src__cta { order: 4; align-self: flex-start }
+  .hs-src__cta { position: relative; left: auto; bottom: auto; margin-top: 2rem; display: inline-block }
+  .hs-card { display: none }
+  .hs-src__facts { display: block }
+  .hs-foot__grid { grid-template-columns: 1fr 1fr; gap: 2.5rem 0 }
+  .hs-foot__col { border-left: 0; padding-inline: 0 }
+  /* The lockup gets the row to itself. It fits a half column at this size —
+     64px x 2.12 is 136px against ~163px available — so this is composition
+     rather than necessity: the mark is the one thing in the footer that is not
+     a list, and sharing a row with "Explore" makes it look like a fifth column
+     heading. */
+  .hs-foot__col:first-child { grid-column: 1 / -1 }
+  .hs-foot__col:nth-child(n+3) { padding-top: 1rem }
+  .hs-foot__base { flex-direction: column; gap: .6rem }
+  .hs-foot__base a { margin: 0 1.75rem 0 0 }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto }
+  *,
+  *::before,
+  *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important }
+  .reveal { opacity: 1; transform: none; transition: opacity .4s linear }
+  .hs-hero__scene > svg,
+  .hs-hero__scene > img { animation: none }
+  /* the blanket animation-duration override would snap each column to its end
+     state and leave it shifted half a column up; stop it outright and let the
+     rail stand as a plain static gallery */
+  .hs-gal__col { animation: none !important }
+  .hs-gal__rail { height: auto; -webkit-mask-image: none; mask-image: none }
+  /* the second copy of each column exists only to hide the loop's seam. With the
+     loop stopped it is just every picture printed twice, so it goes. The static
+     file dropped it by skipping the JS duplication; here the duplicate is real
+     markup, rendered on the server, so CSS has to do it instead. */
+  .hs-gal__frame[data-clone] { display: none }
+  .hs-rig { display: none }
+  /* the `.hs-bottle-static { display: block }` that used to sit here is gone. It
+     was the stand-in for the travelling rig this block disables — but the rig is
+     off for everyone now (RIG_ENABLED is false) and the bottle is composited into
+     the plates, so this rule put a second bottle on the page for anyone with
+     reduced motion on, and only for them. */
+}

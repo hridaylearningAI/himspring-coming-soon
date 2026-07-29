@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "preserve",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "incremental": true,
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+    /* The pre-Next.js design still lives under app/(legacy) in plain JS. It is
+       compiled but deliberately not type-checked: it is superseded UI kept for
+       reference, and annotating it would be churn on code that is on its way
+       out. New work goes in TypeScript. */
+    "allowJs": true,
+    "checkJs": false,
+
+    /* no baseUrl: it was removed in TypeScript 6, and paths already resolve
+       relative to this file's directory */
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "plugins": [{ "name": "next" }]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", "_legacy", "reference", ".next"]
+}
