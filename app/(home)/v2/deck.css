@@ -559,9 +559,13 @@
 .hsv-jr__card img { width: 100%; height: 100%; object-fit: cover; display: block }
 
 .hsv-jr__card--label { display: flex; align-items: flex-end; padding: 22px }
+/* Times italic, not Devasia italic — Devasia ships no italic at all, so this was
+   a sheared upright. Down from 22px because Devasia is extremely condensed and
+   Times is not: the same nominal size in a normal-width serif is far wider, and
+   the label has a 22px-padded card to stay inside. */
 .hsv-jr__card--label span {
-  font-family: var(--hs-display); font-style: italic;
-  font-size: 22px; line-height: 1.15;
+  font-family: var(--hs-italic); font-style: italic;
+  font-size: 20px; line-height: 1.2;
   color: var(--hs-white);
 }
 .hsv-jr__card--navy { background: var(--hs-navy) }
@@ -651,7 +655,19 @@
      the DOM, so the accessible name is still a sentence */
   text-transform: uppercase;
 }
-.hsv-jr__h em { font-style: italic }
+/* "Purity, in its element." — the second half italic.
+
+   Times rather than a sheared Devasia, same as everywhere else. This one also
+   gains something from the swap beyond correctness: the heading is uppercase
+   Devasia, so the em now changes face as well as slant, which is the display
+   serif against text serif contrast a magazine deck actually uses. Slightly
+   larger for Times's x-height, and the tracking is opened because uppercase
+   italic serif closes up. */
+.hsv-jr__h em {
+  font-family: var(--hs-italic);
+  font-style: italic;
+  font-size: .92em; letter-spacing: .02em;
+}
 .hsv-jr__lede { margin: 1.4rem auto 0; max-width: 42ch }
 
 /* Sheds from the right as the viewport narrows, five columns down to two —
@@ -970,9 +986,14 @@
    Negative tracking is a correction for the loose fit of a normal-width face set
    large, and on an already-condensed one it closes the counters up — .hsv-hero__
    title records the same finding and made the same change. */
+/* Set in caps, with the tracking that caps always want: letterforms drawn to sit
+   under lowercase are spaced for it, and set as capitals with no compensation
+   they crowd. .01em is small because the face is condensed — the usual .04em for
+   a display cap would undo the very thing this face is here for. */
 .hsv-fr__h {
   font-family: var(--hs-display); font-weight: 400;
-  font-size: clamp(34px, 4.6vw, 68px); line-height: 1.14; letter-spacing: 0;
+  font-size: clamp(34px, 4.6vw, 68px); line-height: 1.14; letter-spacing: .01em;
+  text-transform: uppercase;
 }
 
 .hsv-fr__board { display: grid; grid-template-columns: 1fr 1fr }
@@ -989,11 +1010,23 @@
   display: flex; align-items: center;
 }
 .hsv-fr__cell--photo {
-  background: var(--hsv-glacier);
+  /* Warm, not Glacier Mist Grey.
+
+     This was --hsv-glacier, which was correct when the page's other grounds
+     were Snow White and two steps of that same cool grey. The family section is
+     three warm photographic plates now, and this square was the last cool-blue
+     ground left on the page — a founder in a blue-grey box directly below a
+     cream one.
+
+     Sampled a step deeper than the portraits' own backdrop, which falls off to
+     #dcd3c4 at its edges, so the picture reads as lighter than the mat it sits
+     on and the frame's shadow still has something to fall onto. Any lighter and
+     the photograph's own vignette becomes the only edge it has. */
+  background: #e7dccd;
   justify-content: center;
-  /* the mat. Generous, because the glacier square showing around the picture is
-     what makes it a square on a board rather than a photograph with a tint
-     behind it. */
+  /* the mat. Generous, because the square showing around the picture is what
+     makes it a square on a board rather than a photograph with a tint behind
+     it. */
   padding: clamp(2.5rem, 7vh, 4.5rem) clamp(2rem, 4vw, 4rem);
 }
 /* --hs-gut on the horizontal, not a local clamp. On the second row the copy sits
@@ -1036,12 +1069,14 @@
    aspect ratio produce the height inverts that — the picture is as wide as the
    square can carry and the row grows to hold it.
 
-   Cropped by the frame rather than fitted to it. The two source photographs were
-   taken in different rooms at different ratios (1260x1250 and 922x1152); both
-   are pre-cut to 4:5 in public/assets/founders, and cover is the guarantee that
-   stays true if either is ever replaced with something else. What makes them
-   read as a pair is being the same shape at the same size, which is the one
-   thing neither photograph brings on its own.
+   Cropped by the frame rather than fitted to it, and that is now load-bearing
+   rather than a safety net. The section points at the supplied files in public/
+   exactly as delivered — no re-cut, no conversion — and they are different
+   shapes: 1260x1250 for Abdulrahman, 922x1152 for Rajdev. So `cover` against
+   this 4:5 is what makes them the same shape on the board, at the cost of about
+   a fifth of the width of the squarer one. What makes two portraits read as a
+   pair is being the same shape at the same size, which is the one thing neither
+   photograph brings on its own.
 
    The second term of the min() is the short-window guard, and it is expressed as
    a width rather than as max-height on purpose. A max-height would clip the box
@@ -1059,14 +1094,32 @@
 .hsv-fr__frame img {
   width: 100%; height: 100%;
   object-fit: cover;
-  /* Both files are already cut to 4:5, so with the frame holding that ratio this
-     never bites today. It is the safety for a replacement photograph dropped in
-     at whatever shape the camera gave it — biased up, because what gets lost in
-     a crop of a standing portrait is never the face. */
+  /* Biased up, because what gets lost in a crop of a standing portrait should
+     never be the face. This does bite now: the files are the originals at their
+     own ratios rather than pre-cut to 4:5, so both are actually being cropped
+     here — Abdulrahman's on the width, Rajdev's not at all, since his is already
+     4:5. */
   object-position: 50% 28%;
 }
 
-.hsv-fr__copy { max-width: 42ch }
+/* Wide enough to read a biography in.
+
+   42ch here with .hsv-prose capped at 34ch inside it put the paragraphs at 389px
+   and forty characters a line, inside a cell with 547px of usable width. Forty
+   is a newspaper column: fine for the two-sentence note this section carried
+   while the copy was lorem, and wrong for three paragraphs, where it makes the
+   eye turn seven times per paragraph and leaves 158px of the square empty.
+
+   52ch overshoots the 547px the cell can give, deliberately — the cell is the
+   real constraint and this only has to stop being the smaller of the two. The
+   result is about 56 characters a line, inside the comfortable band, and it
+   shortens the block enough to take some of the height back too. */
+.hsv-fr__copy { max-width: 52ch }
+/* Paragraphs fill the copy block rather than keeping .hsv-prose's own 34ch.
+   That measure is right where it is used elsewhere — a caption-length note
+   beside a bottle — and this is the one place on the page running long-form
+   text through it. */
+.hsv-fr__copy .hsv-prose { max-width: none }
 
 /* Gotham, not the display face. Devasia at 22px turns "01" into two vertical
    strokes and a gap — a condensed face has nothing left to give at numeral size,
@@ -1100,14 +1153,19 @@
   background: var(--hs-gold);
 }
 
-/* No ch cap and no negative tracking, both for the reasons given on .hsv-fr__h.
-   The longest of these two names is 31 characters and comes in at 426px set in
-   Devasia at 46px, which is a good deal less than the same string would measure
-   in Times — a name is the one string on a page that must not be allowed to
-   wrap, and this face is what makes that affordable at this size. */
+/* No ch cap, for the reason given on .hsv-fr__h, and caps to match it.
+
+   Re-measured after the change, because the note here was written against a
+   31-character longest name and both inputs have since moved: Abdulrahman's
+   supplied name is 40 characters, and capitals are wider than the lowercase the
+   old figure was taken from. It still holds. Set in caps at 46px the longer name
+   measures 459px against a 547px cell, so it stays on one line with 88px spare —
+   a name is the one string on the page that must not wrap, and the condensed
+   face is what keeps that affordable at this size. Times would not fit. */
 .hsv-fr__name {
   font-family: var(--hs-display); font-weight: 400;
-  font-size: clamp(28px, 3.2vw, 46px); line-height: 1.14; letter-spacing: 0;
+  font-size: clamp(28px, 3.2vw, 46px); line-height: 1.14; letter-spacing: .01em;
+  text-transform: uppercase;
   margin-bottom: .8rem;
 }
 /* set from the name's own size, so it stays proportional through the clamp */
@@ -1138,6 +1196,50 @@
 /* the bio is .hsv-prose, whose 34ch measure is narrower than the copy square's
    42ch on purpose — the name and the role set the column's width, the paragraph
    sits inside it */
+
+/* Paragraphs, plural, since the supplied biography runs to three. Spaced rather
+   than indented: the column is short-measure and ragged-right, and a first-line
+   indent needs a justified block to read as anything but an accident. */
+.hsv-fr__copy .hsv-prose + .hsv-prose { margin-top: 1.05rem }
+
+/* The credo. Quiet and large, rather than small and loud.
+
+   Two settings were wrong before this one, and both failures are worth keeping
+   because the constraints that caused them have not moved.
+
+   Devasia first, at ~20px. Wrong because Devasia is a very condensed display cut
+   that only resolves at headline size — the name above is Devasia at 46px and is
+   perfect, the same face at half that turns twenty words into grey texture.
+
+   Then Gotham Bold Italic, the brand book's accent pairing. Wrong for a reason
+   that is structural rather than aesthetic: this family ships italic at one
+   weight only, 700 (see app/(home)/layout.tsx). Asking for italic therefore
+   asks for bold, and there is no lighter italic to fall back to — the browser
+   would synthesize an oblique from Book, which is worse than not having one. So
+   the line came out as the heaviest block in the column after the name, which
+   is precisely the wrong register for a sentence about restraint.
+
+   Times New Roman italic is the setting that works, and it is the site-wide
+   rule for italic now — see --hs-italic in home.css for why neither loaded
+   family can set one. A real italic at regular weight is exactly what was
+   missing: the slant marks it as a voice without the bold making it shout.
+
+   Sized up to 25px because Times carries a smaller x-height than Gotham and
+   would otherwise read a size down from the body it sits above. Separation is
+   scale, the serif against the sans, full ink against the prose's ink-soft, and
+   air — no quotation marks, no rule. A shorter measure than the paragraphs
+   finishes it: the block is visibly its own shape without any mark added to say
+   so. */
+.hsv-fr__quote {
+  margin: .4rem 0 2.1rem;
+  max-width: 34ch;
+  font-family: var(--hs-italic);
+  font-style: italic; font-weight: 400;
+  font-size: clamp(20px, 1.75vw, 25px);
+  line-height: 1.5; letter-spacing: 0;
+  color: var(--hs-ink);
+  text-wrap: pretty;
+}
 
 /* ---- [06] detail ---- */
 

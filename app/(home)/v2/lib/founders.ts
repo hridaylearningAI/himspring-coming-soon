@@ -6,20 +6,40 @@
    alternates from there, so reordering this array re-lays the whole board and
    nothing else needs touching.
 
-   `bio` is lorem on purpose. The real copy is coming, and writing plausible
-   founder biography as a stand-in is the one kind of placeholder that ships by
-   accident, because nothing about it looks unfinished. Lorem cannot be mistaken
-   for approved copy. The two are deliberately different lengths so the layout is
-   tested against an uneven pair rather than a matched one.
+   Both biographies are now the supplied copy — no lorem left in this file, and
+   they arrived almost exactly matched: three paragraphs each, 140 words against
+   138, plus a credo of 17 words against 19. That is what the board was drawn for
+   and what the placeholder denied it — the two rows are now the same height by
+   the copy's own doing rather than by anything done to the layout.
 
    A plain readonly array rather than the fixed tuple lib/family.ts uses: nothing
-   destructures this, so a third founder is one entry here and no other edit. */
+   destructures this, so a third founder is one entry here and no other edit.
+
+   `portrait` points at the supplied files in public/ directly, and that is the
+   instruction rather than an oversight: these are to be used exactly as
+   delivered. Everything that was done to them has been undone — they are not
+   re-cropped to the frame, not converted to WebP, and not re-grounded.
+
+   Two consequences worth knowing. The files are 1.2MB and 148KB of PNG against
+   the 42KB and 79KB of WebP they replace, so this section is now the heaviest
+   image payload on the page.
+
+   And they are different shapes — Abdulrahman's is 1260x1250, very nearly
+   square, where Rajdev's is 922x1152, exactly 4:5. The frame holds 4:5 and
+   covers, so the square one is cropped to fit: roughly 20% comes off its width,
+   taking the outer edges of his arms and some of the chair. That is a display
+   crop and not an edit to the file, and it is the accepted trade for both
+   portraits being the same shape on the board.
+
+   The percent-encoding is required: both filenames contain a space, and a bare
+   space in an img src is not a valid URL. */
 
 export type Founder = {
   readonly id: string;
-  /* As displayed. The brief supplied Abdulrahman's name in full caps; it is set
-     here in title case because the name is rendered in the display serif at
-     40px+ over two lines, and all-caps at that size is a headline, not a name. */
+  /* Stored in title case and displayed in capitals — the uppercasing is
+     text-transform in deck.css, not baked in here. That way the string stays the
+     name as it is actually written, which is what a screen reader announces and
+     what anyone copying it off the page gets; only the rendering shouts. */
   readonly name: string;
   /* the initials some of the team are known by, set small after the name — only
      Rajdev has one, and inventing one for anybody else would be putting words in
@@ -27,23 +47,64 @@ export type Founder = {
   readonly alias?: string;
   readonly role: string;
   readonly portrait: string;
-  readonly bio: string;
+  /* The line they lead with, set as a pull quote above the biography. Both
+     founders now have one, supplied with their copy. Still optional rather than
+     required: a third founder who arrives without a credo should render without
+     one, because the alternative is inventing words for a real person. */
+  readonly quote?: string;
+  /* Paragraphs, not a paragraph. The supplied biography runs to three of them
+     and a single string cannot carry the breaks without the component splitting
+     on a magic character. */
+  readonly bio: readonly string[];
 };
 
 export const FOUNDERS: readonly Founder[] = [
   {
     id: "aljabri",
-    name: "Abdulrahman Rashed Matar Aljabri",
-    role: "Co-Founder & Director — United Arab Emirates",
-    portrait: "/assets/founders/aljabri.webp",
-    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    /* Supplied with the biography, and longer than the name this entry carried
+       before — "Abdulrahman Rashed Matar Rashed Al Jabri" against the brief's
+       original "Abdulrahman Rashed Matar Aljabri". The second Rashed and the
+       split Al Jabri are both in the copy as written, twice, so they are not a
+       typo to tidy. */
+    name: "Abdulrahman Rashed Matar Rashed Al Jabri",
+    /* Also from the supplied copy, replacing "Co-Founder & Director — United
+       Arab Emirates" from the original brief. Worth a glance: on the Himspring
+       site the trailing "Himspring" is a given, and the territory the old line
+       carried is now nowhere on the board. */
+    role: "Co-Founder & Director, Himspring",
+    portrait: "/ABDULRAHMAN%20RASHED.PNG",
+    quote:
+      "True luxury lies in the details—in providing an experience that is refined, authentic, and uncompromising in quality.",
+    bio: [
+      "Mr. Abdulrahman Rashed Matar Rashed Al Jabri represents a dynamic force in the UAE’s luxury and corporate landscape. A forward-thinking entrepreneur, Abdulrahman has built an exceptional track record of driving innovation and setting new standards across high-end service industries.",
+      "As the CEO of Royal Smart Limousine (RSL), a flagship entity under the Rashid Al Jabri Group of Companies. He has spearheaded the growth of premium transportation solutions across Dubai and Abu Dhabi and his visionary leadership has elevated RSL into a benchmark for luxury mobility, corporate travel, and bespoke client experiences.",
+      "With a deep-rooted commitment to excellence and a natural understanding of luxury lifestyles, Abdulrahman brings a sharp strategic vision to Himspring. As Co-Founder and Director, he drives the brand’s mission to deliver pristine Himalayan mineral water to the world’s most exclusive dining tables, five-star hospitality venues, and private residences.",
+    ],
   },
   {
     id: "brahmbhatt",
+    /* The supplied copy heads this write-up "Rajdev Brahmbhatt", without the
+       middle initial this entry has carried since the original brief. Kept as
+       the fuller form because it is not contradicted by the shorter one, and
+       because the alias below is only an alias of the name with the S in it. */
     name: "Rajdev S. Brahmbhatt",
     alias: "RSB",
-    role: "Founder & Chairman",
-    portrait: "/assets/founders/brahmbhatt.webp",
-    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error.",
+    /* Extended from "Founder & Chairman" to match the supplied line, which also
+       matches Abdulrahman's — both roles now name the company. */
+    role: "Founder & Chairman, Himspring",
+    portrait: "/Rajdev%20Bhrambhatt.PNG",
+    quote:
+      "Pure luxury is created when nature’s rarest gifts are paired with timeless storytelling, meticulous craftsmanship, and commitment to excellence.",
+    /* Supplied copy, set as delivered but for two things. The source marked
+       "Himspring" and "Indian media fraternity" bold; the emphasis is dropped
+       here because bolding the brand name inside its own founder's biography is
+       a press-release habit, and the only bold body text on the page would read
+       as a defect rather than as stress. And the straight quotes and apostrophes
+       are curled, as everywhere else in this file. */
+    bio: [
+      "As the Founder and Chairman of Himspring, Rajdev Brahmbhatt brings a visionary approach to luxury consumer goods and brand development. Driven by a passion to deliver the untouched, high-altitude purity of the Himalayas to the world’s most elite tables, Rajdev established Himspring as a hallmark of prestige, sophistication, and pure organic luxury.",
+      "Prior to founding Himspring, Rajdev built a distinguished career within the Indian media fraternity, orchestrating high-impact narratives, entertainment ventures, and media strategies across dynamic markets. His deep experience in brand architecture, media production, and public engagement gave him a unique perspective on storytelling—a mastery he now applies to positioning Himspring at the apex of global fine dining, five-star hospitality, and luxury lifestyle ecosystems.",
+      "By bridging rich media heritage with commercial foresight, Rajdev leads Himspring with an unwavering dedication to provenance, sustainable stewardship, and world-class luxury positioning.",
+    ],
   },
 ];

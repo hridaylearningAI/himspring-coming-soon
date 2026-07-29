@@ -33,8 +33,9 @@ export default function Founders() {
         <Reveal as="p" className="hs-eyebrow">
           Founders
         </Reveal>
-        {/* Placeholder in the same sense the bios are — written to hold the
-            shape until the real line arrives with the copy. */}
+        {/* The last placeholder in this section — written to hold the shape
+            while the bios were lorem, and still standing now that both of them
+            are the real copy. Worth replacing with an authored line. */}
         <Reveal as="h2" className="hsv-fr__h hsv-blur" id="hsv-fr-t" delay={90}>
           Two people, one source.
         </Reveal>
@@ -66,9 +67,15 @@ export default function Founders() {
                   {/* eslint-disable-next-line @next/next/no-img-element -- the
                       frame's width is a min() of a vw clamp and an svh term, so
                       there is no authored px width for next/image to size a
-                      srcset from; both files are pre-cut to the frame's 4:5 at
-                      1200x1500 and come in under 80KB, which is smaller than the
-                      largest step a srcset would have produced anyway */}
+                      srcset from.
+
+                      That reasoning used to come with "and both files are under
+                      80KB anyway", which no longer holds: these are now the
+                      supplied PNGs used exactly as delivered, 1.2MB and 148KB.
+                      They are lazy and below several full-height sections, so
+                      nothing above the fold waits on them — but this is the one
+                      place on the page where next/image would genuinely earn its
+                      keep if the originals ever stop being a requirement. */}
                   <img src={f.portrait} alt={f.name} loading="lazy" decoding="async" />
                 </Reveal>
               </figure>
@@ -88,9 +95,30 @@ export default function Founders() {
                   <Reveal as="p" className="hsv-fr__role" delay={130}>
                     {f.role}
                   </Reveal>
-                  <Reveal as="p" className="hsv-prose hsv-blur" delay={190}>
-                    {f.bio}
-                  </Reveal>
+                  {/* The credo, above the biography rather than pulled out of
+                      it. A pull quote in the usual sense is a line lifted from
+                      the body and repeated; this one appears nowhere in the
+                      prose, so setting it first makes it the way in rather than
+                      an echo. */}
+                  {f.quote ? (
+                    <Reveal as="blockquote" className="hsv-fr__quote hsv-blur" delay={190}>
+                      {f.quote}
+                    </Reveal>
+                  ) : null}
+                  {f.bio.map((para, p) => (
+                    <Reveal
+                      as="p"
+                      className="hsv-prose hsv-blur"
+                      /* Stable across renders and unique within the founder;
+                         the paragraphs are a fixed authored list, not a
+                         reorderable collection. */
+                      // eslint-disable-next-line react/no-array-index-key -- see above
+                      key={p}
+                      delay={190 + (f.quote ? 60 : 0) + p * 60}
+                    >
+                      {para}
+                    </Reveal>
+                  ))}
                 </div>
               </div>
             </Fragment>
