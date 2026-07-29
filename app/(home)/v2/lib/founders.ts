@@ -41,10 +41,9 @@ export type Founder = {
      name as it is actually written, which is what a screen reader announces and
      what anyone copying it off the page gets; only the rendering shouts. */
   readonly name: string;
-  /* the initials someone is known by, set small after the name. No founder
-     carries one at present — Rajdev's "RSB" came off with the middle initial it
-     was drawn from — and inventing one for anybody would be putting words in a
-     real person's mouth, so this stays optional and unused rather than filled. */
+  /* the initials someone is known by, set small after the name and bracketed by
+     CSS rather than by the string — only Rajdev has one, and inventing one for
+     anybody else would be putting words in a real person's mouth */
   readonly alias?: string;
   readonly role: string;
   readonly portrait: string;
@@ -88,13 +87,12 @@ export const FOUNDERS: readonly Founder[] = [
   },
   {
     id: "brahmbhatt",
-    /* As the supplied write-up heads it, and now by instruction: no middle
-       initial. The entry carried "Rajdev S. Brahmbhatt" with an "RSB" alias
-       since the original brief; the alias goes with the S, since initials that
-       do not appear in the name beside them read as a typo rather than as a
-       shorthand. Nothing on the board uses `alias` now — the field and its
-       markup still work, they are simply unexercised. */
+    /* Name without the middle initial, as the supplied write-up heads it; alias
+       kept, so the board reads "Rajdev Brahmbhatt (RSB)". The S in RSB has no
+       counterpart in the name beside it — that is the point of a shorthand
+       somebody is actually known by, and it is the instruction. */
     name: "Rajdev Brahmbhatt",
+    alias: "RSB",
     /* Extended from "Founder & Chairman" to match the supplied line, which also
        matches Abdulrahman's — both roles now name the company. */
     role: "Founder & Chairman, Himspring",
