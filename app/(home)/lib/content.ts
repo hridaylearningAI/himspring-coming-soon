@@ -368,11 +368,96 @@ export const CV_ACCEPT = ".pdf,.doc,.docx";
    alone rejects real applications */
 export const CV_EXTENSIONS = ["pdf", "doc", "docx"] as const;
 
-/* ---- [10] footer ---- */
-export const FOOTER_ABOUT_LINKS = [
-  { href: "#", label: "Our Story" },
-  { href: "#", label: "Craft & Design" },
-  { href: "#", label: "Hospitality" },
+/* ---- [10] footer ----
+
+   Everything below is a fact about the company rather than a piece of copy, and
+   it was already in the repo: the legacy contact page at app/(legacy)/contact
+   carries the registered office, and the legacy footer carries the Instagram
+   URL. Restated here rather than imported because the two route groups share
+   nothing, but it is the same information — if one changes, both have to. */
+
+export const COMPANY = {
+  /* The registered entity, which is what a copyright line and a privacy policy
+     have to name. "Himspring" alone is the brand. */
+  legalName: "Himspring Beverages Pvt. Ltd.",
+  /* Not in the footer — it was there briefly and came out again by instruction.
+     It stays declared because the legal pages still need it: a privacy policy
+     has to identify the company answerable for the data, and an address is how
+     that is done. Kept as lines rather than one string so it can be set as a
+     block or run inline; legal.ts joins it with commas.
+
+     The telephone number and opening hours were removed outright rather than
+     left unused, since nothing renders them now. Both are still on the legacy
+     contact page if they are wanted back. */
+  address: [
+    "407, Skyline Icon, 4th Floor",
+    "Nana Mava Main Road",
+    "Rajkot, Gujarat 360005",
+    "India",
+  ],
+} as const;
+
+export const CONTACT_EMAIL = "hello@himspring.com";
+
+/* The footer's About column is gone, and this is the note explaining why so it
+   is not re-added by someone reading a three-column footer as unfinished.
+
+   It held three href="#" placeholders — Our Story, Craft & Design, Hospitality —
+   and was briefly pointed at /our-story, /the-source, /purity and
+   /sustainability, which do exist and do return 200. The trouble is what they
+   are: pre-redesign pages, navy palette, the retired hs monogram, the cloud
+   intro overlay. They were the only links on the new site that left it, and a
+   visitor following one landed somewhere that did not look like where they came
+   from.
+
+   So the footer now links only to things built in the current design. Those four
+   pages stay reachable by URL and stay in the repo; when they are rebuilt, this
+   column comes back as a list here and a block in SiteFooter. */
+
+/* The baseline strip. Both of these resolve to real pages under (home) — see
+   app/(home)/privacy and app/(home)/terms. */
+export const LEGAL_LINKS = [
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms of Use" },
 ] as const satisfies readonly NavLink[];
 
-export const CONTACT_EMAIL = "enquire@himspring.com";
+/* Instagram and LinkedIn, in that order.
+
+   An entry with an empty href is declared but not rendered — see SiteFooter. That
+   is what LinkedIn is today: the account is wanted, but no URL for it exists
+   anywhere in this repo (the legacy site links LinkedIn to href="#" in two
+   places, which is where that trail ends). Rendering it against "#" would put
+   back exactly the kind of dead link this footer was rebuilt to remove, so it
+   stays dark until the real URL lands — at which point it is this one string and
+   nothing else. */
+export type SocialLink = {
+  readonly label: string;
+  readonly icon: "instagram" | "linkedin";
+  readonly href: string;
+};
+
+export const SOCIAL_LINKS: readonly SocialLink[] = [
+  {
+    label: "Instagram",
+    icon: "instagram",
+    /* the account the legacy site links, tracking parameter and all — it is the
+       share URL Instagram itself produces */
+    href: "https://www.instagram.com/himspring?igsh=MWloMmd4ZmR3ejVsYg==",
+  },
+  {
+    label: "LinkedIn",
+    icon: "linkedin",
+    href: "",
+  },
+];
+
+/* The in-page anchors as seen from a page that is not the homepage.
+
+   `#formats` means "the formats section of this document", so on /privacy it
+   means nothing at all. Prefixing with / makes it a link to that section of the
+   homepage instead. The legal pages pass these to the nav and footer; the
+   homepage passes nothing and gets the bare anchors. */
+export const AWAY_SECTION_LINKS = SECTION_LINKS.map((link) => ({
+  href: `/${link.href}`,
+  label: link.label,
+})) as readonly NavLink[];

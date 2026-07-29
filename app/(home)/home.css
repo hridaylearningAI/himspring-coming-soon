@@ -66,6 +66,30 @@
   --hs-accent: "Times New Roman Condensed", "TimesNewRomanCondensed",
     "Times New Roman", Times, "Liberation Serif", Georgia, serif;
 
+  /* The italic face, and the rule is simply: anything set in italic uses this.
+     It is not a preference, it is the only honest option in this system —
+     neither of the two loaded families can actually set one.
+
+       Devasia   ships no italic at all, at any weight.
+       Gotham    ships italic at 700 and nowhere else, so asking a 400-weight
+                 element for italic gets a fake oblique, and asking for a real
+                 one gets bold whether or not bold was wanted.
+
+     A browser given font-style: italic with no italic cut synthesizes an
+     oblique by shearing the upright — which on a display serif smears the
+     modulation and on a geometric sans just leans the circles over. Three rules
+     in this codebase were doing exactly that before this token existed.
+
+     Times New Roman is a brand face (book p.19 names Regular and Italic), it has
+     a real italic, and it ships with every OS, so this needs no @font-face and
+     costs nothing. Deliberately not --hs-accent: that stack leads with a
+     condensed cut which resolves on a handful of machines and nowhere else, so
+     italic set through it would be a different width for a few visitors.
+
+     Times has a smaller x-height than Gotham, so anything moved onto this needs
+     roughly 10% more size to hold its optical weight. */
+  --hs-italic: "Times New Roman", Times, "Liberation Serif", Georgia, serif;
+
   --hs-shell: 1360px;
   --hs-gut: clamp(1.5rem, 6vw, 5.5rem);
   --hs-band: clamp(4.5rem, 10vw, 8rem);
@@ -359,10 +383,16 @@ button, input { font: inherit; color: inherit }
   line-height: 1.06; letter-spacing: -.02em; margin-bottom: 0; white-space: nowrap;
 }
 /* the standfirst: italic text serif, the way a magazine sets a deck under a title.
-   Full ink, not the soft grey, because it sits on the plate rather than flat white. */
+   Full ink, not the soft grey, because it sits on the plate rather than flat white.
+
+   That description is finally true. This was --hs-text, which resolves to Gotham
+   — a sans, with no italic below weight 700 — so "italic text serif" described
+   something the rule could not produce and the browser was shearing Gotham Book
+   into a fake oblique. --hs-italic is a real Times italic; size is up ~10% to
+   hold the same optical weight against Times's smaller x-height. */
 .hs-hero__foot p {
-  font-family: var(--hs-text); font-style: italic; color: var(--hs-ink);
-  font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.5; letter-spacing: .01em;
+  font-family: var(--hs-italic); font-style: italic; color: var(--hs-ink);
+  font-size: clamp(1.1rem, 1.42vw, 1.32rem); line-height: 1.5; letter-spacing: .01em;
   margin: 0 auto 2.2rem; max-width: 30ch;
 }
 
@@ -786,32 +816,106 @@ button, input { font: inherit; color: inherit }
    [10] footer
    ============================================================ */
 .hs-foot { border-top: 1px solid var(--hs-gold-pale); background: #fff }
-.hs-foot__grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr; padding-block: clamp(3rem, 6vw, 4.5rem) }
+/* Three columns, not four: About is gone. The brand column keeps the larger
+   share — it holds the lockup, which is 182px wide at this size and wants air
+   around it rather than a column cut to fit it. */
+.hs-foot__grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; padding-block: clamp(3rem, 6vw, 4.5rem) }
 .hs-foot__col { padding-inline: clamp(1.25rem, 3vw, 2.75rem); border-left: 1px solid var(--hs-gold-pale) }
-.hs-foot__col:first-child { border-left: 0; padding-left: 0; display: flex; flex-direction: column; align-items: flex-start }
+.hs-foot__col--brand { border-left: 0; padding-left: 0; display: flex; flex-direction: column; align-items: flex-start }
 /* Larger than the nav's, because this column has the room the bar does not and
    the descriptor is the one thing on the page that states what the water is.
-   86px x 2.12 = 182px inside a column that is 1.5fr of a 1360px shell. */
+   86px x 2.12 = 182px inside a column that is 1.55fr of a 1360px shell. */
 .hs-foot .hs-logo { --hs-logo-h: clamp(64px, 6.4vw, 86px) }
 .hs-foot h3 { font-size: 8.5px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase; color: var(--hs-gold); margin-bottom: 1.35rem }
 .hs-foot li { margin-bottom: .75rem }
-.hs-foot li a,
-.hs-foot__col a[href^="mailto"] { font-size: 12.5px; color: var(--hs-ink-soft); transition: color .35s var(--hs-ease) }
-.hs-foot li a:hover,
-.hs-foot__col a[href^="mailto"]:hover { color: var(--hs-ink) }
-.hs-foot__ig {
+.hs-foot li a { font-size: 12.5px; color: var(--hs-ink-soft); transition: color .35s var(--hs-ease) }
+.hs-foot li a:hover { color: var(--hs-ink) }
+.hs-foot__social { display: flex; gap: .6rem; margin-top: 1.6rem }
+.hs-foot__social li { margin-bottom: 0 }
+.hs-foot__social-btn {
   display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
-  margin-top: 1.5rem; border: 1px solid var(--hs-gold-pale); transition: border-color .4s var(--hs-ease);
+  border: 1px solid var(--hs-gold-pale); transition: border-color .4s var(--hs-ease);
 }
-.hs-foot__ig svg { width: 15px; height: 15px; stroke: var(--hs-ink-soft); fill: none; stroke-width: 1.2; transition: stroke .4s var(--hs-ease) }
-.hs-foot__ig:hover { border-color: var(--hs-gold) }
-.hs-foot__ig:hover svg { stroke: var(--hs-gold-deep) }
+.hs-foot__social-btn svg { width: 15px; height: 15px; stroke: var(--hs-ink-soft); fill: none; stroke-width: 1.2; transition: stroke .4s var(--hs-ease) }
+.hs-foot__social-btn:hover { border-color: var(--hs-gold) }
+.hs-foot__social-btn:hover svg { stroke: var(--hs-gold-deep) }
 .hs-foot__base {
-  display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+  display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap;
   padding-block: 1.4rem; border-top: 1px solid var(--hs-gold-pale); font-size: 11px; color: var(--hs-ink-soft);
 }
-.hs-foot__base a { margin-left: 2rem }
+.hs-foot__base a { margin-left: 2rem; transition: color .35s var(--hs-ease) }
 .hs-foot__base a:hover { color: var(--hs-ink) }
+
+/* ============================================================
+   [11] legal — /privacy and /terms
+
+   The only pages on this site that are read rather than looked at, and set
+   accordingly: one column, no rules, no grid, nothing in the margins. Every
+   other section here is composed against the 1360px shell; this one ignores it,
+   because a 1360px measure is unreadable and the shell exists to align things
+   that sit beside each other. Nothing here sits beside anything.
+   ============================================================ */
+/* The nav is fixed and transparent until 40px of scroll, so the first line of a
+   document would otherwise start underneath it. 5.8rem clears the 93px bar with
+   air to spare; the clamp gives the top of the page room to breathe on wide
+   screens without pushing the title off a phone. */
+.hs-legal { padding-top: clamp(5.8rem, 9vw, 8.5rem); padding-bottom: clamp(4rem, 9vw, 7rem) }
+/* 34rem ≈ 70 characters of Gotham at 15px — the upper end of a comfortable
+   measure. Legal text is read in full or not at all, and a short line is what
+   makes reading it in full survivable.
+
+   The gutter is added to the max-width rather than taken out of it. Setting
+   max-width: 34rem with padding-inline on top gives a 34rem box whose *content*
+   is 34rem minus two gutters — at this page's clamp that is 371px, or about 43
+   characters, which is a newspaper column and not a document. */
+.hs-legal__shell {
+  max-width: calc(34rem + 2 * var(--hs-gut));
+  margin-inline: auto; padding-inline: var(--hs-gut);
+}
+.hs-legal__head { padding-bottom: 2.5rem; margin-bottom: 3rem; border-bottom: 1px solid var(--hs-gold-pale) }
+.hs-legal__h {
+  font-family: var(--hs-display); font-weight: 400;
+  font-size: clamp(2.1rem, 5vw, 3.1rem); line-height: 1.1; letter-spacing: -.01em;
+}
+.hs-legal__standfirst {
+  margin-top: 1.25rem; max-width: 30rem;
+  font-size: clamp(15px, 1.5vw, 16.5px); line-height: 1.7; color: var(--hs-ink-soft);
+}
+.hs-legal__date { margin-top: 1.75rem; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--hs-gold) }
+.hs-legal__sec + .hs-legal__sec { margin-top: 2.75rem }
+/* Gotham, not the display face, and this is the same call the founders quote
+   forced: Devasia is drawn for 90px and at 25px it stops resolving into words.
+   A section heading in a document has one job, which is to be found by somebody
+   scanning for it, and the title above is where the brand face earns its keep.
+   Separation from the body comes from weight and colour instead — 500 against
+   400, full ink against ink-soft. */
+.hs-legal__sec h2 {
+  position: relative; margin-bottom: 1.1rem;
+  font-family: var(--hs-sans); font-weight: 500;
+  font-size: 16px; line-height: 1.45; letter-spacing: .01em; color: var(--hs-ink);
+}
+/* Hung into the gutter on wide screens so the headings themselves stay flush
+   with the body text — a number indented with the prose reads as part of the
+   sentence. Below 700px there is no gutter to hang into, so it comes inline. */
+.hs-legal__num {
+  position: absolute; right: 100%; top: .35em; margin-right: 1.1rem;
+  font-family: var(--hs-sans); font-size: 10px; font-weight: 500;
+  letter-spacing: .18em; color: var(--hs-gold);
+}
+.hs-legal__sec p { color: var(--hs-ink-soft) }
+.hs-legal__sec p + p { margin-top: 1rem }
+.hs-legal__list { margin: 1rem 0 0; padding-left: 1.1rem; list-style: disc; color: var(--hs-ink-soft) }
+.hs-legal__list li { margin-bottom: .5rem }
+.hs-legal__list li::marker { color: var(--hs-gold-pale) }
+.hs-legal__defs { margin-top: 1.35rem }
+.hs-legal__defs > div + div { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--hs-gold-pale) }
+.hs-legal__defs dt { font-size: 10.5px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--hs-ink) }
+.hs-legal__defs dd { margin-top: .45rem; color: var(--hs-ink-soft) }
+
+@media (max-width: 700px) {
+  .hs-legal__sec h2 { display: flex; gap: .7rem; align-items: baseline }
+  .hs-legal__num { position: static; margin-right: 0 }
+}
 
 /* ============================================================
    reveal
@@ -938,9 +1042,12 @@ button, input { font: inherit; color: inherit }
      rather than necessity: the mark is the one thing in the footer that is not
      a list, and sharing a row with "Explore" makes it look like a fifth column
      heading. */
-  .hs-foot__col:first-child { grid-column: 1 / -1 }
-  .hs-foot__col:nth-child(n+3) { padding-top: 1rem }
-  .hs-foot__base { flex-direction: column; gap: .6rem }
+  .hs-foot__col--brand { grid-column: 1 / -1 }
+  /* nth-child(n+3) used to add a top margin here, back when four columns wrapped
+     to two rows of two and the second row needed separating. With three columns
+     the brand takes row one alone and Explore and Contact share row two, so that
+     rule would have indented Contact and nothing else. */
+  .hs-foot__base { flex-direction: column; align-items: flex-start; gap: .6rem }
   .hs-foot__base a { margin: 0 1.75rem 0 0 }
 }
 

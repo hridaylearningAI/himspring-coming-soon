@@ -10,21 +10,31 @@ import { Logo } from "./Logo";
 
    The section links are a prop because every href in them is an in-page anchor,
    which makes them a property of the page the nav is rendered over rather than
-   of the nav. Two pages render it — the homepage and the archived /v1 — and
-   they have no sections in common, so a single hardcoded list would be four
-   dead links on one of them. Default is the homepage's set. */
+   of the nav. Four pages render it — the homepage, the archived /v1 and the two
+   legal pages — and they have no sections in common, so a single hardcoded list
+   would be four dead links on three of them. Default is the homepage's set.
+
+   `origin` is the same problem for the three anchors the nav owns rather than
+   receives: the wordmark's #top, and Contact and Enquire on #contact. Those are
+   correct on a page that has those ids and dead on one that does not, so a page
+   without them passes origin="/" and gets links to the homepage's instead. */
 
 export default function SiteNav({
   links = SECTION_LINKS,
+  origin = "",
 }: {
   readonly links?: readonly NavLink[];
+  readonly origin?: string;
 }) {
   const [stuck, setStuck] = useState(false);
   const [open, setOpen] = useState(false);
 
   /* Derived, not passed: the drawer is always the section list plus Contact,
      and taking it as a second prop would let the two get out of step. */
-  const drawerLinks: readonly NavLink[] = [...links, CONTACT_LINK];
+  const drawerLinks: readonly NavLink[] = [
+    ...links,
+    { ...CONTACT_LINK, href: `${origin}${CONTACT_LINK.href}` },
+  ];
 
   useEffect(() => {
     let ticking = false;
@@ -71,13 +81,15 @@ export default function SiteNav({
             ))}
           </nav>
 
-          <Logo href="#top" lockup eager />
+          {/* origin="/" makes this a link home; empty, it is a jump to the top
+              of the page you are already on. */}
+          <Logo href={origin || "#top"} lockup eager />
 
           <div className="hs-nav__set hs-nav__set--end">
-            <a className="hs-navlink" href="#contact">
+            <a className="hs-navlink" href={`${origin}#contact`}>
               Contact
             </a>
-            <a className="hs-btn" href="#contact">
+            <a className="hs-btn" href={`${origin}#contact`}>
               Enquire
             </a>
             <button
