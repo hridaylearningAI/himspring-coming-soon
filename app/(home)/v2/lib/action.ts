@@ -63,7 +63,7 @@ export const ACTION_COLUMNS: readonly ActionColumn[] = [
   {
     direction: "down",
     cards: [
-      shot("journey-boatman", "A Himspring bottle on a boat cushion, a swimmer at the gunwale beyond", 240),
+      shot("journey-bow", "The Himspring emblem on a burgee at the bow of a classic wooden boat at sea", 240),
       { kind: "label", lines: ["Stay above", "the ordinary"], tone: "navy", h: 200 },
       shot("journey-yacht", "A Himspring bottle on a silver tray on a mahogany boat deck at sea", 300),
     ],
@@ -92,7 +92,7 @@ export const ACTION_COLUMNS: readonly ActionColumn[] = [
     cards: [
       shot("journey-yacht", "A Himspring bottle on a silver tray on a mahogany boat deck at sea", 280),
       up("prod-deck", "Himspring bottle and towel on a teak yacht deck", 240),
-      shot("journey-flag", "Flags carrying the Himspring emblem aboard a sailing yacht", 300),
+      shot("journey-bow", "The Himspring emblem on a burgee at the bow of a classic wooden boat at sea", 300),
     ],
   },
 ];
