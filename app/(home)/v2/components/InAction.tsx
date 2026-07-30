@@ -122,7 +122,7 @@ export default function InAction() {
           </h2>
           <p className="hsv-prose hsv-jr__lede">
             A moving gallery of Himspring at home in the world&rsquo;s most considered spaces
-            &mdash; from sunlit decks to candlelit tables.
+            from sunlit decks to candlelit tables.
           </p>
         </ActionPanel>
       </div>

@@ -105,7 +105,7 @@ export default function Family() {
   return (
     <section className="hsv-family" id="family" ref={section} aria-labelledby="hsv-family-t">
       <h2 className="hs-vh" id="hsv-family-t">
-        The family — three sizes
+        The family: three sizes
       </h2>
 
       <div className="hsv-family__pin">

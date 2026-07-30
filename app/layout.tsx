@@ -15,7 +15,7 @@ import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://himspring.com"),
-  title: "Himspring — Natural Himalayan Spring Water",
+  title: "Himspring · Natural Himalayan Spring Water",
   description:
     "Himspring rises from an ancient spring at 3,200 metres in the Himalaya, bottled at source in its purest form.",
 };

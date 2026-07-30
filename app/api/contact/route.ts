@@ -76,7 +76,7 @@ function rowsHtml(rows: readonly Row[]) {
 
 function adminEmail(topic: ContactTopic, rows: readonly Row[], message: string, hasCv: boolean) {
   const from = rows.find((r) => r.label === "Full name")?.value || "Someone";
-  const subject = `${SUBJECT[topic.id]} — ${oneLine(from)}`;
+  const subject = `${SUBJECT[topic.id]}: ${oneLine(from)}`;
 
   const text = [
     SUBJECT[topic.id],
@@ -90,7 +90,7 @@ function adminEmail(topic: ContactTopic, rows: readonly Row[], message: string, 
 
   const html = `
   <div style="font-family:Helvetica,Arial,sans-serif;color:#16191c;max-width:640px;">
-    <p style="margin:0 0 4px;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#b8933f;">Himspring — ${escapeHtml(topic.label)}</p>
+    <p style="margin:0 0 4px;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#b8933f;">Himspring · ${escapeHtml(topic.label)}</p>
     <h2 style="margin:0 0 20px;font-size:20px;font-weight:400;">${escapeHtml(SUBJECT[topic.id])}</h2>
     <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;border-top:1px solid #e5dac0;">
       ${rowsHtml(rows)}
@@ -104,10 +104,10 @@ function adminEmail(topic: ContactTopic, rows: readonly Row[], message: string, 
 }
 
 function ackEmail(topic: ContactTopic, message: string) {
-  const subject = "We have your message — Himspring";
+  const subject = "We have your message · Himspring";
   const text =
     `Thank you for writing to Himspring.\n\n${topic.reply}\n\n` +
-    `For your records, this is what you sent:\n\n${message}\n\n— Himspring`;
+    `For your records, this is what you sent:\n\n${message}\n\nHimspring`;
   const html = `
   <div style="margin:0;padding:32px 0;background:#03101f;font-family:Helvetica,Arial,sans-serif;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -120,7 +120,7 @@ function ackEmail(topic: ContactTopic, message: string) {
             <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#cdd7e3;">${escapeHtml(topic.reply)}</p>
             <p style="margin:0 0 8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8fa0b4;">What you sent</p>
             <p style="margin:0 0 28px;padding-left:14px;border-left:1px solid rgba(202,191,114,0.3);font-size:14px;line-height:1.6;color:#cdd7e3;white-space:pre-wrap;">${escapeHtml(message)}</p>
-            <p style="margin:0;font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:#9fb0c2;">— Himspring</p>
+            <p style="margin:0;font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:#9fb0c2;">Himspring</p>
           </td></tr>
         </table>
       </td></tr>

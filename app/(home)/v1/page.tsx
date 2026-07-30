@@ -30,7 +30,7 @@ import { LEGACY_SECTION_LINKS } from "../lib/content";
    the homepage's sections now, and none of those ids exist here. */
 
 export const metadata: Metadata = {
-  title: "Himspring — previous homepage",
+  title: "Himspring · previous homepage",
   alternates: { canonical: "/v1" },
   /* an archive, and not a second copy of the homepage for a crawler to weigh
      against the real one */

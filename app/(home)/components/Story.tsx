@@ -34,7 +34,7 @@ export default function Story() {
             spring untouched by time or civilisation.
           </Reveal>
           <Reveal as="p" className="hs-body" delay={220}>
-            We bottle at the source to preserve what nature intended &mdash; crystal purity,
+            We bottle at the source to preserve what nature intended: crystal purity,
             natural minerals, and a story older than words.
           </Reveal>
           <Reveal className="hs-sign" delay={300}>

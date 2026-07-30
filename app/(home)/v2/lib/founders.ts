@@ -107,7 +107,7 @@ export const FOUNDERS: readonly Founder[] = [
        are curled, as everywhere else in this file. */
     bio: [
       "As the Founder and Chairman of Himspring, Rajdev Brahmbhatt brings a visionary approach to luxury consumer goods and brand development. Driven by a passion to deliver the untouched, high-altitude purity of the Himalayas to the world’s most elite tables, Rajdev established Himspring as a hallmark of prestige, sophistication, and pure organic luxury.",
-      "Prior to founding Himspring, Rajdev built a distinguished career within the Indian media fraternity, orchestrating high-impact narratives, entertainment ventures, and media strategies across dynamic markets. His deep experience in brand architecture, media production, and public engagement gave him a unique perspective on storytelling—a mastery he now applies to positioning Himspring at the apex of global fine dining, five-star hospitality, and luxury lifestyle ecosystems.",
+      "Prior to founding Himspring, Rajdev built a distinguished career within the Indian media fraternity, orchestrating high-impact narratives, entertainment ventures, and media strategies across dynamic markets. His deep experience in brand architecture, media production, and public engagement gave him a unique perspective on storytelling, a mastery he now applies to positioning Himspring at the apex of global fine dining, five-star hospitality, and luxury lifestyle ecosystems.",
       "By bridging rich media heritage with commercial foresight, Rajdev leads Himspring with an unwavering dedication to provenance, sustainable stewardship, and world-class luxury positioning.",
     ],
   },

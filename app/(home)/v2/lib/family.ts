@@ -149,7 +149,7 @@ export const FAMILIES: Readonly<Record<FormatId, Family>> = {
       label: "Size 02",
       name: "500 ml",
       ml: 500,
-      note: "The everyday one. Desk, gym, commute — refilled or replaced without a second thought.",
+      note: "The everyday one. Desk, gym, commute; refilled or replaced without a second thought.",
     },
     {
       id: "pet-330",

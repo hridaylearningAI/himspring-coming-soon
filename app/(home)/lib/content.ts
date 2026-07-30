@@ -35,12 +35,9 @@ export type NavLink = { readonly href: string; readonly label: string };
    an id part-way through a 420vh pin does not land where a reader expects. The
    claims are their own section again, so this points at them.
 
-   #family and #founders keep their anchors and simply have no nav entry — five
-   labels were supplied and neither is one of them.
-
-   #founders no longer has a nav entry. It is still on the page and still
-   reachable by scrolling — it lost its slot to the five supplied labels, which
-   have no name for it. */
+   #family and #founders keep their anchors and simply have no nav entry. Both
+   are still on the page and still reachable by scrolling; they lost their slots
+   to the five supplied labels, which have no name for either. */
 export const SECTION_LINKS = [
   { href: "#formats", label: "Our Story" },
   { href: "#action", label: "Journey" },
@@ -65,7 +62,7 @@ export const CONTACT_LINK = { href: "#contact", label: "Contact" } as const sati
 /* ---- [03] provenance bar ---- */
 export type ProvenanceStat = {
   readonly value: string;
-  /* rendered as a <sup> after the value — the "M" on 180–220 */
+  /* rendered as a <sup> after the value — the "M" on "180 to 220" */
   readonly unit?: string;
   readonly key: string;
   /* long values set smaller so all four cells stay on one line */
@@ -83,7 +80,7 @@ export type ProvenanceStat = {
    meaningful number for a confined-aquifer spring anyway. */
 export const PROVENANCE: readonly ProvenanceStat[] = [
   { value: "64", key: "TDS (mg/L)" },
-  { value: "180–220", unit: "M", key: "Aquifer depth" },
+  { value: "180 to 220", unit: "M", key: "Aquifer depth", wide: true },
   { value: "Shivalik Spring", key: "Source", wide: true },
   { value: "7.6", key: "pH balance" },
 ];
@@ -91,7 +88,7 @@ export const PROVENANCE: readonly ProvenanceStat[] = [
 /* ---- [05] the source ---- */
 export const SOURCE_FACTS = [
   { term: "Range", detail: "Shivalik, Outer Himalaya" },
-  { term: "Aquifer depth", detail: "180–220 metres" },
+  { term: "Aquifer depth", detail: "180 to 220 metres" },
 ] as const;
 
 /* Was a lat/lon pair pointing at 27°59′ N, 86°42′ E — the Khumbu valley in
@@ -323,7 +320,7 @@ export const CONTACT_TOPICS: readonly [ContactTopic, ...ContactTopic[]] = [
       { name: "deadline", label: "Your deadline", placeholder: "e.g. 14 August", optional: true, half: true },
     ],
     prompt: "What are you working on?",
-    placeholder: "The story, the format, and what you need from us — samples, imagery, an interview.",
+    placeholder: "The story, the format, and what you need from us: samples, imagery, an interview.",
     reply: "Our press desk answers within two working days, sooner on a deadline.",
   },
   {
@@ -377,7 +374,7 @@ export const CONTACT_TOPICS: readonly [ContactTopic, ...ContactTopic[]] = [
       { name: "batch", label: "Batch code", placeholder: "Printed on the neck", optional: true, half: true },
     ],
     prompt: "What happened?",
-    placeholder: "The more detail the better — the batch code, the best-before date, and what you saw.",
+    placeholder: "The more detail the better: the batch code, the best-before date, and what you saw.",
     reply: "Support answers within one working day.",
   },
 ];

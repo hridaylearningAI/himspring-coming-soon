@@ -48,13 +48,13 @@ const devasia = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Himspring — Natural Himalayan Spring Water",
+  title: "Himspring · Natural Himalayan Spring Water",
   description:
     "Himspring rises from an ancient spring in the Shivalik foothills of the Himalaya, bottled at source in its purest form.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
-    title: "Himspring — Natural Himalayan Spring Water",
+    title: "Himspring · Natural Himalayan Spring Water",
     description: "Untouched. Untamed. Bottled at the source.",
     url: "/",
     siteName: "Himspring",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Himspring — Natural Himalayan Spring Water",
+    title: "Himspring · Natural Himalayan Spring Water",
     description: "Untouched. Untamed. Bottled at the source.",
   },
 };

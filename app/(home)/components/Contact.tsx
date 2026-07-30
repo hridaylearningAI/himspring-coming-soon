@@ -210,7 +210,7 @@ export default function Contact() {
                 <path d="M10 16.5 14.5 21 22.5 12" />
               </svg>
             </p>
-            <h3>Thank you — your message is with us.</h3>
+            <h3>Thank you. Your message is with us.</h3>
             <p>{topic.reply}</p>
             <p className="hs-contact__doneNote">
               A copy is on its way to {values.email}. If it is not there in a few minutes, check

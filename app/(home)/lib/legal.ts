@@ -110,7 +110,7 @@ export const PRIVACY: LegalDocument = {
         },
         {
           kind: "p",
-          text: "Plus, in every case, the message you write. Please do not include anything sensitive in it — health information, government identifiers, or payment details. We never ask for those, and this form is not the place to send them.",
+          text: "Plus, in every case, the message you write. Please do not include anything sensitive in it: health information, government identifiers, or payment details. We never ask for those, and this form is not the place to send them.",
         },
       ],
     },
@@ -128,7 +128,7 @@ export const PRIVACY: LegalDocument = {
       blocks: [
         {
           kind: "p",
-          text: "We use Vercel Web Analytics to count page views and see which pages people reach. It is cookieless: it does not store an identifier on your device and does not follow you to other websites. What we see is aggregate — how many visits a page had, roughly where in the world they came from, and which page sent them — and not a record of what any individual did.",
+          text: "We use Vercel Web Analytics to count page views and see which pages people reach. It is cookieless: it does not store an identifier on your device and does not follow you to other websites. What we see is aggregate (how many visits a page had, roughly where in the world they came from, and which page sent them), not a record of what any individual did.",
         },
       ],
     },
@@ -200,7 +200,7 @@ export const PRIVACY: LegalDocument = {
         },
         {
           kind: "p",
-          text: "You can also complain to your data protection authority — in India, the Data Protection Board; in the UK, the Information Commissioner's Office; in the EU, your national supervisory authority. We would rather you came to us first.",
+          text: "You can also complain to your data protection authority: in India, the Data Protection Board; in the UK, the Information Commissioner's Office; in the EU, your national supervisory authority. We would rather you came to us first.",
         },
       ],
     },
@@ -299,7 +299,7 @@ export const TERMS: LegalDocument = {
       blocks: [
         {
           kind: "p",
-          text: "Where we link to somewhere we do not run — a social account, for instance — we do so because we think it is useful. We do not control those sites and are not responsible for them.",
+          text: "Where we link to somewhere we do not run (a social account, for instance) we do so because we think it is useful. We do not control those sites and are not responsible for them.",
         },
       ],
     },
@@ -317,7 +317,7 @@ export const TERMS: LegalDocument = {
       blocks: [
         {
           kind: "p",
-          text: "To the fullest extent the law allows, we are not liable for loss arising from your use of this site or from reliance on anything published on it. Nothing in these terms limits liability that cannot lawfully be limited — including for death or personal injury caused by negligence, or for fraud.",
+          text: "To the fullest extent the law allows, we are not liable for loss arising from your use of this site or from reliance on anything published on it. Nothing in these terms limits liability that cannot lawfully be limited, including for death or personal injury caused by negligence, or for fraud.",
         },
       ],
     },
