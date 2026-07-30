@@ -81,7 +81,12 @@ export const FOUNDERS: readonly Founder[] = [
       "True luxury lies in the details, in providing an experience that is refined, authentic, and uncompromising in quality.",
     bio: [
       "Mr. Abdulrahman Rashed Matar Rashed Al Jabri represents a dynamic force in the UAE’s luxury and corporate landscape. A forward-thinking entrepreneur, Abdulrahman has built an exceptional track record of driving innovation and setting new standards across high-end service industries.",
-      "As the CEO of Royal Smart Limousine (RSL), a flagship entity under the Rashid Al Jabri Group of Companies. He has spearheaded the growth of premium transportation solutions across Dubai and Abu Dhabi and his visionary leadership has elevated RSL into a benchmark for luxury mobility, corporate travel, and bespoke client experiences.",
+      /* "Rashed", not "Rashid". The supplied write-up spelled the group name
+         with an i here while spelling the founder's own name with an e twice in
+         the sentence above it, so it was a typo in the source rather than two
+         different names. Corrected by instruction — do not put it back when
+         reconciling against the original document. */
+      "As the CEO of Royal Smart Limousine (RSL), a flagship entity under the Rashed Al Jabri Group of Companies. He has spearheaded the growth of premium transportation solutions across Dubai and Abu Dhabi and his visionary leadership has elevated RSL into a benchmark for luxury mobility, corporate travel, and bespoke client experiences.",
       "With a deep-rooted commitment to excellence and a natural understanding of luxury lifestyles, Abdulrahman brings a sharp strategic vision to Himspring. As Co-Founder and Director, he drives the brand’s mission to deliver pristine Himalayan mineral water to the world’s most exclusive dining tables, five-star hospitality venues, and private residences.",
     ],
   },
