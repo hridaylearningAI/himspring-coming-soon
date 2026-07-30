@@ -86,11 +86,14 @@ export default function SiteNav({
           <Logo href={origin || "#top"} lockup eager />
 
           <div className="hs-nav__set hs-nav__set--end">
+            {/* Enquire is gone by instruction. It was a second control pointing
+                at the same #contact this link does, so nothing is now
+                unreachable — the bar just says it once.
+
+                CONTACT_LINK.label rather than a literal, so the bar and the
+                drawer cannot disagree about what it is called. */}
             <a className="hs-navlink" href={`${origin}#contact`}>
-              Contact
-            </a>
-            <a className="hs-btn" href={`${origin}#contact`}>
-              Enquire
+              {CONTACT_LINK.label}
             </a>
             <button
               className="hs-burger"

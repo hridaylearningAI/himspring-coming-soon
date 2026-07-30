@@ -8,41 +8,42 @@ export type NavLink = { readonly href: string; readonly label: string };
 /* The section anchors shared by the nav, the drawer and the footer's Explore
    column. One list, so they can never drift apart.
 
-   These are the homepage's sections — the deck, since it took over `/`. Every
-   href here has to resolve to an id that page actually renders, which is the
-   whole reason this is a list and not four hardcoded anchors: the nav and the
-   footer cannot each be checked by hand every time a section is added or
-   hidden. `#source` is deliberately absent — Detail owns it and the deck gates
-   Detail behind SHOW_ANALYSIS, so it would be a link to nothing.
+   Every href has to resolve to an id the homepage actually renders, which is the
+   whole reason this is a list and not five hardcoded anchors: the nav and the
+   footer cannot each be checked by hand every time a section is added or hidden.
 
-   The labels are the supplied set and the order is the supplied order, which is
-   also page order. Contact is the fifth item in the nav but is not here: it is
-   CONTACT_LINK, rendered on the other side of the wordmark and appended to the
-   drawer, so adding it to this list would put it in the bar twice.
+   The labels and their order are the supplied set. Contact is the sixth item in
+   the bar but is not here: it is CONTACT_LINK, rendered on the other side of the
+   wordmark and appended to the drawer, so listing it here would put it in the bar
+   twice.
 
-   Two of these are the section's own name and two are the nearest beat to a name
-   the page has no section for, which is worth stating rather than discovering:
+     Our Story       #formats     the title card, over the film
+     The Source      #commitment  the hillside bookend — its own hidden heading
+                                  is "The source", so the label names it exactly
+     Why Himspring   #purity      the four PURITY_PILLARS claims
+     Our Range       #family      the three sizes
+     Founder         #founders    the board
 
-     Our Story       #formats   the title card, over the film
-     Journey         #action    the moving gallery — its shots are journey-*
-     Purity          #purity    the four PURITY_PILLARS claims, on white
-     Our Commitment  #commitment  the hillside bookend, on sustain-valley.jpg
+   Two things worth knowing rather than discovering.
 
-   All four name the thing they point at, which took three passes. Purity was on
-   #family — the three sizes — for as long as the page had no purity section, and
-   it went back there for one round while those claims lived inside Intro's rise
-   beat, where there was nothing to link to: the whole of Intro is #formats, and
-   an id part-way through a 420vh pin does not land where a reader expects. The
-   claims are their own section again, so this points at them.
+   The order is the supplied order, not page order. On the page The Source is
+   last, after the founders, so this bar runs 1st, 6th, 2nd, 4th, 5th and a reader
+   working left to right travels back up the page at the second item. Reordering
+   to Our Story / Why Himspring / Our Range / Founder / The Source would fix that
+   and is a one-line move here.
 
-   #family and #founders keep their anchors and simply have no nav entry. Both
-   are still on the page and still reachable by scrolling; they lost their slots
-   to the five supplied labels, which have no name for either. */
+   And "Founder" is singular against a board of two. That is the supplied label,
+   left as given.
+
+   #action — the journey rail — no longer has a nav entry. It is still on the page
+   and still reached by scrolling; it lost its slot to the five supplied labels,
+   which have no name for it. */
 export const SECTION_LINKS = [
   { href: "#formats", label: "Our Story" },
-  { href: "#action", label: "Journey" },
-  { href: "#purity", label: "Purity" },
-  { href: "#commitment", label: "Our Commitment" },
+  { href: "#commitment", label: "The Source" },
+  { href: "#purity", label: "Why Himspring" },
+  { href: "#family", label: "Our Range" },
+  { href: "#founders", label: "Founder" },
 ] as const satisfies readonly NavLink[];
 
 /* The previous homepage's three, kept for the archived copy at /v1. Its
@@ -57,7 +58,7 @@ export const LEGACY_SECTION_LINKS = [
 /* The drawer is the section list plus Contact, whichever list is in play — so
    it is derived in SiteNav from the links it was given rather than declared
    here against one of them. */
-export const CONTACT_LINK = { href: "#contact", label: "Contact" } as const satisfies NavLink;
+export const CONTACT_LINK = { href: "#contact", label: "Contact us" } as const satisfies NavLink;
 
 /* ---- [03] provenance bar ---- */
 export type ProvenanceStat = {

@@ -268,9 +268,23 @@ button, input { font: inherit; color: inherit }
   transition: background .5s var(--hs-ease), border-color .5s var(--hs-ease);
 }
 .hs-nav.is-stuck { background: rgba(255, 255, 255, .95); border-bottom-color: var(--hs-gold-pale); backdrop-filter: blur(10px) }
+/* The bar spans the window rather than the 1360px shell the page's content sits
+   in, and it has its own gutter rather than --hs-gut.
+
+   Both for the same reason: five labels and a wordmark need width. Capped at the
+   shell, a 1440 window left 80px unused on each side while the link set filled
+   its column to the pixel and "Founder" sat hard against the logo. Spanning the
+   window and taking the gutter from ~86px to ~50px gives each 1fr column about
+   90px more than it needs, and because the set is left-aligned in its column all
+   of that becomes air in front of the wordmark.
+
+   It does mean the first link no longer lines up with the copy below it, which is
+   the price of the bar being a bar rather than a column of the page. */
 .hs-nav__inner {
-  max-width: var(--hs-shell); margin-inline: auto; padding: 1.1rem var(--hs-gut);
-  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem;
+  max-width: none; margin-inline: auto;
+  padding: 1.1rem clamp(1.5rem, 3.5vw, 4rem);
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  gap: clamp(1.25rem, 2.2vw, 2.5rem);
 }
 /* The full lockup, descriptor included, so 46px is the floor rather than a
    preference — below it "NATURAL HIMALAYAN WATER" stops resolving as letters.
@@ -288,9 +302,30 @@ button, input { font: inherit; color: inherit }
    `1fr auto 1fr` grid is narrower than it was and the section links gain room
    rather than losing it. */
 .hs-nav .hs-logo { --hs-logo-h: clamp(46px, 4.4vw, 58px) }
-.hs-nav__set { display: flex; gap: 2rem; align-items: center }
+ /* Fluid, because the bar went from four labels to five and the grid below
+    forces both side columns to the same width — so the left column has to hold
+    five links while the right holds only "Contact us".
+
+    1.8vw rather than the 2.2 that first fitted. At 2.2 the set filled its column
+    exactly, which put "Founder" hard against the wordmark with nothing between
+    them but the grid's own 1rem. The set is left-aligned in its column, so every
+    pixel taken off this gap becomes air on the right — in front of the logo,
+    which is where it is wanted. */
+.hs-nav__set { display: flex; gap: clamp(.9rem, 1.8vw, 1.75rem); align-items: center }
 .hs-nav__set--end { justify-content: flex-end }
-.hs-navlink { position: relative; font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; padding-block: .4rem }
+ /* nowrap is the load-bearing part: without it a label that does not fit breaks
+    inside itself, so "Why Himspring" quietly became two stacked lines and the bar
+    grew a second row rather than telling anyone it had run out of room. With it,
+    a bad fit overflows visibly and gets fixed.
+
+    .16em rather than .22em. Tracking is most of these labels' width at 9.5px —
+    "Why Himspring" is 13 characters, so .22em alone was 27px of it — and the six
+    hundredths saved take the five labels from 416px of ink to about 389, which is
+    what makes them fit the column at the breakpoint below. */
+.hs-navlink {
+  position: relative; font-size: 9.5px; letter-spacing: .16em;
+  text-transform: uppercase; padding-block: .4rem; white-space: nowrap;
+}
 .hs-navlink::after {
   content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; background: var(--hs-gold);
   transform: scaleX(0); transform-origin: left; transition: transform .45s var(--hs-ease);
@@ -939,11 +974,36 @@ button, input { font: inherit; color: inherit }
 /* ============================================================
    responsive
    ============================================================ */
-@media (max-width: 1080px) {
+
+/* The nav collapses on its own breakpoint rather than the layout's 1080px.
+
+   Five labels need about 389px of ink plus four gaps, and the grid gives the left
+   column half of whatever is left after the wordmark. Swept it after the bar went
+   full width: the wordmark sits dead centre from 1200 up, and below that the link
+   set is wider than its 1fr, so the column grows and pushes the logo off centre —
+   5px at 1180, 12 at 1160, 15 at 1150, with no air in front of it at any of them.
+   1200 is where the bar is comfortable rather than merely not wrapping, so that is
+   where it hands to the drawer, which carries the same five links plus Contact us.
+
+   It was 1260 before the bar spanned the window; the extra ~90px a column gained
+   from dropping the shell cap is what bought the 60px back.
+
+   Its own block, because everything else that happens at 1080 — the gallery
+   shedding a column, the purity connectors, the hero foot — is unrelated and
+   should not move with it. */
+@media (max-width: 1199px) {
   .hs-nav__set--start { display: none }
   .hs-nav__set--end .hs-navlink { display: none }
-  .hs-nav__inner { grid-template-columns: 1fr auto 1fr }
+  /* Two columns, not the desktop's three. The start set is display: none, so it
+     leaves the grid entirely and the wordmark drops into column 1 with the end
+     set in column 2 — leaving the third column empty and parking the burger in
+     the middle of the bar. 1fr auto is what the bar actually is here: wordmark
+     left, burger hard right. */
+  .hs-nav__inner { grid-template-columns: 1fr auto }
   .hs-burger { display: block }
+}
+
+@media (max-width: 1080px) {
   .hs-hero__foot { max-width: min(32ch, 92%) }
   /* drop to three columns */
   .hs-gal__col--lg { display: none }
