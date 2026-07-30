@@ -56,16 +56,16 @@ export const ACTION_COLUMNS: readonly ActionColumn[] = [
     direction: "up",
     cards: [
       up("prod-deck", "Himspring bottle and white towel on a teak yacht deck at golden hour", 300),
-      shot("journey-club", "A private members' club interior", 240),
+      shot("journey-club", "A Himspring bottle on a side table in a private members' club", 240),
       up("prod-dining", "Himspring bottle on a candlelit fine dining table", 300),
     ],
   },
   {
     direction: "down",
     cards: [
-      shot("journey-speedboat", "Aerial view of a classic wooden speedboat", 240),
+      shot("journey-speedboat", "A Himspring bottle on the deck of a classic wooden speedboat, seen from above", 240),
       { kind: "label", lines: ["Stay above", "the ordinary"], tone: "navy", h: 200 },
-      shot("journey-yacht", "A sailing yacht at sea", 300),
+      shot("journey-yacht", "A Himspring bottle on a silver tray on a mahogany boat deck at sea", 300),
     ],
   },
   {
@@ -73,8 +73,8 @@ export const ACTION_COLUMNS: readonly ActionColumn[] = [
     dropAt: "sm",
     cards: [
       up("prod-marble", "Himspring bottle beside rolled linen on a marble ledge", 280),
-      shot("journey-boatman", "A boatman on calm mountain water", 300),
-      shot("journey-flag", "Nautical club flags aboard a sailing yacht", 240),
+      shot("journey-boatman", "A Himspring bottle on a boat cushion, a swimmer at the gunwale beyond", 300),
+      shot("journey-flag", "Flags carrying the Himspring emblem aboard a sailing yacht", 240),
     ],
   },
   {
@@ -82,7 +82,7 @@ export const ACTION_COLUMNS: readonly ActionColumn[] = [
     dropAt: "md",
     cards: [
       up("prod-chalet", "Himspring bottle on slate before a snowy mountain chalet window", 260),
-      shot("journey-club", "A private members' club interior", 300),
+      shot("journey-club", "A Himspring bottle on a side table in a private members' club", 300),
       { kind: "label", lines: ["The difference", "you can taste"], tone: "gradient", h: 210 },
     ],
   },
@@ -90,9 +90,9 @@ export const ACTION_COLUMNS: readonly ActionColumn[] = [
     direction: "up",
     dropAt: "lg",
     cards: [
-      shot("journey-yacht", "A sailing yacht at sea", 280),
+      shot("journey-yacht", "A Himspring bottle on a silver tray on a mahogany boat deck at sea", 280),
       up("prod-deck", "Himspring bottle and towel on a teak yacht deck", 240),
-      shot("journey-speedboat", "Aerial view of a classic wooden speedboat", 300),
+      shot("journey-speedboat", "A Himspring bottle on the deck of a classic wooden speedboat, seen from above", 300),
     ],
   },
 ];
