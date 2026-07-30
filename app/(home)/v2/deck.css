@@ -52,6 +52,28 @@
   background: var(--hs-white);
 }
 
+/* A unit rule, learned from two overlaps on a real handset that no emulator
+   reproduced.
+
+   Every full-frame box on this page is sized in svh — the hero, the intro pin,
+   the family pin and its panels, the return pin. Anything laid out INSIDE one of
+   those has to be svh as well.
+
+   vh is the LARGE viewport: the height the page would have if the browser's own
+   chrome were retracted. svh is the small one, with the chrome showing. On a
+   desktop and in headless they are identical, which is exactly why this hid: a
+   31vh bottle inside a 100svh frame is 31% of a box roughly 15% taller than the
+   frame it sits in, so on a phone with Safari's bars up every bottle grew and
+   climbed, and the copy beside it got walked over. Twice — the rise's ladder into
+   the four claims, and the family panels' bottles into their own captions.
+
+   The section scroll budgets stay in vh on purpose: 420vh, 400vh, 210vh, 560vh
+   are travel, not layout, and useScrub derives its span from the measured rect
+   either way.
+
+   So: svh for anything the eye sees inside a frame, vh only for how far the page
+   scrolls. */
+
 /* ---- shared ---- */
 
 /* the micro-caps column label the reference sets hard left of every body
@@ -160,7 +182,7 @@
 }
 .hsv-hero__inner {
   position: relative; z-index: 2;
-  padding: clamp(7rem, 16vh, 10.5rem) var(--hs-gut) 0;
+  padding: clamp(7rem, 16svh, 10.5rem) var(--hs-gut) 0;
   text-align: center;
 }
 /* "Pure Himalayan" — readability, on the hero's eyebrow only.
@@ -298,8 +320,8 @@
    case it is wanted back: wordmark closing at ~87%, tagline at ~94%, and a 4vh
    gap under the title, at the cost of a noticeably smaller bottle. */
 .hsv-hero__stage {
-  position: absolute; left: 50%; top: 28vh; z-index: 3;
-  height: 86vh; transform: translateX(-50%);
+  position: absolute; left: 50%; top: 28svh; z-index: 3;
+  height: 86svh; transform: translateX(-50%);
   /* Rises into place on load, echoing the reference's own hero where the bottle
      enters from the bottom edge. 250ms slots it into the existing sequence —
      eyebrow at 0, title at 100 — so it arrives just behind the headline it
@@ -314,13 +336,13 @@
    whole transform, so dropping it would un-centre the bottle for the duration
    of the animation and snap it back at the end. */
 @keyframes hsv-bottle-in {
-  from { opacity: 0; transform: translateX(-50%) translateY(16vh) }
+  from { opacity: 0; transform: translateX(-50%) translateY(16svh) }
   to { opacity: 1; transform: translateX(-50%) translateY(0) }
 }
 .hsv-hero__foot {
   position: relative; z-index: 2; margin-top: auto;
   display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem;
-  padding: 0 var(--hs-gut) clamp(2rem, 5vh, 3.25rem);
+  padding: 0 var(--hs-gut) clamp(2rem, 5svh, 3.25rem);
   font-size: 13.5px; color: var(--hs-ink-soft);
 }
 
@@ -466,7 +488,7 @@
    The extra width comes out of the heading, which is set to run wider than the
    prose under it. */
 .hsv-intro__copy {
-  position: absolute; right: var(--hs-gut); bottom: clamp(3rem, 9vh, 6rem);
+  position: absolute; right: var(--hs-gut); bottom: clamp(3rem, 9svh, 6rem);
   z-index: 3; max-width: 38ch;
 }
 /* The heading. Devasia caps, and sized off the viewport rather than fixed — this
@@ -538,7 +560,7 @@
   font-size: 11.5px; font-weight: 500;
   letter-spacing: .24em; text-transform: uppercase;
   color: var(--hs-gold-ink);
-  margin: 0 0 clamp(1.1rem, 2.2vh, 1.6rem);
+  margin: 0 0 clamp(1.1rem, 2.2svh, 1.6rem);
 }
 
 /* One divided line, running down. The claims own half a frame rather than a full
@@ -562,7 +584,7 @@
   grid-template-columns: 2.4ch 1fr;
   grid-template-areas: "num title" ".   body";
   column-gap: .85rem; row-gap: .3rem;
-  padding: clamp(.7rem, 1.4vh, 1rem) 0;
+  padding: clamp(.7rem, 1.4svh, 1rem) 0;
   border-top: 1px solid color-mix(in srgb, var(--hs-ink) 18%, transparent);
 }
 .hsv-why__cell:first-child { padding-top: 0; border-top: 0 }
@@ -621,7 +643,7 @@
      thing that may differ between these three is how far up from it they reach.
      Anchoring from the top instead would make every bottle's base sit somewhere
      different, and the ladder would read as an arrangement rather than a size. */
-  position: absolute; bottom: 12vh;
+  position: absolute; bottom: 12svh;
   /* Each bottle's own 0..1 out of the shared --rise, offset by --d so the three
      do not arrive as a single block. x2.4 is the reciprocal of the ~0.42 each
      takes to travel, so they overlap for most of it. */
@@ -630,7 +652,7 @@
   /* enough travel to start below the frame from a resting bottom of 12vh. At
      --v = 1 the translate is zero, so the group settles on exactly the geometry
      above and nothing else. */
-  transform: translateY(calc((1 - var(--v)) * 96vh));
+  transform: translateY(calc((1 - var(--v)) * 96svh));
   /* the fade trails the movement, so they are visible while still climbing
      rather than appearing in place */
   opacity: clamp(0, calc(var(--v) * 1.6), 1);
@@ -647,9 +669,9 @@
 
    Largest first, left to right, matching the order the panels subdivide in
    further down the page. */
-.hsv-rise__item--1 { --d: 0; left: 7vw; height: 52vh }
-.hsv-rise__item--2 { --d: 0.12; left: 17vw; height: 45vh }
-.hsv-rise__item--3 { --d: 0.24; left: 26vw; height: 40vh }
+.hsv-rise__item--1 { --d: 0; left: 7vw; height: 52svh }
+.hsv-rise__item--2 { --d: 0.12; left: 17vw; height: 45svh }
+.hsv-rise__item--3 { --d: 0.24; left: 26vw; height: 40svh }
 
 /* The frame splits down the middle: the ladder climbs on the left, the four
    claims stand on the right.
@@ -776,7 +798,7 @@
    this page rather than as something pasted into it. */
 
 .hsv-jr {
-  position: relative; min-height: 100vh; overflow: hidden;
+  position: relative; min-height: 100svh; overflow: hidden;
   background: var(--hs-white);
 }
 .hsv-jr__cols {
@@ -1077,7 +1099,7 @@
    only thing moving is position. Centred, because a left-aligned column adrift
    in a full-bleed panel has nothing to align to. */
 .hsv-panel__inner {
-  position: absolute; top: 13vh; left: 50%;
+  position: absolute; top: 13svh; left: 50%;
   transform: translateX(-50%);
   width: min(26vw, 360px); max-width: none;
   text-align: center;
@@ -1132,10 +1154,10 @@
    one by a factor nobody can discount by eye. The whole section is a
    measurement, so the subject stands up. */
 .hsv-panel__bottle {
-  position: absolute; bottom: -6vh; left: 50%;
+  position: absolute; bottom: -6svh; left: 50%;
   transform: translateX(-50%);
   width: auto;
-  height: calc(var(--hsv-scale, 1) * var(--hsv-base, 64vh));
+  height: calc(var(--hsv-scale, 1) * var(--hsv-base, 64svh));
 
   /* Both formats are mounted in every panel and only one is shown. Hidden with
      opacity rather than display, because the two vessels are the same silhouette
@@ -1172,7 +1194,7 @@
    product rather than a hole punched in it. */
 .hsv-family__switch {
   position: absolute; z-index: 3;
-  left: 50%; bottom: clamp(1.1rem, 3.2vh, 2rem);
+  left: 50%; bottom: clamp(1.1rem, 3.2svh, 2rem);
   transform: translateX(-50%);
   display: flex; gap: 2px;
   padding: 4px;
@@ -1220,7 +1242,7 @@
 .hsv-fr { background: var(--hsv-snow); color: var(--hs-ink) }
 
 .hsv-fr__head {
-  padding: var(--hs-band) var(--hs-gut) clamp(2.5rem, 6vh, 4rem);
+  padding: var(--hs-band) var(--hs-gut) clamp(2.5rem, 6svh, 4rem);
   text-align: center;
 }
 /* No ch measure on this, and none on the name below either. Devasia is condensed
@@ -1275,7 +1297,7 @@
   /* the mat. Generous, because the square showing around the picture is what
      makes it a square on a board rather than a photograph with a tint behind
      it. */
-  padding: clamp(2.5rem, 7vh, 4.5rem) clamp(2rem, 4vw, 4rem);
+  padding: clamp(2.5rem, 7svh, 4.5rem) clamp(2rem, 4vw, 4rem);
 }
 /* --hs-gut on the horizontal, not a local clamp. On the second row the copy sits
    in the left column and its padding is the page's left margin — a local value
@@ -1521,7 +1543,7 @@
    size put the middle of the body on screen and the cap somewhere above the
    viewport — which quietly threw away the one thing the section is for. */
 .hsv-detail__stage {
-  position: absolute; right: 8vw; top: 9vh; height: 110vh;
+  position: absolute; right: 8vw; top: 9svh; height: 110svh;
   transform: rotate(-8deg);
 }
 .hsv-detail__bottle { height: 100% }
@@ -1533,7 +1555,7 @@
 
 .hsv-spec {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.75rem 2.5rem; margin-top: clamp(2.5rem, 6vh, 3.5rem);
+  gap: 1.75rem 2.5rem; margin-top: clamp(2.5rem, 6svh, 3.5rem);
   border-top: 1px solid var(--hs-gold-pale); padding-top: 1.75rem;
 }
 .hsv-spec dt {
@@ -1643,7 +1665,7 @@
      on this rule instead looks equivalent and is not: a local declaration wins
      over the inherited one, so the line would read its own constant zero and
      never move no matter what the scrub wrote to the pin above it. */
-  transform: translateY(calc(-25vh + (1 - var(--climb, 0)) * 51vh));
+  transform: translateY(calc(-25svh + (1 - var(--climb, 0)) * 51svh));
   will-change: transform;
 }
 
@@ -1695,12 +1717,12 @@
   padding: var(--hs-band) var(--hs-gut); overflow: hidden;
 }
 .hsv-cta__stage {
-  position: absolute; right: -6vw; bottom: -24vh; height: 168vh;
+  position: absolute; right: -6vw; bottom: -24svh; height: 168svh;
   transform: rotate(6deg);
 }
 .hsv-cta__bottle { height: 100% }
 .hsv-cta__copy { position: relative; max-width: 34ch }
-.hsv-cta__copy .hs-btn { margin-top: clamp(1.75rem, 4vh, 2.5rem) }
+.hsv-cta__copy .hs-btn { margin-top: clamp(1.75rem, 4svh, 2.5rem) }
 
 /* ============================================================
    responsive
@@ -1714,7 +1736,7 @@
     position: relative;
     display: block;
     width: auto;
-    padding: 16vh var(--hs-gut) 0;
+    padding: 16svh var(--hs-gut) 0;
     text-align: center;
   }
   .hsv-hero__title {
@@ -1799,7 +1821,7 @@
      that ended in mid-air. */
   .hsv-intro__copy {
     left: 0; right: 0; bottom: 0; max-width: none;
-    padding: clamp(3.5rem, 9vh, 5rem) var(--hs-gut) clamp(3rem, 9vh, 6rem);
+    padding: clamp(3.5rem, 9svh, 5rem) var(--hs-gut) clamp(3rem, 9svh, 6rem);
     background: linear-gradient(to top, rgba(255, 255, 255, .92), rgba(255, 255, 255, 0));
   }
   /* A panel, not a scrim. Our Story is the whole story again — label, display
@@ -1817,7 +1839,7 @@
 
      It still fades on --lede, so the handover to the rise is unchanged. */
   .hsv-intro__copy {
-    padding: clamp(2rem, 5vh, 2.75rem) var(--hs-gut) clamp(2rem, 5vh, 3rem);
+    padding: clamp(2rem, 5svh, 2.75rem) var(--hs-gut) clamp(2rem, 5svh, 3rem);
     background: var(--hs-white);
     border-top: 1px solid color-mix(in srgb, var(--hs-ink) 10%, transparent);
   }
@@ -1843,7 +1865,7 @@
      sits in moves. */
   .hsv-rise__copy {
     left: var(--hs-gut); right: var(--hs-gut);
-    top: clamp(7rem, 15vh, 9rem); bottom: auto;
+    top: clamp(7rem, 15svh, 9rem); bottom: auto;
     transform: none; max-width: none;
     /* no wash: stacked, the claims sit on the sky rather than on the near-ridge,
        and the veil's own even lift is enough there */
@@ -1905,8 +1927,20 @@
      of the last panel.
      relative undoes the absolute AND gives each bottle its own containing block.
      (`inset: 0` carries over harmlessly: on a relative box top/left win, both 0.) */
+  /* 100svh, up from 88.
+
+     The bottle's top edge is (min-height + 8svh - --hsv-base) down the panel, a
+     pure fraction of the frame; the copy's bottom is 112px of nav clearance plus
+     ~135px of type, which does not shrink with the screen. At 88svh those two
+     crossed at every phone height — measured -2px at 402x874 and -51px at
+     402x700, which is the caption sitting on the bottle's neck.
+
+     Giving the panel the full frame moves the bottle's top from 0.28 of the
+     height to 0.40 of it, and dropping the base to 62svh takes it to 0.46. The
+     bottle is smaller for it, and still cropped by the panel's bottom edge, which
+     is the part of the composition that was load-bearing. */
   .hsv-panel {
-    position: relative; min-height: 88svh;
+    position: relative; min-height: 100svh;
     /* --hs-band bottoms out at 4.5rem on a phone, which is 72px against a fixed
        82px nav: stacked, every panel's top is a scroll position the reader will
        land on, and the label was landing behind the bar. Floor it at the same
@@ -1947,7 +1981,7 @@
     position: relative; inset: auto; z-index: 2;
     transform: none; width: auto; margin: 0 auto;
   }
-  .hsv-panel__bottle { bottom: -8vh }
+  .hsv-panel__bottle { bottom: -8svh }
   /* The ground is simply the ground here.
 
      --in is still written on a narrow screen — the scrub does not check width,
@@ -1964,7 +1998,7 @@
      one at a time rather than split between, these are compared from memory
      rather than side by side, and at 1:0.87:0.76 that is asking a lot of the
      reader; the larger base is what buys back a little of it. */
-  .hsv-panel { --hsv-base: 68vh }
+  .hsv-panel { --hsv-base: 62svh }
 
   /* Sticky rather than absolute, because there is no pin to be absolute inside —
      and the three panels are three full screens here, so a control that scrolls
@@ -2006,7 +2040,7 @@
      390x844 screen — enough to read as cropped, and still shallow enough to
      leave the mountain artwork at the foot of the label on screen. */
   .hsv-hero__stage {
-    left: 50%; right: auto; top: 30vh; z-index: 3;
+    left: 50%; right: auto; top: 30svh; z-index: 3;
     height: 74svh; transform: translateX(-50%);
     animation: none; opacity: 1;
   }
@@ -2031,7 +2065,7 @@
        Relative to the viewport, not a flat 5rem: on a 667px-tall screen a fixed
        80px scrim is 12% of the frame against 9% on a tall one, and it starts
        washing the label copy rather than only the base. */
-    padding-top: clamp(3.5rem, 9vh, 5rem);
+    padding-top: clamp(3.5rem, 9svh, 5rem);
     background: linear-gradient(to top, rgba(255, 255, 255, .92), rgba(255, 255, 255, 0));
   }
 
@@ -2054,14 +2088,20 @@
      so the group hangs off the same line the copy above it starts on and the
      ladder descends away to the right — which is the order it is in.
 
-     Base is 31vh, down from a first pass at 34: the claims share this frame now
-     and the tallest bottle's cap was reaching into the fourth one. The cube-root
-     ratios are unchanged — .874 of 31 is 27, .761 is 23.6 — so the ladder still
-     says exactly what it said, three volumes apart by the cube root of their
-     contents. */
-  .hsv-rise__item--1 { left: 6vw; height: 31vh }
-  .hsv-rise__item--2 { left: 36vw; height: 27vh }
-  .hsv-rise__item--3 { left: 64vw; height: 23.6vh }
+     Base is 27svh and the group stands on 8svh rather than 12.
+
+     Same arithmetic as the family panels: the ladder's top edge is a fraction of
+     the frame while the claims' bottom is a fixed ~300px of type under a 112px
+     nav floor, so the gap closes as the screen shortens. At 31svh on 12svh it
+     measured 70px clear at 402x874 and -10px at 402x700 — a collision on any
+     short phone. At 27svh on 8svh it is clear at both ends of that range.
+
+     The cube-root ratios are unchanged: .874 of 27 is 23.6, .761 is 20.5. The
+     ladder still says the one thing it exists to say. */
+  .hsv-rise__item { bottom: 8svh }
+  .hsv-rise__item--1 { left: 6vw; height: 27svh }
+  .hsv-rise__item--2 { left: 36vw; height: 23.6svh }
+  .hsv-rise__item--3 { left: 64vw; height: 20.5svh }
   /* The board becomes a column, which is the only honest thing a checkerboard
      can do on a phone: two 190px squares are not a portrait and not a paragraph.
      What survives is the alternation — glacier, snow, glacier, snow down the
@@ -2096,9 +2136,9 @@
   }
   .hsv-fr__copy { max-width: none }
 
-  .hsv-detail__stage { right: -22vw; height: 108vh }
+  .hsv-detail__stage { right: -22vw; height: 108svh }
   .hsv-spec { grid-template-columns: 1fr }
-  .hsv-cta__stage { right: -30vw; height: 104vh }
+  .hsv-cta__stage { right: -30vw; height: 104svh }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2139,7 +2179,7 @@
 
   .hsv-rise { position: static }
   /* tall enough to contain the tallest item standing on the field's own floor */
-  .hsv-rise__field { position: relative; height: 58vh; margin-top: var(--hs-band) }
+  .hsv-rise__field { position: relative; height: 58svh; margin-top: var(--hs-band) }
   .hsv-rise__item { bottom: 0; transform: none; opacity: 1 }
   .hsv-rise__copy { position: static; opacity: 1; margin: 2.5rem var(--hs-gut) 0 }
 
@@ -2172,8 +2212,20 @@
      sat at y=0 and the size at y=39 — both behind the bar, with only the note
      clearing it. The pinned layout never needed padding because the stack is
      absolute at 13vh inside it. */
+  /* 100svh, up from 88.
+
+     The bottle's top edge is (min-height + 8svh - --hsv-base) down the panel, a
+     pure fraction of the frame; the copy's bottom is 112px of nav clearance plus
+     ~135px of type, which does not shrink with the screen. At 88svh those two
+     crossed at every phone height — measured -2px at 402x874 and -51px at
+     402x700, which is the caption sitting on the bottle's neck.
+
+     Giving the panel the full frame moves the bottle's top from 0.28 of the
+     height to 0.40 of it, and dropping the base to 62svh takes it to 0.46. The
+     bottle is smaller for it, and still cropped by the panel's bottom edge, which
+     is the part of the composition that was load-bearing. */
   .hsv-panel {
-    position: relative; min-height: 88svh; clip-path: none;
+    position: relative; min-height: 100svh; clip-path: none;
     padding: max(var(--hs-band), 7rem) var(--hs-gut) var(--hs-band);
   }
   /* will-change: auto for the containing-block reason given in the narrow block */
@@ -2196,7 +2248,7 @@
      one states the arrived position for readers the scrub never runs for, so a
      figure left behind here parks the line somewhere the scrubbed version never
      stops — and with the larger wording that is inside the mask's haze band. */
-  .hsv-return__line { transform: translateY(-25vh) }
+  .hsv-return__line { transform: translateY(-25svh) }
 
   .hsv-plate > img { transition: none }
   /* stated, not skipped: the from-state is opacity 0, so merely disabling the
