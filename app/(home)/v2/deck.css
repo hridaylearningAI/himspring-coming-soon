@@ -163,6 +163,29 @@
   padding: clamp(7rem, 16vh, 10.5rem) var(--hs-gut) 0;
   text-align: center;
 }
+/* "Pure Himalayan" — readability, on the hero's eyebrow only.
+
+   Three things were against it and the colour was the worst: --hs-gold measures
+   2.54:1 against this plate, where 10px text wants 4.5. --hs-gold-ink is 5.06:1
+   in the same place. The legacy hero reached for --hs-gold-deep for exactly this
+   reason, but that is 3.76:1 and still short at this size.
+
+   Then 10px, which was sized for "Bottled at the source" — a caption naming a
+   fact. This line is the brand's own claim and sits directly over the headline,
+   so 13px is nearer its job.
+
+   And .26em of tracking, which at 10px is airy and at a readable size starts
+   pulling the two words apart into letters. .2em keeps the label character
+   without costing word shape.
+
+   Weight is deliberately untouched. Gotham here is 400, 500 and a 700 *italic* —
+   there is no 600 and no upright bold, so anything heavier than the 500 it
+   already carries would be the browser synthesising a face. */
+.hsv-hero .hs-eyebrow {
+  font-size: 13px;
+  letter-spacing: .2em;
+  color: var(--hs-gold-ink);
+}
 /* Retuned for Devasia, off the DESIGN.md display step it used to sit on.
 
    That step — clamp(38px, 5.4vw, 92px) — was calibrated against Times. Devasia
@@ -183,7 +206,7 @@
   font-size: clamp(64px, 13.7vw, 240px); line-height: 1.02; letter-spacing: 0;
   color: var(--hs-ink);
   /* Set in CSS rather than typed into the markup so the accessible name stays
-     "Natural Spring Water" — screen readers read the DOM text, and literal caps
+     "Natural Mineral Water" — screen readers read the DOM text, and literal caps
      there get spelled out letter by letter by some of them. */
   text-transform: uppercase;
 }
@@ -423,10 +446,155 @@
   transform-origin: 110px 644px;
   transform: rotate(calc(-1 * var(--rot))) scale(calc(1 / var(--scale)));
 }
+/* Was 34ch holding a label and one sentence. It holds the story now — a label, a
+   display heading, a lede and two paragraphs — so it needs more measure, and it
+   needs to stop being a stack of same-sized things.
+
+   38ch rather than more: this is type over a photograph, and past about 40
+   characters the eye has to travel back across the picture to find the next line.
+   The extra width comes out of the heading, which is set to run wider than the
+   prose under it. */
 .hsv-intro__copy {
   position: absolute; right: var(--hs-gut); bottom: clamp(3rem, 9vh, 6rem);
-  z-index: 3; max-width: 34ch;
+  z-index: 3; max-width: 38ch;
 }
+/* The heading. Devasia caps, and sized off the viewport rather than fixed — this
+   is the second-largest display type on the page after the hero, and it should
+   read as the same voice.
+
+   Not the hero's step: that one is calibrated to fill a whole viewport width on
+   one line. This sits in a 38ch column, so it is the smaller display size the
+   founders board uses. */
+.hsv-intro__h {
+  font-family: var(--hs-display); font-weight: 400;
+  font-size: clamp(30px, 3.9vw, 62px); line-height: 1.04;
+  /* caps on a condensed face take a little tracking back — the same .01em the
+     founders board settled on, for the same reason */
+  letter-spacing: .01em; text-transform: uppercase;
+  color: var(--hs-ink);
+  margin: 0 0 1.4rem;
+}
+/* The hairline between the title and the story, which is what stops the block
+   reading as four paragraphs of graded size. Gold, and short — it is a mark, not
+   a divider across the column. */
+.hsv-intro__h::after {
+  content: ""; display: block;
+  width: 3.5rem; height: 1px; margin-top: 1.4rem;
+  background: var(--hs-gold);
+}
+/* The step between the heading and the body. Ink rather than the prose grey, and
+   larger than the paragraphs under it: one line carrying the claim, so it reads
+   as a statement rather than as the first line of a column. */
+.hsv-intro__lede {
+  font-size: clamp(17px, 1.35vw, 21px); line-height: 1.5;
+  color: var(--hs-ink); max-width: 30ch;
+  margin: 0 0 1.15rem;
+}
+/* Two paragraphs now, where there was one and margins never came up. */
+.hsv-intro__copy .hsv-prose { margin: 0 }
+.hsv-intro__copy .hsv-prose + .hsv-prose { margin-top: .95rem }
+
+/* ---- [02b] the story's close, and why Himspring ---- */
+
+/* The claims band, under [03]'s rail and inside its section. No ground of its
+   own — .hsv-jr is already white, and a second white here would only add an edge
+   where the rail's bottom mask is already fading into one. */
+/* ---- why Himspring: the four claims, in the rise beat ---- */
+
+/* No box of its own. This lives in .hsv-rise__copy, which owns the position, the
+   width and the --rise fade; everything here styles contents only. It has been a
+   white section, a full-width bar and a 2x2 grid over three rounds — the rules
+   below are the accreted result flattened back into one pass, because the older
+   ones were still in the file underneath the newer ones and winning on order.
+   .hsv-why__icon was set to display:none and then to display:block 6 lines
+   later, which is why the icons were still there. */
+
+/* Micro-caps, not the display face — the third time on this page Devasia has lost
+   an argument at a small size, after the legal pages' section headings and the
+   founders' credo.
+
+   It was clamp(24px, 2.4vw, 40px) of Devasia caps, 34px at 1440, and "WHY
+   HIMSPRING" at 34px on a condensed face is a picket fence: the H, I, M and N
+   close into a row of verticals and the word has to be worked out rather than
+   read. That face earns its keep at the hero's 197px and the story's 56px, and
+   nowhere near this.
+
+   So it takes the vocabulary the page already has for a line above a block —
+   .hsv-label's micro-caps. Gold-ink rather than gold: this sits over a
+   photograph, where 2.5:1 is not enough. It stays an <h3>; size is not heading
+   level. */
+.hsv-why__h {
+  font-size: 11.5px; font-weight: 500;
+  letter-spacing: .24em; text-transform: uppercase;
+  color: var(--hs-gold-ink);
+  margin: 0 0 clamp(1.1rem, 2.2vh, 1.6rem);
+}
+
+/* One divided line, running down. The claims own half a frame rather than a full
+   band, so the line is vertical and its rules are horizontal — the same device
+   the row used, turned to fit the column it now lives in. */
+.hsv-why__grid {
+  list-style: none; counter-reset: hsv-why;
+  display: grid; grid-template-columns: 1fr; gap: 0;
+  margin: 0; padding: 0;
+}
+
+/* The divider is a top border on every cell but the first — three rules for four
+   cells, no extra element, and nothing hanging off either end of the line.
+
+   Each cell is its own small grid: numeral in a fixed column, title beside it,
+   body under the title and indented to the title's left edge. That indent is what
+   makes four rows read as a list rather than four stacked paragraphs. */
+.hsv-why__cell {
+  counter-increment: hsv-why;
+  display: grid;
+  grid-template-columns: 2.4ch 1fr;
+  grid-template-areas: "num title" ".   body";
+  column-gap: .85rem; row-gap: .3rem;
+  padding: clamp(.7rem, 1.4vh, 1rem) 0;
+  border-top: 1px solid color-mix(in srgb, var(--hs-ink) 18%, transparent);
+}
+.hsv-why__cell:first-child { padding-top: 0; border-top: 0 }
+.hsv-why__cell::before {
+  content: counter(hsv-why, decimal-leading-zero);
+  grid-area: num;
+  font-size: 10.5px; font-weight: 500; letter-spacing: .1em;
+  color: var(--hs-gold-ink);
+  /* optical: a 10.5px numeral against a 13px title has to be pushed down to sit
+     on the title's line rather than on its box's top edge */
+  padding-top: .25em;
+}
+
+/* The icons are out, and PurityIcon is still rendered — see WhyHimspring.tsx.
+
+   Four gold glyphs and four gold numerals down one column is two marks per row
+   saying "this is item three", and this column has four rows to fit in half a
+   frame. The numerals carry the enumeration and cost no height. Kept in the
+   markup rather than removed so restoring them is this one declaration. */
+.hsv-why__icon { display: none }
+.hsv-why__icon svg {
+  display: block; width: 28px; height: 28px;
+  fill: none; stroke: var(--hs-gold);
+  stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* Gotham, not Devasia, for the reason given above .hsv-why__h. */
+.hsv-why__t {
+  grid-area: title;
+  font-family: var(--hs-text); font-weight: 500;
+  font-size: 13px; line-height: 1.3; letter-spacing: .015em;
+  text-transform: uppercase;
+  color: var(--hs-ink); margin: 0;
+}
+/* Ink, not the soft grey the rest of the page's small copy uses. These four sit
+   over a photograph even with the wash behind them, and ink-soft measured too
+   light against the near-ridge to be worth the consistency. */
+.hsv-why__b {
+  grid-area: body;
+  font-size: 13px; line-height: 1.55;
+  color: var(--hs-ink); margin: 0;
+}
+
 
 /* ---- the family, rising into the landscape ---- */
 
@@ -472,10 +640,75 @@
 .hsv-rise__item--2 { --d: 0.12; left: 17vw; height: 45vh }
 .hsv-rise__item--3 { --d: 0.24; left: 26vw; height: 40vh }
 
+/* The frame splits down the middle: the ladder climbs on the left, the four
+   claims stand on the right.
+
+   Three placements were measured before this one. A 34ch column bottom-right is
+   what the old two-line caption wanted, and the claims overran it into the
+   tallest bottle. Four across the frame's full width ran through the whole
+   ladder. Two by two in 34ch gave 15 characters a cell.
+
+   The split works because the ladder is already left-weighted and has to stay
+   that way — the bottles sit at 7, 17 and 26vw and reach 52vh, so they occupy
+   the left third and nothing else. Handing the right half to the claims uses the
+   emptiness that composition creates instead of fighting it, and the two read as
+   object and argument side by side.
+
+   Centred vertically rather than hung off the bottom: the column is four rows
+   tall and a bottom offset would push its head up into the nav on a short
+   viewport while leaving the ladder's feet in air. */
 .hsv-rise__copy {
-  position: absolute; right: var(--hs-gut); bottom: clamp(3rem, 9vh, 6rem);
-  max-width: 34ch;
+  position: absolute;
+  left: 50%; right: 0;
+  top: 50%; bottom: auto;
+  transform: translateY(-50%);
   opacity: clamp(0, calc((var(--rise) - .28) * 2.6), 1);
+
+  /* Its own ground, rather than relying on .hsv-intro__veil.
+
+     The veil's scrim is a radial anchored at 100% 100% — built for a block in the
+     bottom-right corner, which is where the lede sits. These claims sit at the
+     middle-right, roughly 0.3-0.5 of that radial's radius out, so they land
+     between its 66% and 0% stops and the grey body text was sitting half-lifted
+     on the dark near-ridge.
+
+     The wash is NOT on this block — see .hsv-rise::before. Painted here it was
+     clipped to this box, so whatever the gradient's own geometry said, its top and
+     bottom were hard cuts at the block's edges: two faint horizontal lines across
+     the ridge. A gradient can only fade out inside the box it is painted in, and
+     this box is the size of the text. */
+  padding-left: clamp(1.5rem, 3vw, 3rem);
+  padding-right: var(--hs-gut);
+}
+/* The claims' ground, on the whole frame rather than on the block.
+
+   inset 0 gives the fade the full viewport to finish in, which is the only way it
+   ends in air rather than on an edge. Anchored at the right, so it falls off to
+   the left across the empty middle of the frame and reaches zero well before the
+   ladder — the bottles are inside 6-64vw and the wash is gone by about 55%.
+
+   Tied to the same --rise expression as the copy, so ground and type arrive
+   together; z-index 0 inside .hsv-rise puts it under both the field and the copy,
+   which is why the bottles are not washed even where the two do overlap. */
+.hsv-rise::before {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  pointer-events: none;
+  opacity: clamp(0, calc((var(--rise) - .28) * 2.6), 1);
+  background: radial-gradient(
+    62% 115% at 100% 50%,
+    color-mix(in srgb, var(--hs-white) 88%, transparent) 0%,
+    color-mix(in srgb, var(--hs-white) 80%, transparent) 38%,
+    color-mix(in srgb, var(--hs-white) 46%, transparent) 66%,
+    transparent 88%
+  );
+}
+.hsv-rise__field { z-index: 1 }
+.hsv-rise__copy { z-index: 2 }
+/* Zero-height scroll marker, at the depth where the rise is on screen. Not
+   display:none — a target with no box is not scrolled to. */
+.hsv-intro__mark {
+  position: absolute; top: 78%; left: 0;
+  width: 1px; height: 1px;
 }
 
 /* ---- [03] formats intro ---- */
@@ -1239,7 +1472,25 @@
   line-height: 1.5; letter-spacing: 0;
   color: var(--hs-ink);
   text-wrap: pretty;
+  /* Hanging punctuation. The opening quote is pulled into the margin so the
+     first line's first *letter* still sits on the same left edge as the name, the
+     role and the biography below it. Left inline it shunts that line right by the
+     width of the mark and the whole column reads as misaligned by a few pixels —
+     which is the one thing a pull quote at 25px cannot get away with.
+
+     em, not px: it has to scale with the clamp above it. -.42em is measured
+     against Times italic's own opening double quote at this size. */
+  text-indent: -.42em;
 }
+/* The quotes themselves, added here rather than typed into lib/founders.ts — the
+   same call as .hsv-fr__alias's parentheses just above. The stored string stays
+   the sentence the founder actually said, which is what a screen reader announces
+   and what anyone copying it off the page gets, and <blockquote> already carries
+   "this is a quotation" without needing the marks to say it.
+
+   Curly, matching every other quote and apostrophe in that file. */
+.hsv-fr__quote::before { content: "\201C" }
+.hsv-fr__quote::after { content: "\201D" }
 
 /* ---- [06] detail ---- */
 
@@ -1332,37 +1583,43 @@
      frame rather than wrapping. So the size tracks the measure exactly and the
      fit holds at every width.
 
-     10.05vw is measured rather than derived, and re-measured when this went to
-     caps: at 9.2vw sentence case the line sat at 83% of the measure, 10.4 took
-     that to 94%, and uppercase then pushed the same 10.4 to 97% — past the 96%
-     the padding leaves, so it clipped. 10.05 brings caps back to ~94%. The two
-     percent of daylight is deliberate: Devasia's advance widths set this, and a
-     figure that fits exactly would clip the moment the fallback face rendered
-     first. Re-measure this if the wording or the case ever changes again. */
-  font-size: 10.05vw; line-height: 1.06;
+     Re-measured for "Nature's Finest Expression", which is 26 characters where
+     the previous line was 41: at the old 10.05vw it filled 57.7% of the measure
+     and read as stranded rather than as a line spanning the frame. 15.6vw brings
+     it to ~90%.
+
+     90%, not the 94% the old wording sat at. The trade is vertical: 16.4vw would
+     hit 94% but line-height 1.06 makes the block 250px on a 900px frame, and at
+     the rest position that pushes its lower edge to 41.9% — inside the ridge
+     mask's 40-56% haze transition, where the bottom of the type would sit
+     permanently half-dissolved. 15.6vw keeps the block clear of it. The rest
+     offset moved with it; see the transform below.
+
+     The two percent of daylight the old note describes still applies: Devasia's
+     advance widths set this, and a figure that fits exactly clips the moment the
+     fallback face renders first. Re-measure if the wording or the case changes
+     again — the fill percentage is what to measure, not the character count. */
+  font-size: 15.6vw; line-height: 1.06;
   white-space: nowrap;
   /* Caps set in CSS, not typed into the markup, for the same reason as
      .hsv-hero__title: the DOM text stays sentence case so a screen reader reads
      a sentence rather than spelling it out letter by letter. */
   text-transform: uppercase;
-  /* Navy, where this was white.
-
-     White was right when the line sat centred over the veiled mountains. It
-     rests up in the sky now, and the sky is pale: through an 18% navy veil it
-     measures about 187 luma, which puts white type near 1.3:1 and renders it
-     literally invisible. The alternative was to darken the top of the frame
-     enough to carry white — roughly 55% navy — which turns a dawn photograph
-     into a dusk one and stops it matching the plate the intro film lands on.
-     Dark type on a pale sky keeps the photograph and gets the contrast. */
-  color: var(--hs-navy);
+  /* White by instruction, over navy. Known trade: against the pale sky the top
+     of the frame measures ~187 luma through the 18% veil, so white sits near
+     1.3:1 there — it reads as a wash, not as type. If it ever needs to carry
+     again, the options are navy (the previous answer) or ~55% veil at the top. */
+  color: #fff;
   /* Both ends measured off the mask rather than guessed. Its alpha by row is
      nil to 38%, a haze transition from 40 to 56%, and effectively solid from
      60% down. The grid centres this line at 50vh, which is inside that
      transition — parked there it would sit permanently half-dissolved.
 
-     So it rests at -22vh, which measures out to the block sitting between 17 and
-     39% — clear of the haze, with the last line above it rather than catching
-     the few percent of veiling that -19vh left on it. It starts 51vh lower,
+     It rested at -22vh while the block was 153px tall. The new wording is set
+     larger, so the block is 216px — 24vh of a 900px frame against 17 — and the
+     same offset would have hung its lower edge at 40.2%, in the haze. -25vh puts
+     it back between 13 and 37%, clear of the transition with the same margin the
+     measured -22vh had. It starts 51vh lower,
      spanning 68 to 90%, well inside the solid part of the ridge and still on the
      pin rather than below it: a line that begins off-frame has nothing to
      emerge from.
@@ -1371,7 +1628,7 @@
      on this rule instead looks equivalent and is not: a local declaration wins
      over the inherited one, so the line would read its own constant zero and
      never move no matter what the scrub wrote to the pin above it. */
-  transform: translateY(calc(-22vh + (1 - var(--climb, 0)) * 51vh));
+  transform: translateY(calc(-25vh + (1 - var(--climb, 0)) * 51vh));
   will-change: transform;
 }
 
@@ -1435,27 +1692,162 @@
    ============================================================ */
 
 @media (max-width: 900px) {
-  /* Unpinned below 900px. A sticky scrub competes with momentum scrolling on
-     touch, and the arc needs a viewport wide enough for the body to run off to
-     one side — on a phone it just fills the screen with a flat wall of bottle. */
-  .hsv-intro { height: auto }
-  .hsv-intro__pin { position: static; height: auto; padding: var(--hs-band) 0 }
-  .hsv-intro__stage { position: static; height: 54vh }
-  .hsv-intro__stage .hsv-bottle { height: 100%; transform: rotate(8deg) }
-
-  /* In the flow and at the shot's own ratio, not absolute and stretched.
-
-     Left on inset:0 the film takes the unpinned pin's height, which is set by
-     the copy — a tall portrait box that `cover` fills by cropping a 16:9 frame
-     down to a narrow vertical strip of bottle. Giving it the frame's own aspect
-     means nothing is cropped and the shot reads as the still it now is. */
-  .hsv-intro__film {
-    position: relative; inset: auto;
-    width: 100%; height: auto;
-    aspect-ratio: 16 / 9;
+  /* The desktop treatment carries over: one centered headline sits in the open
+     space above the bottle's body. It stays static on touch, but keeps the
+     clear, single-line reading order of the desktop composition. */
+  .hsv-hero__inner {
+    position: relative;
+    display: block;
+    width: auto;
+    padding: 16vh var(--hs-gut) 0;
+    text-align: center;
+  }
+  .hsv-hero__title {
+    font-size: 15.5vw;
+    line-height: 1.02;
+  }
+  .hsv-pressure {
+    display: flex;
+  }
+  /* Also neutralise an already-mounted desktop effect when a browser crosses
+     into this breakpoint after a resize. */
+  .hsv-pressure__ch {
+    transform: none !important;
+    -webkit-text-stroke-width: 0 !important;
   }
 
-  .hsv-intro__copy { position: static; margin: 3rem var(--hs-gut) 0; max-width: none }
+  /* [02] is pinned and scrubbed here too, by instruction — the same sequence as
+     the desktop, not a still in a box.
+
+     This section used to be unpinned below 900px, and the reason was the drawn
+     arc it no longer contains: a bottle leaning over needs a viewport wide
+     enough for its body to run off to one side, and on a phone it was a flat
+     wall of bottle. The film is a framed shot rather than a transform on an
+     object in the layout, so it has no such requirement and fills whatever
+     aspect the pin happens to be. With the arc gone the fallback was outliving
+     its cause, and what it left on a phone was a 16:9 box that the reader
+     scrolled past while the frames advanced inside it.
+
+     So there are no `.hsv-intro`/`__pin`/`__film` overrides here at all now —
+     the desktop rules are the rules, and the whole treatment is what is left
+     when the workaround is deleted. Two consequences worth stating:
+
+     The scrub is a rAF loop reading getBoundingClientRect, and on iOS momentum
+     scrolling that lags the finger by a frame or two. It reads as weight rather
+     than as breakage because useFilm holds the last decoded frame instead of
+     clearing — a scrub that hesitates is heavy, a scrub that flashes is broken.
+
+     And the 150 frames are ~4.9MB, which a phone on cellular now downloads to
+     scrub a section it previously got as one still. That is the actual price of
+     this change and there is no way to have the sequence without it.
+
+     Only the parts that genuinely do not fit 390px are restated below: the
+     ladder's spacing, and the two copy blocks. */
+
+  /* Full width rather than the desktop's right-hand third, and there is nothing
+     to its left to stay clear of until the ladder arrives — which is after this
+     block has faded out (--lede reaches 0 at 0.78, --rise starts at 0.72).
+
+     Edge to edge with its own inset, so the scrim below can be full-bleed while
+     the type still sits on the gutter.
+
+     The scrim is the hero foot's, for the same reason and by the same mechanism:
+     16px body grey on a bottle. On a wide screen this block sits in the empty
+     backdrop beside the bottle and needs nothing for the first third of the
+     scrub, then gets the veil. Cover-cropped to portrait the shot is all
+     bottle — the copy lands on the label's gold mountains at --veil 0, where
+     the veil is no help because it has not come up yet. So the block carries
+     its own ground, always on, and fades out with the copy it is under.
+
+     The desktop's bottom offset becomes padding, so the block reaches the pin's
+     own bottom edge and the type still sits where it did. Left as an offset the
+     scrim stopped 76px short of the edge and that showed as a hard horizontal
+     line across the ridge — a scrim has to end at an edge or in a gradient, and
+     that ended in mid-air. */
+  .hsv-intro__copy {
+    left: 0; right: 0; bottom: 0; max-width: none;
+    padding: clamp(3.5rem, 9vh, 5rem) var(--hs-gut) clamp(3rem, 9vh, 6rem);
+    background: linear-gradient(to top, rgba(255, 255, 255, .92), rgba(255, 255, 255, 0));
+  }
+  /* A panel, not a scrim. Our Story is the whole story again — label, display
+     heading, lede and two paragraphs, about 435px on a 390px phone. On the
+     gradient the top of that block sits where the wash is still nearly clear,
+     directly over the bottle, and pushing the wash up far enough to cover it
+     whites out most of the film. Measured both ways.
+
+     So the bottom of the frame becomes an opaque panel and the film keeps the top
+     ~400px: picture above, text below, which is how a page carries a photograph
+     and a column of copy at this width. It is also more of the film than the
+     gradient showed, since a 43:24 frame cover-cropped to portrait is a narrow
+     vertical strip — the panel gives that strip a horizon instead of running
+     under type.
+
+     It still fades on --lede, so the handover to the rise is unchanged. */
+  .hsv-intro__copy {
+    padding: clamp(2rem, 5vh, 2.75rem) var(--hs-gut) clamp(2rem, 5vh, 3rem);
+    background: var(--hs-white);
+    border-top: 1px solid color-mix(in srgb, var(--hs-ink) 10%, transparent);
+  }
+  /* 34px, not the 26 this started at and not the clamp's own 30px floor. Devasia
+     is condensed enough that caps below about 30px close into a picket fence —
+     the finding that moved the legal headings, the founders' credo and [03]'s
+     label off this face. It has to stay Devasia here, because it is the section's
+     display line and the hero's is 60px of the same face two screens above, so
+     the size goes up instead. Costs 8px of panel height. */
+  .hsv-intro__h { font-size: 34px; margin-bottom: 1rem }
+  .hsv-intro__h::after { margin-top: 1rem }
+  .hsv-intro__lede { font-size: 16px; max-width: none; margin-bottom: .9rem }
+  .hsv-intro__copy .hsv-prose { font-size: 15px; line-height: 1.65 }
+
+
+  /* The split does not survive a phone. Half of 390px is 171px, which is not a
+     column of claims, and the ladder needs the full width to still read as a
+     ladder of three.
+
+     So the frame stacks rather than splitting: the claims take the top, the
+     bottles keep the baseline. The divided line itself is unchanged — it is
+     already a column with horizontal rules at every width, so only the box it
+     sits in moves. */
+  .hsv-rise__copy {
+    left: var(--hs-gut); right: var(--hs-gut);
+    top: clamp(7rem, 15vh, 9rem); bottom: auto;
+    transform: none; max-width: none;
+    /* no wash: stacked, the claims sit on the sky rather than on the near-ridge,
+       and the veil's own even lift is enough there */
+    padding: 0; background: none;
+  }
+  /* Tightened, because the column and the ladder now share the vertical rather
+     than the horizontal. Between the nav floor at 127px and the tallest bottle
+     there are 329px on a 390x844 screen, and at the desktop's sizes four rows
+     plus a heading measured 400 — the fourth claim sat across the bottles. This
+     brings the four to ~256. */
+  .hsv-why__cell { padding: .5rem 0; row-gap: .2rem }
+  .hsv-why__t { font-size: 12px }
+  .hsv-why__b { font-size: 12px; line-height: 1.45 }
+  .hsv-why__h { margin-bottom: .9rem }
+
+  /* Re-anchored, because the copy it lights has moved. The desktop veil is a
+     radial in the bottom-right corner, under a 34ch block that lives there; the
+     block spans the frame here, so that same gradient lifts the end of each
+     sentence and leaves the beginning on the bare ridge — which reads as a
+     lighting fault rather than as a scrim. Centred on the bottom edge and wider
+     covers a block that runs the full width. The even lift underneath is
+     unchanged and still does its own job. */
+  .hsv-intro__veil {
+    background:
+      radial-gradient(
+        150% 74% at 50% 100%,
+        color-mix(in srgb, var(--hs-white) 90%, transparent) 0%,
+        color-mix(in srgb, var(--hs-white) 66%, transparent) 34%,
+        transparent 70%
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--hs-white) 20%, transparent) 0%,
+        color-mix(in srgb, var(--hs-white) 6%, transparent) 55%,
+        color-mix(in srgb, var(--hs-white) 24%, transparent) 100%
+      );
+  }
 
   .hsv-family { height: auto }
   /* overflow has to come off with the pin, not just the height.
@@ -1482,7 +1874,12 @@
      (`inset: 0` carries over harmlessly: on a relative box top/left win, both 0.) */
   .hsv-panel {
     position: relative; min-height: 88svh;
-    padding: var(--hs-band) var(--hs-gut);
+    /* --hs-band bottoms out at 4.5rem on a phone, which is 72px against a fixed
+       82px nav: stacked, every panel's top is a scroll position the reader will
+       land on, and the label was landing behind the bar. Floor it at the same
+       7rem the rise copy uses, so the two sections clear the nav by the same
+       margin rather than each guessing. Bottom keeps the band. */
+    padding: max(var(--hs-band), 7rem) var(--hs-gut) var(--hs-band);
     clip-path: none;
   }
   /* will-change: auto is not tidying up — it is load-bearing. `will-change:
@@ -1492,7 +1889,31 @@
      this box, which here is only as tall as the copy. Every bottle hung 300px
      above the top of its own panel, over the section before it. */
   .hsv-panel__stack { position: static; transform: none; will-change: auto }
-  .hsv-panel__inner { position: static; transform: none; width: auto; margin: 0 auto }
+  /* relative and z-index 2, or the copy is laid out correctly and never painted.
+
+     z-index only applies to positioned elements, so `position: static` on the
+     stack above silently throws away its `z-index: 2` — the one declaration
+     holding the copy above .hsv-ground, which is absolute at z-index 0 and
+     covers the panel. The copy falls to the in-flow paint step, which is below
+     every positioned descendant, and the opaque plate prints straight over it.
+     Only the copy: the bottle is absolute and later in the DOM, so it kept
+     painting above the ground and the panel looked merely wordless rather than
+     broken. That is why the size, the volume and the note all vanished here.
+
+     The layer has to be claimed here rather than by making the stack relative
+     again. A relative stack becomes the containing block for .hsv-panel__bottle,
+     and the stack in the flow is only as tall as the copy — the bottle would
+     hang near the top of the panel, which is the trap already described two
+     rules up. .hsv-panel__inner has no absolute children, so it can be
+     positioned without moving anything.
+
+     inset: auto because the desktop rule's top: 13vh / left: 50% are offsets
+     once this is relative rather than absolute, and would push the copy down and
+     off to the right instead of doing nothing. */
+  .hsv-panel__inner {
+    position: relative; inset: auto; z-index: 2;
+    transform: none; width: auto; margin: 0 auto;
+  }
   .hsv-panel__bottle { bottom: -8vh }
   /* The ground is simply the ground here.
 
@@ -1546,32 +1967,68 @@
     background: var(--hsv-snow);
   }
 
-  /* Scaled back from the measured desktop figures rather than carried over.
-     The reference was recorded on a wide screen where a 52.6vh bottle still
-     leaves the title room to breathe; on a phone the same proportion puts the
-     cap directly under the headline. Cap top lands at ~55vh here instead. */
-  /* same reasoning as the desktop rule — enough of the bottle in frame for the
-     wordmark to clear the fold, with the title given more room than it needs on
-     a narrow screen where the headline wraps */
-  .hsv-hero__stage { height: 74vh; top: 46vh }
-  .hsv-hero__foot { flex-direction: column; align-items: flex-start; gap: .75rem }
+  /* 70svh at 29vh landed the base 8px above the bottom edge: a whole bottle
+     floating in the middle of the frame, which is the catalogue photograph the
+     crop exists to avoid. 74svh at 30vh runs it off the edge by ~34px on a
+     390x844 screen — enough to read as cropped, and still shallow enough to
+     leave the mountain artwork at the foot of the label on screen. */
+  .hsv-hero__stage {
+    left: 50%; right: auto; top: 30vh; z-index: 3;
+    height: 74svh; transform: translateX(-50%);
+    animation: none; opacity: 1;
+  }
+  /* The line starts at the left gutter and runs across the bottle instead of
+     sitting in the side margin the desktop row keeps it in — at 390px the bottle
+     is 164px wide and the margins are 89px, which does not hold "Purity for the
+     World's Elite" at any size worth reading. (flex-direction and gap are now
+     for a single child, and stay for the same reason the row above does.)
+     So the type stays put and the ground under it is fixed instead: a white
+     scrim over the bottom band, which both carries the soft grey against glass
+     and gold, and fades the cropped base into the edge rather than letting it
+     stop dead there. Sized to the foot's own box, so it tracks the padding. */
+  .hsv-hero__foot {
+    z-index: 4;
+    flex-direction: column; align-items: flex-start; gap: .75rem;
+    /* padding, not a taller gradient: the box is pinned to the bottom by
+       margin-top: auto, so padding-top grows it upward and leaves the type
+       where it is. Without this the box starts 10px above the first line and
+       the gradient is still near-transparent there — the line that most needs
+       the scrim would get none of it.
 
-  /* The family beat, stated rather than animated. With the pin gone --rise
-     never moves off 0, which would leave all three parked 96vh below the frame
-     at zero opacity — the rise has to be undone, not just skipped. */
-  .hsv-rise { position: static }
-  /* tall enough to contain the absolute items on their shared baseline, or the
-     copy below rides up over them */
-  .hsv-rise__field { position: relative; height: 46vh; margin-top: var(--hs-band) }
-  .hsv-rise__item { bottom: 0; transform: none; opacity: 1 }
-  /* Same cube-root ratios off a 38vh base, and still on one baseline — the
-     comparison is the whole point of the group and it does not survive being
-     re-staged for a narrow screen. Tighter left steps to fit the width. */
-  .hsv-rise__item--1 { left: 4vw; height: 38vh }
-  .hsv-rise__item--2 { left: 36vw; height: 33vh }
-  .hsv-rise__item--3 { left: 64vw; height: 29vh }
-  .hsv-rise__copy { position: static; opacity: 1; margin: 2.5rem var(--hs-gut) 0; max-width: none }
+       Relative to the viewport, not a flat 5rem: on a 667px-tall screen a fixed
+       80px scrim is 12% of the frame against 9% on a tall one, and it starts
+       washing the label copy rather than only the base. */
+    padding-top: clamp(3.5rem, 9vh, 5rem);
+    background: linear-gradient(to top, rgba(255, 255, 255, .92), rgba(255, 255, 255, 0));
+  }
 
+  /* The rise climbs here as well, now that there is a pin for it to climb into
+     — so the whole "stated rather than animated" fallback is gone with the one
+     above it, and --rise drives the same transform it drives on a desktop.
+
+     What does not survive is the desktop staging. There the ladder occupies the
+     left third and the copy sits bottom-right; at 390px the three bottles off a
+     52vh base are ~122, 106 and 94px wide against 342px of usable width, and
+     10vw left steps are 39px, so they would sit on top of each other with no
+     room left for a paragraph beside them.
+
+     So the frame is split horizontally instead of vertically: the ladder owns
+     the baseline across the full width, and its copy moves to the top of the
+     pin. The lede it takes over from is at the bottom, so the two never share a
+     band even during the six-hundredths of the scrub where both are up.
+
+     The first bottle's left edge is on the gutter rather than a step in from it,
+     so the group hangs off the same line the copy above it starts on and the
+     ladder descends away to the right — which is the order it is in.
+
+     Base is 31vh, down from a first pass at 34: the claims share this frame now
+     and the tallest bottle's cap was reaching into the fourth one. The cube-root
+     ratios are unchanged — .874 of 31 is 27, .761 is 23.6 — so the ladder still
+     says exactly what it said, three volumes apart by the cube root of their
+     contents. */
+  .hsv-rise__item--1 { left: 6vw; height: 31vh }
+  .hsv-rise__item--2 { left: 36vw; height: 27vh }
+  .hsv-rise__item--3 { left: 64vw; height: 23.6vh }
   /* The board becomes a column, which is the only honest thing a checkerboard
      can do on a phone: two 190px squares are not a portrait and not a paragraph.
      What survives is the alternation — glacier, snow, glacier, snow down the
@@ -1631,7 +2088,15 @@
     aspect-ratio: 16 / 9;
   }
   .hsv-intro__stage .hsv-bottle { height: 100%; transform: rotate(8deg) }
-  .hsv-intro__copy { position: static; margin: 3rem var(--hs-gut) 0 }
+  /* The narrow layout's scrim and its padding come off with the pin, and this
+     has to say so: a phone with reduced motion matches both blocks, and this one
+     wins only on what it restates. In the flow there is nothing behind the block
+     for a scrim to lift it off, so the gradient would be a stray white band and
+     the padding a stray 100px of air. */
+  .hsv-intro__copy {
+    position: static; margin: 3rem var(--hs-gut) 0;
+    padding: 0; background: none;
+  }
   .hsv-intro__veil { display: none }
 
   /* The rail stops. Both sets are still rendered, so the columns simply stand
@@ -1668,10 +2133,25 @@
      narrow-layout block above. useScrub bails here, so --l/--r/--cx keep their
      resting values and every panel would sit clipped to a third with its copy
      shoved sideways — all three have to be undone, not merely left alone. */
-  .hsv-panel { position: relative; min-height: 88svh; clip-path: none }
+  /* Padding for the same reason as the narrow block, and it was missing here
+     entirely: unpinned, the copy starts at the panel's own top edge, and the nav
+     is fixed and 94px tall on a wide screen. Measured at panel top, the label
+     sat at y=0 and the size at y=39 — both behind the bar, with only the note
+     clearing it. The pinned layout never needed padding because the stack is
+     absolute at 13vh inside it. */
+  .hsv-panel {
+    position: relative; min-height: 88svh; clip-path: none;
+    padding: max(var(--hs-band), 7rem) var(--hs-gut) var(--hs-band);
+  }
   /* will-change: auto for the containing-block reason given in the narrow block */
   .hsv-panel__stack { position: static; transform: none; will-change: auto }
-  .hsv-panel__inner { position: static; transform: none; width: auto; margin: 0 auto }
+  /* z-index 2 for the reason given in the narrow block: static discards the
+     stack's own, and the ground then paints over the copy. Reached on a wide
+     screen too, so this was not only a phone bug. */
+  .hsv-panel__inner {
+    position: relative; inset: auto; z-index: 2;
+    transform: none; width: auto; margin: 0 auto;
+  }
 
   /* useScrub bails here, so --climb never leaves 0 and the line would stay
      parked behind the ridge for good. Stated at its arrived position instead,
@@ -1679,7 +2159,11 @@
      because the line is above the mask's transition band either way. */
   .hsv-return { height: auto; min-height: 92svh }
   .hsv-return__pin { position: static; height: auto; min-height: 92svh }
-  .hsv-return__line { transform: translateY(-22vh) }
+  /* -25vh, tracking the rest offset in the main rule. These two are a pair: this
+     one states the arrived position for readers the scrub never runs for, so a
+     figure left behind here parks the line somewhere the scrubbed version never
+     stops — and with the larger wording that is inside the mask's haze band. */
+  .hsv-return__line { transform: translateY(-25vh) }
 
   .hsv-plate > img { transition: none }
   /* stated, not skipped: the from-state is opacity 0, so merely disabling the

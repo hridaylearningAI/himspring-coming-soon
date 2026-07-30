@@ -90,13 +90,14 @@ export function useFilm(canvas: RefObject<HTMLCanvasElement | null>) {
     }
     frames.current = imgs;
 
-    /* The resting frame, for everyone who will never drive the scrub: reduced
-       motion (where useScrub bails outright) and the narrow layout (where the
-       pin is unpinned and there is no gesture to scrub). Both want the end of
-       the move, not the start — the formats rise into the landscape directly
-       below, and arriving at that over a studio backdrop makes no sense.
+    /* The resting frame, for the one case that will never drive the scrub:
+       reduced motion, where useScrub bails outright. It wants the end of the
+       move, not the start — the formats rise into the landscape directly below,
+       and arriving at that over a studio backdrop makes no sense.
 
-       Everyone else gets frame 0, which is where their scrub begins. */
+       The narrow layout used to be the second such case, because the pin was
+       unpinned below 900px and there was no gesture to scrub. It is pinned and
+       scrubbed now, so a phone begins at frame 0 like everyone else. */
     const reduced =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;

@@ -43,7 +43,17 @@ export default function Outro() {
 
   return (
     <>
-      <section className="hsv-return" ref={returnSection} aria-labelledby="hsv-return-t">
+      {/* id="commitment" is the nav's "Our Commitment" target. This section is
+          the closest thing on the page to that: it runs on sustain-valley.jpg
+          and its one line is the provenance claim the whole page has been
+          building to. Landing here puts the reader at the top of the beat, with
+          the line still behind the ridge and the rise ahead of them, which is
+          the start of the gesture rather than the middle of it.
+
+          If a real commitment section is ever written, this id moves to it and
+          the nav needs no edit — that is the point of the anchor living on the
+          section rather than in the link list. */}
+      <section className="hsv-return" id="commitment" ref={returnSection} aria-labelledby="hsv-return-t">
         <div className="hsv-return__pin" ref={pin}>
           <Scene className="hsv-return__scene hsv-plate" src="/assets/sustain-valley.jpg" alt="">
             {null}
@@ -54,7 +64,7 @@ export default function Outro() {
             <h2 className="hs-vh" id="hsv-return-t">
               The source
             </h2>
-            <p className="hsv-return__line">Everything above came out of one hillside.</p>
+            <p className="hsv-return__line">Nature&rsquo;s Finest Expression</p>
           </div>
 
           {/* The occluder. Same src as the plate above — the browser has it

@@ -13,12 +13,39 @@ export type NavLink = { readonly href: string; readonly label: string };
    whole reason this is a list and not four hardcoded anchors: the nav and the
    footer cannot each be checked by hand every time a section is added or
    hidden. `#source` is deliberately absent — Detail owns it and the deck gates
-   Detail behind SHOW_ANALYSIS, so it would be a link to nothing. */
+   Detail behind SHOW_ANALYSIS, so it would be a link to nothing.
+
+   The labels are the supplied set and the order is the supplied order, which is
+   also page order. Contact is the fifth item in the nav but is not here: it is
+   CONTACT_LINK, rendered on the other side of the wordmark and appended to the
+   drawer, so adding it to this list would put it in the bar twice.
+
+   Two of these are the section's own name and two are the nearest beat to a name
+   the page has no section for, which is worth stating rather than discovering:
+
+     Our Story       #formats   the title card, over the film
+     Journey         #action    the moving gallery — its shots are journey-*
+     Purity          #purity    the four PURITY_PILLARS claims, on white
+     Our Commitment  #commitment  the hillside bookend, on sustain-valley.jpg
+
+   All four name the thing they point at, which took three passes. Purity was on
+   #family — the three sizes — for as long as the page had no purity section, and
+   it went back there for one round while those claims lived inside Intro's rise
+   beat, where there was nothing to link to: the whole of Intro is #formats, and
+   an id part-way through a 420vh pin does not land where a reader expects. The
+   claims are their own section again, so this points at them.
+
+   #family and #founders keep their anchors and simply have no nav entry — five
+   labels were supplied and neither is one of them.
+
+   #founders no longer has a nav entry. It is still on the page and still
+   reachable by scrolling — it lost its slot to the five supplied labels, which
+   have no name for it. */
 export const SECTION_LINKS = [
-  { href: "#formats", label: "The Water" },
-  { href: "#action", label: "In Action" },
-  { href: "#family", label: "The Family" },
-  { href: "#founders", label: "Founders" },
+  { href: "#formats", label: "Our Story" },
+  { href: "#action", label: "Journey" },
+  { href: "#purity", label: "Purity" },
+  { href: "#commitment", label: "Our Commitment" },
 ] as const satisfies readonly NavLink[];
 
 /* The previous homepage's three, kept for the archived copy at /v1. Its

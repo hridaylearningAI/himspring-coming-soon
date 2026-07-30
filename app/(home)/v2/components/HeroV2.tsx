@@ -29,10 +29,10 @@ export default function HeroV2() {
 
       <div className="hsv-hero__inner">
         <Reveal as="p" className="hs-eyebrow">
-          Bottled at the source
+          Pure Himalayan
         </Reveal>
         <Reveal as="h1" className="hsv-hero__title" id="hsv-hero-t" delay={100}>
-          <PressureText text="Natural Spring Water" />
+          <PressureText text="Natural Mineral Water" />
         </Reveal>
       </div>
 
@@ -54,12 +54,17 @@ export default function HeroV2() {
         />
       </div>
 
+      {/* One item now, where this was a line of provenance on the left and a
+          "Two formats →" cue on the right. The cue is gone by instruction, and
+          #formats is not orphaned by that: the nav and the footer's Explore
+          column both point at it as "Our Story".
+
+          .hsv-hero__foot keeps its space-between and gap. With a single child
+          space-between resolves to flex-start, so it costs nothing and it is
+          what a second item would need back. */}
       <div className="hsv-hero__foot">
         <Reveal as="p" delay={220}>
-          Shivalik Range, Outer Himalaya
-        </Reveal>
-        <Reveal as="a" className="hs-link" href="#formats" delay={300}>
-          Two formats<span className="hs-arw">&#8594;</span>
+          Purity for the World&rsquo;s Elite
         </Reveal>
       </div>
     </section>

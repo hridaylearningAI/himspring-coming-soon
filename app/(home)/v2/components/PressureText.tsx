@@ -78,7 +78,10 @@ export default function PressureText({
   useEffect(() => {
     const el = row.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    /* This is a desktop-only detail. On the narrow hero the headline is a
+       fixed, stacked text column, so binding pointer listeners there causes
+       layout churn without a useful interaction. */
+    if (window.matchMedia("(max-width: 900px), (prefers-reduced-motion: reduce)").matches) return;
 
     const spans = Array.from(el.querySelectorAll<HTMLSpanElement>("[data-pressure-char]"));
     if (spans.length === 0) return;

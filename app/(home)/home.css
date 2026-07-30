@@ -25,6 +25,16 @@
   --hs-mist: #f1f4f8;
   --hs-gold: #b8933f;
   --hs-gold-deep: #96762d;
+  /* The gold that survives small type on a light ground.
+
+     Measured, because the other two do not: against the hero plate (#eef1f4
+     through the veil) --hs-gold is 2.54:1 and --hs-gold-deep is 3.76:1, where
+     10-13px text needs 4.5:1. This is 5.06:1 there, 5.14 on cream and 5.74 on
+     white, so it passes wherever the brand puts a light background. Still in the
+     same hue family — it reads as a darker antique gold rather than as a new
+     colour. Use it for gold text at label sizes; --hs-gold stays correct for
+     rules, borders and anything large. */
+  --hs-gold-ink: #7e6224;
   --hs-gold-pale: #e5dac0;
   --hs-navy: #0b1a2a;
   --hs-navy-soft: #1e3a5f;

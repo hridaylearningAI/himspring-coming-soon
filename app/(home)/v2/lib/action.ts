@@ -64,7 +64,7 @@ export const ACTION_COLUMNS: readonly ActionColumn[] = [
     direction: "down",
     cards: [
       shot("journey-speedboat", "Aerial view of a classic wooden speedboat", 240),
-      { kind: "label", lines: ["Elevated", "leisure"], tone: "navy", h: 200 },
+      { kind: "label", lines: ["Stay above", "the ordinary"], tone: "navy", h: 200 },
       shot("journey-yacht", "A sailing yacht at sea", 300),
     ],
   },
@@ -83,7 +83,7 @@ export const ACTION_COLUMNS: readonly ActionColumn[] = [
     cards: [
       up("prod-chalet", "Himspring bottle on slate before a snowy mountain chalet window", 260),
       shot("journey-club", "A private members' club interior", 300),
-      { kind: "label", lines: ["Born above", "the noise"], tone: "gradient", h: 210 },
+      { kind: "label", lines: ["The difference", "you can taste"], tone: "gradient", h: 210 },
     ],
   },
   {

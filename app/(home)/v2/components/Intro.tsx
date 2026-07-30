@@ -5,6 +5,7 @@ import { FILM_H, FILM_W, useFilm } from "../lib/useFilm";
 import { FAMILIES } from "../lib/family";
 import { segment, useScrub } from "../lib/useScrub";
 import FormatBottle from "./FormatBottle";
+import WhyHimspring from "./WhyHimspring";
 
 /* [02] intro — one pinned sequence, two movements, no section breaks in it.
 
@@ -71,9 +72,6 @@ export default function Intro() {
 
   return (
     <section className="hsv-intro" id="formats" ref={section} aria-labelledby="hsv-intro-t">
-      <h2 className="hs-vh" id="hsv-intro-t">
-        The water, and the two formats it comes in
-      </h2>
 
       <div className="hsv-intro__pin" ref={pin}>
         {/* The film. Fixed backing store at the frames' own size — CSS
@@ -90,12 +88,38 @@ export default function Intro() {
 
         <div className="hsv-intro__veil" aria-hidden="true" />
 
+        {/* The section's real heading now, where this used to be one label and
+            one sentence with the h2 hidden above it in .hs-vh. The story copy
+            arrived and it needs a title, and a visible title that is already the
+            right level is better than a hidden one duplicating it — so
+            hsv-intro-t moved onto the <h2> below and the hidden copy is gone.
+
+            "HIMSPRING flows from" in the supplied copy is set as "Himspring"
+            here. Same call as the founders' biographies, which arrived with the
+            brand name bolded: shouting the brand inside its own paragraph is a
+            press-release habit, and it would be the only all-caps word in any
+            body text on the page, which reads as a defect rather than as stress.
+            One word to change back if that is wanted. */}
         <div className="hsv-intro__copy">
-          <p className="hsv-label">Himspring spring water</p>
+          <p className="hsv-label">Our Story</p>
+          <h2 className="hsv-intro__h" id="hsv-intro-t">
+            Born above the ordinary
+          </h2>
+          {/* The hook, set larger than what follows — it is one line and it is
+              the claim, so it carries the step down from the heading rather than
+              the body having to start at full size. */}
+          <p className="hsv-intro__lede">
+            Deep within the Shivalik Himalayas lies a source untouched by time.
+          </p>
           <p className="hsv-prose">
-            Himspring is a natural spring water drawn from a confined aquifer beneath the
-            Shivalik foothills, bottled at the source and untouched between the rock and
-            the seal.
+            Himspring flows from protected high-altitude aquifers, patiently acquiring its
+            unique mineral balance as it trickles through ancient mountain strata over
+            centuries.
+          </p>
+          <p className="hsv-prose">
+            We do not alter what nature has perfected; we preserve it. Every bottle
+            delivers the raw purity, balance, and timeless character of its Himalayan
+            origin, elevating every sip into an extraordinary experience.
           </p>
         </div>
 
@@ -123,15 +147,33 @@ export default function Intro() {
             ))}
           </div>
 
+          {/* Why Himspring, in the slot "The Himspring family" held.
+
+              This is the beat the four claims belong to. The three-sizes copy
+              that was here is not information the page loses — [04] states every
+              size in its own panel, with the volume, the name and a note, which
+              is where a reader comparing 750 against 500 actually goes.
+
+              The layout is the part that took work. A 34ch column bottom-right
+              is what a two-line caption wants and not what four claims want: at
+              that measure they collided with the tallest bottle, and four across
+              at the frame's full width ran through the whole ladder. So the frame
+              is split down the middle instead — see .hsv-rise__copy. */}
           <div className="hsv-rise__copy">
-            <p className="hsv-label">The Himspring family</p>
-            <p className="hsv-prose">
-              One bottle in three sizes &mdash; 750, 500 and 330 millilitres &mdash; so the
-              only decision is how much of it you want, never what is inside it.
-            </p>
+            <WhyHimspring />
           </div>
         </div>
       </div>
+
+      {/* The nav's Purity target.
+
+          It cannot go on .hsv-rise__copy: that lives inside a sticky pin, so its
+          box is wherever the pin currently is, and an anchor jump to it lands
+          somewhere that depends on where you already were. This is a zero-height
+          marker on the section itself, at the scroll depth where the rise is
+          actually on screen — RISE_START is 0.72 of the scrubbable span, so 78%
+          puts the reader just inside the beat with the climb still to come. */}
+      <span className="hsv-intro__mark" id="purity" aria-hidden="true" />
     </section>
   );
 }

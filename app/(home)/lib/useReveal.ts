@@ -43,6 +43,20 @@ export function useReveal<T extends HTMLElement>() {
       return;
     }
 
+    /* Already on screen at mount: reveal it without waiting on the observer.
+       The -8% bottom rootMargin is a dead band, and anything sitting inside it
+       in the first viewport never intersects at threshold 0.15 — it stays at
+       opacity 0 until the reader scrolls it *up*, by which time they have
+       scrolled past the thing it was announcing. That is how the hero's "Two
+       formats" link came to be permanently invisible on a phone, where the foot
+       stacks into a column and pushes the link 23px into the band; on a wide
+       screen the foot is one row and it clears. The stagger is CSS transition
+       delay, not observation timing, so first-screen elements look the same. */
+    if (el.getBoundingClientRect().top < window.innerHeight) {
+      setVisible(true);
+      return;
+    }
+
     const observer = sharedObserver();
     onVisible.set(el, () => setVisible(true));
     observer.observe(el);
