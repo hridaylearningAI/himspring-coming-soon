@@ -342,6 +342,17 @@
   --scene: 0;
   --lede: 1;
   --rise: 0;
+  /* The narrow timeline's pair, and the indirection the composition actually
+     reads. Everything below consumes --lede-eff / --rise-eff, and the only thing
+     the breakpoint does is repoint those at the other pair — so there is one
+     place where "which timeline is this" is decided rather than four.
+
+     Defaults match the wide pair's: with no script, or under reduced motion where
+     useScrub bails, the lede is up and the rise has arrived. */
+  --lede-n: 1;
+  --rise-n: 0;
+  --lede-eff: var(--lede);
+  --rise-eff: var(--rise);
   position: sticky; top: 0; height: 100svh; overflow: hidden;
 }
 /* The handover layer. Identical drawing to the one inside the portal, at an
@@ -382,7 +393,7 @@
   display: grid; place-items: center;
 }
 .hsv-intro__veil { position: absolute; inset: 0; opacity: var(--veil); z-index: 2 }
-.hsv-intro__copy { opacity: var(--lede) }
+.hsv-intro__copy { opacity: var(--lede-eff) }
 .hsv-intro__stage .hsv-bottle {
   height: 58vh;
   /* origin at the base, not the centre: scaling about the middle throws the
@@ -615,7 +626,7 @@
      do not arrive as a single block. x2.4 is the reciprocal of the ~0.42 each
      takes to travel, so they overlap for most of it. */
   --d: 0;
-  --v: clamp(0, calc((var(--rise) - var(--d)) * 2.4), 1);
+  --v: clamp(0, calc((var(--rise-eff) - var(--d)) * 2.4), 1);
   /* enough travel to start below the frame from a resting bottom of 12vh. At
      --v = 1 the translate is zero, so the group settles on exactly the geometry
      above and nothing else. */
@@ -662,7 +673,7 @@
   left: 50%; right: 0;
   top: 50%; bottom: auto;
   transform: translateY(-50%);
-  opacity: clamp(0, calc((var(--rise) - .28) * 2.6), 1);
+  opacity: clamp(0, calc((var(--rise-eff) - .28) * 2.6), 1);
 
   /* Its own ground, rather than relying on .hsv-intro__veil.
 
@@ -693,7 +704,7 @@
 .hsv-rise::before {
   content: ""; position: absolute; inset: 0; z-index: 0;
   pointer-events: none;
-  opacity: clamp(0, calc((var(--rise) - .28) * 2.6), 1);
+  opacity: clamp(0, calc((var(--rise-eff) - .28) * 2.6), 1);
   background: radial-gradient(
     62% 115% at 100% 50%,
     color-mix(in srgb, var(--hs-white) 88%, transparent) 0%,
@@ -707,7 +718,11 @@
 /* Zero-height scroll marker, at the depth where the rise is on screen. Not
    display:none — a target with no box is not scrolled to. */
 .hsv-intro__mark {
-  position: absolute; top: 78%; left: 0;
+  /* 72% of the section, which lands inside the rise on both timelines: the wide
+     one is 420vh over a 320vh span, so this is p=0.945 — the claims arrived; the
+     narrow one is 560vh over 460vh, so p=0.876 — the claims coming up. 78% put
+     the wide case past p=1, which is the pin already released. */
+  position: absolute; top: 72%; left: 0;
   width: 1px; height: 1px;
 }
 
@@ -1714,6 +1729,24 @@
   .hsv-pressure__ch {
     transform: none !important;
     -webkit-text-stroke-width: 0 !important;
+  }
+
+  /* The beats take turns instead of sharing the frame.
+
+     Repointing these two is the whole switch: the composition reads --lede-eff
+     and --rise-eff, so the film gets the frame to itself, then the story, then
+     the ladder. The story was an opaque panel sitting on the film for the whole
+     scrub, and on a real handset — where Safari's chrome takes a slice the
+     emulator never does — that left the film about a quarter of the visible page.
+
+     And the section grows to 560vh, because three beats one after another need
+     more scroll than three beats stacked on top of each other. The film keeps its
+     0..0.66 share, which is 304vh of travel here against 211 on a desktop: a
+     slower scrub, which is the right way round for a thumb. */
+  .hsv-intro { height: 560vh }
+  .hsv-intro__pin {
+    --lede-eff: var(--lede-n);
+    --rise-eff: var(--rise-n);
   }
 
   /* [02] is pinned and scrubbed here too, by instruction — the same sequence as

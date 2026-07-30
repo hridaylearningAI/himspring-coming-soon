@@ -37,6 +37,27 @@ const FILM_END = 0.66;
 const RISE_START = 0.72;
 const RISE_END = 0.95;
 
+/* The narrow timeline, written alongside the wide one every frame.
+
+   On a phone the story cannot share the frame with the film. It is a heading, a
+   lede and two paragraphs, which needs an opaque panel to stay legible over a
+   photograph, and that panel measured 63% of the visible page on a real handset
+   once Safari's own chrome had taken its share — the film was a strip of bottle
+   neck. Shrinking the type does not fix a block whose height is set by the words
+   in it.
+
+   So the beats stop overlapping and take turns instead: the film owns the frame,
+   then the story, then the rise. Which is why these run late — the story fades in
+   only once the film has arrived at the landscape.
+
+   No width check in here on purpose. Both sets are three subtractions and a
+   clamp, so writing both every frame is cheaper than a matchMedia read plus the
+   resize listener and hydration ordering it would need, and CSS picks between
+   them at the breakpoint. See --lede-eff / --rise-eff in deck.css. */
+const N_LEDE_IN: readonly [number, number] = [0.66, 0.73];
+const N_LEDE_OUT: readonly [number, number] = [0.84, 0.885];
+const N_RISE: readonly [number, number] = [0.86, 1];
+
 export default function Intro() {
   const section = useRef<HTMLElement | null>(null);
   /* the pin, not the stage: every layer below is the stage's sibling, and
@@ -68,6 +89,14 @@ export default function Intro() {
     /* and hands over to the formats copy rather than sharing the frame with it */
     el.style.setProperty("--lede", (1 - segment(p, FILM_END, RISE_START + 0.06)).toFixed(3));
     el.style.setProperty("--rise", segment(p, RISE_START, RISE_END).toFixed(3));
+
+    /* The narrow pair. The lede fades in and back out rather than starting up
+       and leaving, so it is the smaller of the two ramps — in after the film,
+       out before the bottles climb into the same frame. */
+    const ledeIn = segment(p, N_LEDE_IN[0], N_LEDE_IN[1]);
+    const ledeOut = 1 - segment(p, N_LEDE_OUT[0], N_LEDE_OUT[1]);
+    el.style.setProperty("--lede-n", Math.min(ledeIn, ledeOut).toFixed(3));
+    el.style.setProperty("--rise-n", segment(p, N_RISE[0], N_RISE[1]).toFixed(3));
   });
 
   return (
