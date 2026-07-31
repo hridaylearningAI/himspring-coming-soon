@@ -30,7 +30,6 @@ export type FamilyMember = {
   readonly name: string;
   /* millilitres */
   readonly ml: number;
-  readonly note: string;
 };
 
 export type Family = readonly [FamilyMember, FamilyMember, FamilyMember];
@@ -106,6 +105,15 @@ export const scaleFor = (ml: number) => Math.cbrt(ml / LADDER_BASE_ML);
 /* Ordered largest first. The section opens on the largest — the one the brand
    leads with — and works down, which is also the order the panels subdivide in.
 
+   Each member carried a `note` — a sentence on what that size is for, set under
+   the volume. The three glass ones were named for removal and PET's three went
+   with them, because there is one <p> rendering the field for both formats:
+   taking it out for glass alone would have left a caption that appears only
+   when the switch is thrown, which reads as a defect rather than as a choice.
+   The field is gone from FamilyMember rather than left unread, so nothing here
+   claims to carry copy the page does not show. The strings are in git if they
+   are wanted back.
+
    PET's three volumes are the glass ones, as a stand-in. The real PET line has
    not been supplied yet, and this is the same kind of placeholder the section
    already carries for the product shots: visible rather than implied, and one
@@ -119,21 +127,18 @@ export const FAMILIES: Readonly<Record<FormatId, Family>> = {
       label: "Size 01",
       name: "750 ml",
       ml: 750,
-      note: "The shared bottle. Set down in the middle of the table and poured from all evening.",
     },
     {
       id: "glass-500",
       label: "Size 02",
       name: "500 ml",
       ml: 500,
-      note: "The one you carry. Enough for a morning, small enough to hold in one hand.",
     },
     {
       id: "glass-330",
       label: "Size 03",
       name: "330 ml",
       ml: 330,
-      note: "The place setting. One glass, poured and finished, with nothing left standing.",
     },
   ],
   pet: [
@@ -142,21 +147,18 @@ export const FAMILIES: Readonly<Record<FormatId, Family>> = {
       label: "Size 01",
       name: "750 ml",
       ml: 750,
-      note: "The car door and the kit bag. The same water, in something that survives being thrown in after it.",
     },
     {
       id: "pet-500",
       label: "Size 02",
       name: "500 ml",
       ml: 500,
-      note: "The everyday one. Desk, gym, commute; refilled or replaced without a second thought.",
     },
     {
       id: "pet-330",
       label: "Size 03",
       name: "330 ml",
       ml: 330,
-      note: "The one that goes in a lunchbox. Light enough that a child carries it and finishes it.",
     },
   ],
 };

@@ -998,11 +998,15 @@
    the offset that centres its content in that third. Family.tsx overwrites both
    per frame, so these are the no-script composition.
 
-   --hsv-key and --hsv-body are the copy colours, and the plates forced them.
-   Measured against each plate's darkest region — the right test, because the
-   copy travels the full width of its panel on --cx and so crosses everything in
-   it — ink lands at 9.6 / 9.1 / 7.6, ink-soft at 3.1 / 3.0 / 2.5, and gold at
-   about 1.5 on all three. So both roles go to full ink on every panel.
+   --hsv-key is the copy colour, and the plates forced it. Measured against each
+   plate's darkest region — the right test, because the copy travels the full
+   width of its panel on --cx and so crosses everything in it — ink lands at
+   9.6 / 9.1 / 7.6, ink-soft at 3.1 / 3.0 / 2.5, and gold at about 1.5 on all
+   three. So it goes to full ink on every panel.
+
+   There were two, --hsv-key and --hsv-body, when the panel carried a note under
+   the volume. The note is gone and so is --hsv-body; the measurement above is
+   why the surviving one is not gold.
 
    That costs the gold label the 750 panel used to carry. It is not a loss worth
    arguing over: gold on these plates is ~1.5:1, which is not a compliance
@@ -1014,19 +1018,16 @@
   --l: 0%; --r: 66.667%; --cx: -33.333vw;
   background: var(--hsv-tone, var(--hsv-snow)); color: var(--hs-ink);
   --hsv-key: var(--hs-ink);
-  --hsv-body: var(--hs-ink);
 }
 .hsv-panel--p2 {
   --l: 33.333%; --r: 33.333%; --cx: 0vw;
   background: var(--hsv-tone, var(--hsv-glacier)); color: var(--hs-ink);
   --hsv-key: var(--hs-ink);
-  --hsv-body: var(--hs-ink);
 }
 .hsv-panel--p3 {
   --l: 66.667%; --r: 0%; --cx: 33.333vw;
   background: var(--hsv-tone, var(--hsv-stone)); color: var(--hs-ink);
   --hsv-key: var(--hs-ink);
-  --hsv-body: var(--hs-ink);
 }
 
 /* The copy and the bottle, held together and slid into the middle of whatever
@@ -1107,24 +1108,15 @@
 .hsv-panel__name {
   font-family: var(--hs-display); font-weight: 400;
   font-size: clamp(32px, 4vw, 66px); line-height: 1.12;
-  margin-bottom: 1rem;
+  /* no margin-bottom: this was the gap down to .hsv-panel__note and the name is
+     the last thing in .hsv-panel__inner now */
 }
-/* Both take their colour from the panel, not from the shared class. This used to
-   be one flat rule for all three "now that every ground is light" — see the
-   --hsv-key note above for why that did not survive measurement. */
+/* Takes its colour from the panel, not from the shared class — see the --hsv-key
+   note above for why a flat rule did not survive measurement. It was two rules,
+   this and .hsv-panel__note; the note is gone (see Family.tsx) and took
+   --hsv-body with it, since nothing else ever read that token. */
 .hsv-panel .hsv-label { color: var(--hsv-key, var(--hs-gold)) }
-.hsv-panel__note {
-  font-size: 13.5px; line-height: 1.65;
-  color: var(--hsv-body, var(--hs-ink-soft));
-}
 
-/* Centred under the copy, cropped by the panel's bottom edge.
-
-   Upright, where this used to carry a 9deg tilt. The tilt suited a bottle
-   cropped into a corner; it cannot survive here, because three bottles at three
-   volumes only compare if the thing being compared is their height, and a
-   rotated bottle is shorter than an upright one by a factor nobody can discount
-   by eye. The whole section is a measurement — so the subject stands up. */
 /* The size ladder.
 
    One rule, not three. This used to be .hsv-panel--s750/s500/s330 with a literal

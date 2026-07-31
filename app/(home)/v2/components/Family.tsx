@@ -183,8 +183,12 @@ export default function Family() {
                   <p className="hsv-label">
                     {formatLabel} &middot; {m.label}
                   </p>
+                  {/* The note under the volume is gone by instruction — "The
+                      shared bottle. Set down in the middle of the table…" and
+                      its two siblings. The panel is now the label, the volume
+                      and the bottle. See lib/family for why PET's three went
+                      with them. */}
                   <p className="hsv-panel__name">{m.name}</p>
-                  <p className="hsv-panel__note">{m.note}</p>
                 </div>
 
                 {/* Both vessels mounted, one visible, crossfaded between.
