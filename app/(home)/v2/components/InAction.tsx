@@ -100,8 +100,8 @@ export default function InAction() {
   return (
     <section className="hsv-jr" id="action" aria-labelledby="hsv-jr-t">
       {/* The rail itself carries no information the panel does not state, and
-          reading fifteen photo captions to get to it would be a penalty for
-          using a screen reader. */}
+          reading every photo caption to get to it would be a penalty for using
+          a screen reader. */}
       <div className="hsv-jr__cols" aria-hidden="true">
         {ACTION_COLUMNS.map((column, i) => (
           <Column column={column} key={i} />
