@@ -1,0 +1,512 @@
+/* ============================================================
+   HIMSPRING — internal pages
+
+   The five long-form pages under (home): our-story, the-source, purity,
+   sustainability, contact. One sheet, imported by each of them.
+
+   This file follows the same two rules deck.css sets for the homepage, because
+   the point of it is that these pages read as the same site:
+
+     - colour is only ever a token from home.css. No literal hex, with the one
+       exception noted on .hsi-frame.
+     - anything home.css already has a class for is used rather than restated.
+       That is most of a page: .hs-shell, .hs-band, .hs-eyebrow, .hs-h2,
+       .hs-body, .hs-btn, .hs-link and .reveal all come from there. What is left
+       here is only what the homepage has no equivalent of — a photographic page
+       opener, the tonal grounds, and five content blocks.
+
+   Prefixed .hsi-, not .hsv-. deck.css opens by promising that everything in it
+   is .hsv- and touches no .hs- selector, "so this file cannot affect the live
+   homepage while both exist". A second sheet in the same namespace quietly
+   voids that: .hsv-card and .hsv-section are generic enough that deck.css could
+   reasonably add either tomorrow, and the collision would land on the homepage
+   with nothing to warn anyone. Two namespaces, two sheets, no overlap.
+
+   The one deliberate .hs- rule is the drop cap on navy ground — see .hsi-band--
+   navy below for why it has to be here rather than in home.css.
+   ============================================================ */
+
+.hsi {
+  /* The fixed nav's own height. Same measurement and the same caveat as
+     --hsv-nav-h in deck.css: .hs-nav has no height of its own, it is 1.1rem of
+     padding either side of the logo lockup, so it runs 81px at the clamp's
+     floor and 93px at its ceiling. 93 is the number to hold. Keep in step with
+     deck.css if the lockup size changes. */
+  --hsi-nav-h: 93px;
+  position: relative;
+  overflow-x: hidden;
+  /* background, colour and font all come from .hs-root in home.css, which wraps
+     every page in this route group. Restating them here only creates a second
+     place for them to drift. */
+}
+
+/* ============================================================
+   page opener
+
+   Not the homepage's hero — that one is a 100svh takeover with a composited
+   bottle and a travelling rig. This is the smaller thing a section page opens
+   with: one plate, one veil, three lines of type, and enough of the next
+   section showing at the fold that the page reads as having somewhere to go.
+
+   svh, not vh, throughout. deck.css records why at length: vh is the large
+   viewport, the height the page would have with the browser chrome retracted,
+   so a vh-sized frame on a phone with Safari's bars up is about 15% taller than
+   the screen and everything measured against it sits too low.
+   ============================================================ */
+.hsi-hero {
+  position: relative;
+  min-height: 78svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--hs-navy);
+  color: var(--hs-white);
+  /* top padding clears the fixed bar; the rest is the page's own band */
+  padding: calc(var(--hsi-nav-h) + var(--hs-band)) 0 var(--hs-band);
+}
+/* A short opener, for pages whose job is the block underneath rather than the
+   picture — /contact, where the form is the page. */
+.hsi-hero--short { min-height: 56svh }
+
+/* --- the bar, reversed over the opener ---
+
+   The homepage gets away with a dark bar over its hero because that hero is a
+   pale plate under a white veil. These openers are navy, and unstuck the bar
+   has no background of its own — so ink links and a navy lockup were sitting on
+   navy and effectively disappearing until the first scroll.
+
+   Reversed here rather than in SiteNav, because it is a fact about what is
+   underneath the bar on these five pages, not about the bar. :not(.is-stuck) is
+   the whole condition: the moment it takes its white ground at 40px, home.css's
+   own colours are correct again and these rules stop applying.
+
+   The lockup uses the same filter .hs-logo--light does — one artwork taken to
+   pure white rather than a second asset, so the two marks can never drift. */
+.hsi .hs-nav:not(.is-stuck) { color: var(--hs-white) }
+.hsi .hs-nav:not(.is-stuck) .hs-logo img { filter: brightness(0) invert(1) }
+.hsi .hs-nav:not(.is-stuck) .hs-burger span { background: var(--hs-white) }
+
+.hsi-hero__scene { position: absolute; inset: 0; z-index: 0 }
+.hsi-hero__scene img {
+  width: 100%; height: 100%; object-fit: cover;
+  /* Same treatment the homepage hero plate gets, and the same reason: the wash
+     sets how much of the plate survives, the blur sets whether what survives
+     reads as a place rather than as a photograph of one. Lighter than the
+     hero's 7px because this plate is the only picture in the opener and there
+     is no reveal further down the page for it to spoil.
+
+     Scaled past the frame so the blur has material to sample at the edges;
+     without it a blurred cover image feathers into its own border. */
+  filter: blur(3px);
+  transform: scale(1.06);
+  transform-origin: 58% 62%;
+  /* home.css owns this keyframe — the homepage hero runs the identical drift.
+     `forwards`, not `infinite alternate`: it settles and stays settled. */
+  animation: hs-ken 30s ease-out forwards;
+}
+
+.hsi-hero__veil {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  /* Two layers doing two jobs. The radial darkens the corners so the type is
+     never over the brightest part of a plate we did not choose the composition
+     of; the linear lands the bottom edge on flat navy, so the seam into
+     whatever section follows is a colour match rather than a photograph
+     stopping. */
+  background:
+    radial-gradient(ellipse 85% 75% at 50% 45%, transparent 30%,
+      color-mix(in srgb, var(--hs-navy) 82%, transparent) 100%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--hs-navy) 52%, transparent) 0%,
+      color-mix(in srgb, var(--hs-navy) 86%, transparent) 74%,
+      var(--hs-navy) 100%);
+}
+
+.hsi-hero__inner {
+  position: relative; z-index: 2;
+  width: 100%; max-width: var(--hs-shell);
+  margin-inline: auto; padding-inline: var(--hs-gut);
+  text-align: center;
+}
+/* The eyebrow is .hs-eyebrow, unchanged: --hs-gold measures 5.99:1 on navy, so
+   the deep cut the homepage hero needs over its pale plate is not needed here. */
+.hsi-hero__title {
+  font-family: var(--hs-display); font-weight: 400;
+  font-size: clamp(40px, 6vw, 88px); line-height: 1.04;
+  /* .01em, matching every display heading on the homepage. Caps drawn to sit
+     under lowercase want tracking back, but Devasia is condensed and the usual
+     .03-.04em for a display cap opens it far enough to undo the thing the face
+     is here for. .hsv-fr__h and .hsv-intro__h record the same finding. */
+  letter-spacing: .01em;
+  /* Caps set in CSS, sentence case in the DOM, as .hsv-hero__title and
+     .hsv-return__line: screen readers read the DOM text, and literal capitals
+     there get spelled out letter by letter by some of them. */
+  text-transform: uppercase;
+  margin: 0 auto;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+.hsi-hero__lede {
+  font-family: var(--hs-text);
+  font-size: clamp(15.5px, 1.3vw, 18px); line-height: 1.75;
+  color: color-mix(in srgb, var(--hs-white) 84%, var(--hs-navy));
+  max-width: 56ch; margin: clamp(1.4rem, 3vw, 2rem) auto 0;
+}
+
+/* ============================================================
+   grounds
+
+   Snow, White, Mist, Navy — the tonal ladder DESIGN.md names, used the way the
+   homepage uses it: a page alternates grounds so the sections separate without
+   any of them needing a border.
+
+   Snow White is the brand book's own value and is NOT --hs-white; deck.css
+   carries the same literal as --hsv-snow with the same note. It is the one
+   colour here that has no home.css token, and the literal IS the record of the
+   book's value, so aliasing it to --hs-white would reintroduce the drift
+   deck.css went out of its way to avoid.
+   ============================================================ */
+.hsi-band { position: relative }
+.hsi-band--snow { background: #fefef6 }
+.hsi-band--mist { background: var(--hs-mist) }
+.hsi-band--navy { background: var(--hs-navy); color: var(--hs-white) }
+
+/* --- copy on navy ---
+
+   Four rules, because four classes from home.css are ink-coloured by
+   declaration rather than by inheritance and would otherwise render near-black
+   on navy. Written as descendants of .hsi-band--navy so they cannot reach the
+   homepage, which has no such class.
+
+   The drop cap is the one that matters. .hs-body--lead::first-letter sets
+   `color: var(--hs-ink)` outright, so a lede on a dark ground was losing its
+   first letter entirely — the paragraph appeared to start on its second. */
+.hsi-band--navy .hs-h2 { color: var(--hs-white) }
+.hsi-band--navy .hs-body { color: color-mix(in srgb, var(--hs-white) 78%, var(--hs-navy)) }
+.hsi-band--navy .hs-body--lead::first-letter { color: var(--hs-white) }
+.hsi-band--navy .hs-eyebrow { color: var(--hs-gold) }
+
+/* --- and on the light ones ---
+
+   .hs-eyebrow is --hs-gold, which is 2.54:1 on white. That is correct where the
+   homepage uses it (over the hero plate it takes --hs-gold-deep, and in the
+   deck it is either large or decorative) but these pages set it at 10px over
+   flat Snow and Mist, where it has to carry. --hs-gold-ink is the measured
+   answer: 5.14:1 on cream, 5.74 on white. */
+.hsi-band--snow .hs-eyebrow,
+.hsi-band--mist .hs-eyebrow,
+.hsi-band--plain .hs-eyebrow { color: var(--hs-gold-ink) }
+
+/* ============================================================
+   section head and grids
+   ============================================================ */
+.hsi-head { max-width: 46ch; margin-bottom: clamp(2.5rem, 5vw, 4rem) }
+/* .hs-h2 carries no bottom margin — it is used on the homepage in flex and grid
+   contexts that own their own spacing — so the head block supplies it. */
+.hsi-head .hs-h2 { margin-bottom: 1.25rem }
+.hsi-head .hs-body { max-width: none }
+
+/* Two tracks and three tracks. Both collapse on the site's own breakpoints
+   rather than new ones: 900 is where the homepage's split bands stack, 1080 is
+   where its rails and connectors shed. */
+.hsi-duo {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(2.5rem, 6vw, 5rem); align-items: center;
+}
+.hsi-trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem, 3vw, 2.5rem) }
+/* .hsi-duo sets its own vertical rhythm between the head and the grid when both
+   are in one band */
+.hsi-head + .hsi-duo,
+.hsi-head + .hsi-trio { margin-top: 0 }
+
+/* ============================================================
+   card
+
+   Flat at rest with a hairline, per DESIGN.md's Flat-At-Rest Rule: depth on
+   this site comes from 1px borders and tonal field shifts, and a shadow means
+   the element is genuinely floating in z-space. A card sitting in a band is
+   not. The hover is the border swapping to gold, which is the move .hs-btn,
+   .hs-foot__social-btn and .hs-contact__drop all already make — there is no
+   translateY lift anywhere on the homepage and one here would read as a
+   different site's component.
+
+   16px radius: the same as .hsv-jr__card, which is the only carded surface the
+   homepage has.
+   ============================================================ */
+.hsi-card {
+  display: flex; flex-direction: column;
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  border: 1px solid var(--hs-gold-pale);
+  border-radius: 16px;
+  background: var(--hs-white);
+  transition: border-color .45s var(--hs-ease), background-color .45s var(--hs-ease);
+}
+.hsi-card:hover { border-color: var(--hs-gold) }
+
+.hsi-band--navy .hsi-card {
+  background: color-mix(in srgb, var(--hs-white) 5%, transparent);
+  border-color: color-mix(in srgb, var(--hs-white) 16%, transparent);
+}
+.hsi-band--navy .hsi-card:hover {
+  background: color-mix(in srgb, var(--hs-white) 9%, transparent);
+  border-color: var(--hs-gold);
+}
+/* the aside in a two-card comparison — quieter, not a peer */
+.hsi-card--muted { opacity: .78 }
+
+/* The numeral. Times italic through --hs-italic, never a hardcoded Times stack:
+   home.css spends a long note on why that token exists, and the short version is
+   that neither loaded family can set an italic, so every italic on this site
+   resolves through one declaration or it resolves through several that will
+   drift. Same role and same face as .hs-sus__num and .hs-sign__name. */
+.hsi-card__num {
+  font-family: var(--hs-italic); font-style: italic;
+  font-size: 1.75rem; line-height: 1;
+  color: var(--hs-gold-ink);
+  margin-bottom: 1.1rem;
+}
+.hsi-band--navy .hsi-card__num { color: var(--hs-gold) }
+/* the same slot carrying a word rather than a numeral — Times italic at 28px is
+   a figure, at a five-syllable word it is a headline competing with the one
+   below it */
+.hsi-card__num--word {
+  font-family: var(--hs-sans); font-style: normal;
+  font-size: 10px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--hs-gold-ink);
+}
+.hsi-band--navy .hsi-card__num--word { color: var(--hs-gold) }
+
+.hsi-card__title {
+  font-family: var(--hs-display); font-weight: 400;
+  /* Larger than the 1.2-1.3rem the homepage's own h3s take (.hs-pur__col h3,
+     .hs-sus__item h3), because those sit under a gold rule or a medallion that
+     does half the work of announcing them. These have only their own weight,
+     and Devasia is condensed enough that caps at 24px read smaller beside 15px
+     Gotham than the numbers suggest. */
+  font-size: clamp(1.3rem, 2.1vw, 1.75rem); line-height: 1.18; letter-spacing: .01em;
+  text-transform: uppercase;
+  margin-bottom: .75rem;
+}
+/* .hs-body caps itself at 42ch, which inside a 300px card is a cap that never
+   engages and a max-width that fights the card's own padding. */
+.hsi-card__body {
+  font-family: var(--hs-text);
+  font-size: 15px; line-height: 1.7;
+  color: var(--hs-ink-soft);
+  margin: 0; max-width: none;
+}
+.hsi-band--navy .hsi-card__title { color: var(--hs-white) }
+.hsi-band--navy .hsi-card__body { color: color-mix(in srgb, var(--hs-white) 76%, var(--hs-navy)) }
+
+/* ============================================================
+   provenance strip
+
+   The same four figures the homepage's .hs-prov band carries, and deliberately
+   the same construction: hairline-divided cells, --hs-accent numerals, a gold
+   micro-caps key underneath. It is set larger here because it is a section on
+   this page rather than a strip under a hero.
+   ============================================================ */
+.hsi-facts {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--hs-gold-pale);
+  background: var(--hs-white);
+}
+.hsi-facts__cell {
+  padding: clamp(1.75rem, 3.2vw, 2.75rem) 1rem;
+  text-align: center;
+  border-left: 1px solid var(--hs-gold-pale);
+}
+.hsi-facts__cell:first-child { border-left: 0 }
+.hsi-facts__val {
+  font-family: var(--hs-accent);
+  font-size: clamp(1.5rem, 2.8vw, 2.4rem); line-height: 1.1; letter-spacing: .01em;
+  color: var(--hs-ink);
+}
+/* .46em and super, exactly as .hs-prov__val sup — the unit rides the figure, it
+   is not a second figure */
+.hsi-facts__val sup { font-size: .46em; vertical-align: super; letter-spacing: .06em; margin-left: .1em }
+/* a place name is not a number; it takes the step down that .hs-prov__val--word
+   takes for the same reason */
+.hsi-facts__val--word { font-size: clamp(1.05rem, 1.6vw, 1.35rem); letter-spacing: .05em }
+.hsi-facts__key {
+  margin-top: .7rem;
+  font-size: 9px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase;
+  color: var(--hs-gold-ink);
+}
+
+/* ============================================================
+   pull quote
+   ============================================================ */
+.hsi-quote { max-width: 42ch; margin-inline: auto; text-align: center }
+.hsi-quote__q {
+  font-family: var(--hs-italic); font-style: italic;
+  font-size: clamp(1.5rem, 3vw, 2.4rem); line-height: 1.34;
+  color: var(--hs-ink);
+  margin: 0;
+}
+.hsi-quote__cite {
+  display: block; margin-top: 1.75rem;
+  font-family: var(--hs-sans); font-style: normal;
+  font-size: 10px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--hs-gold-ink);
+}
+
+/* ============================================================
+   media frame
+
+   One of the two things on these pages that genuinely floats — it is a
+   photograph laid on a tonal ground, not a surface flush with it — so it takes
+   a shadow rather than only a hairline.
+
+   The shadow is copied verbatim from .hs-contact__panel rather than re-derived,
+   including its literal rgba: that panel is the homepage's floating-on-a-ground
+   recipe, and two panels that must look seated the same way should be seated by
+   the same declaration.
+   ============================================================ */
+.hsi-frame {
+  position: relative; overflow: hidden; border-radius: 16px;
+  background: var(--hs-mist);
+  box-shadow: 0 24px 60px rgba(24, 52, 84, .07), inset 0 0 0 1px var(--hs-gold-pale);
+}
+/* Fixed 4:3, cropped, rather than height:auto.
+
+   The five source plates are four different shapes — story-spring is portrait,
+   intro-shivalik is wide — and left to their own aspect the frame was a
+   different size and a different proportion on every page, which is exactly the
+   thing that makes a set of pages read as five separate builds. The frame is a
+   frame; the picture is cropped into it. Same reasoning as .hs-gal__frame's
+   3/2 and .hsv-jr__card's authored heights.
+
+   4:3 rather than 3:2 because these sit beside a copy column in a two-track
+   grid — 3:2 at half of 1360px is 440px tall against roughly 380px of copy, and
+   the row's centre alignment then hangs the text in the middle of a tall
+   picture. */
+.hsi-frame img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block }
+.hsi-frame__cap {
+  position: absolute; inset-inline: 0; bottom: 0;
+  padding: 2rem 1.5rem .9rem;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--hs-navy) 82%, transparent));
+  color: var(--hs-white);
+  font-family: var(--hs-text);
+  font-size: 12.5px; line-height: 1.5; letter-spacing: .02em;
+}
+
+/* ============================================================
+   format showcase
+   ============================================================ */
+.hsi-formats { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem, 3vw, 2.5rem) }
+.hsi-format {
+  text-align: center;
+  padding: clamp(2rem, 3.5vw, 3rem) 1.25rem clamp(1.5rem, 2.5vw, 2rem);
+  border: 1px solid var(--hs-gold-pale);
+  border-radius: 16px;
+  background: var(--hs-white);
+  transition: border-color .45s var(--hs-ease);
+}
+.hsi-format:hover { border-color: var(--hs-gold) }
+/* A shelf of fixed depth with the bottle standing on its floor, rather than
+   three images each sized to themselves.
+
+   The three cards sit in one row, so the sizes only read as a ladder if the
+   baselines line up and the box is constant — scale the images instead and the
+   750 makes its card taller than the 330's, which reads as three different
+   cards rather than three sizes of one thing. --h is written per card by
+   purity/page.tsx from scaleFor(), the same cube-root the deck's family panels
+   use, so the proportions here and there cannot drift. */
+.hsi-format__shelf {
+  display: flex; align-items: flex-end; justify-content: center;
+  height: clamp(200px, 26vw, 300px);
+  margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+.hsi-format__shelf img {
+  height: var(--h, 100%); width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 26px color-mix(in srgb, var(--hs-navy) 18%, transparent));
+}
+.hsi-format__size {
+  font-family: var(--hs-display); font-weight: 400;
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem); letter-spacing: .01em; text-transform: uppercase;
+  color: var(--hs-ink);
+}
+.hsi-format__use {
+  margin-top: .5rem;
+  font-size: 9px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase;
+  color: var(--hs-gold-ink);
+}
+
+/* No closing CTA panel, by instruction — every one of these pages used to end
+   on a navy "reserve your allocation" plate. Nothing is now unreachable: the
+   fixed bar carries Contact us on every page, the footer carries it again, and
+   /contact is a page in its own right. A CTA repeated at the foot of five
+   consecutive pages is a fifth restatement of a link that is already twice on
+   screen.
+
+   ============================================================
+   contact page blocks
+   ============================================================ */
+.hsi-detail__label {
+  font-size: 10px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--hs-gold-ink);
+  margin-bottom: 1rem;
+}
+.hsi-detail address {
+  font-style: normal; white-space: pre-line;
+  font-family: var(--hs-text); font-size: 15px; line-height: 1.75;
+  color: var(--hs-ink-soft);
+}
+/* .hs-link is the site's inline call to action — micro-caps over a gold rule
+   that retracts on hover. Three things change here.
+
+   Size and case: an email address is read as an address, not scanned as a
+   label, so it keeps its own capitals and takes a step up from 11px.
+
+   align-self is the load-bearing one. .hs-link is inline-block, but .hsi-card
+   is a flex column with the default align-items: stretch, so as a flex child it
+   fills the card's width — and its ::after rule is width:100%, which would run
+   the gold underline across the whole card rather than under the address. */
+.hsi-detail__mail {
+  align-self: flex-start;
+  margin-top: 1.1rem;
+  font-size: 13px; letter-spacing: .1em; text-transform: none;
+}
+
+/* ============================================================
+   responsive
+
+   The site's breakpoints — 1080, 900, 768 — not new ones. home.css sheds the
+   gallery's third column and the purity connectors at 1080, stacks every split
+   band at 900, and drops to single-column forms and a two-up provenance grid at
+   768. These pages move with it.
+   ============================================================ */
+@media (max-width: 1080px) {
+  .hsi-trio,
+  .hsi-formats { grid-template-columns: repeat(2, 1fr) }
+}
+
+@media (max-width: 900px) {
+  .hsi-duo { grid-template-columns: 1fr }
+  /* stacked, the picture goes under the copy on every page rather than keeping
+     whichever side it had — a photograph that leads on one page and follows on
+     the next reads as a mistake once they are all one column */
+  .hsi-duo > .hsi-frame { order: 1 }
+  .hsi-hero { min-height: 68svh }
+  .hsi-hero__title { max-width: none }
+}
+
+@media (max-width: 768px) {
+  .hsi-facts { grid-template-columns: 1fr 1fr }
+  .hsi-facts__cell { border-top: 1px solid var(--hs-gold-pale) }
+  .hsi-facts__cell:nth-child(-n + 2) { border-top: 0 }
+  .hsi-facts__cell:nth-child(odd) { border-left: 0 }
+  .hsi-trio,
+  .hsi-formats { grid-template-columns: 1fr }
+  /* the plate is cropped hard at this width and the type sits over whatever
+     survives, so the veil lifts evenly rather than raking to the corners —
+     the same move .hs-story__veil and .hs-sus__veil make when they stack */
+  .hsi-hero__veil {
+    background: linear-gradient(180deg,
+      color-mix(in srgb, var(--hs-navy) 72%, transparent) 0%,
+      color-mix(in srgb, var(--hs-navy) 88%, transparent) 70%,
+      var(--hs-navy) 100%);
+  }
+  .hsi-quote { max-width: none }
+}

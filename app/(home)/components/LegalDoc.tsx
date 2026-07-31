@@ -91,7 +91,7 @@ export default function LegalDoc({ doc }: { readonly doc: LegalDocument }) {
         </div>
       </main>
 
-      <SiteFooter links={AWAY_SECTION_LINKS} />
+      <SiteFooter />
     </>
   );
 }

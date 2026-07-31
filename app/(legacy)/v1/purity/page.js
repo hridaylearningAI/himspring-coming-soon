@@ -1,8 +1,8 @@
-import Header from "../Header";
-import Footer from "../Footer";
-import NotifyForm from "../NotifyForm";
-import RevealFX from "../RevealFX";
-import { Icon } from "../icons";
+import Header from "../../Header";
+import Footer from "../../Footer";
+import NotifyForm from "../../NotifyForm";
+import RevealFX from "../../RevealFX";
+import { Icon } from "../../icons";
 
 export const metadata = {
   title: "Purity | Himspring",

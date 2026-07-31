@@ -1,7 +1,7 @@
-import Header from "../Header";
-import Footer from "../Footer";
-import RevealFX from "../RevealFX";
-import { Icon } from "../icons";
+import Header from "../../Header";
+import Footer from "../../Footer";
+import RevealFX from "../../RevealFX";
+import { Icon } from "../../icons";
 
 export const metadata = {
   title: "Our Story | Himspring",

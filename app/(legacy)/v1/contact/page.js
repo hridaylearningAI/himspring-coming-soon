@@ -1,9 +1,9 @@
-import Header from "../Header";
-import Footer from "../Footer";
-import NotifyForm from "../NotifyForm";
-import RevealFX from "../RevealFX";
-import ContactForm from "../ContactForm";
-import { Icon } from "../icons";
+import Header from "../../Header";
+import Footer from "../../Footer";
+import NotifyForm from "../../NotifyForm";
+import RevealFX from "../../RevealFX";
+import ContactForm from "../../ContactForm";
+import { Icon } from "../../icons";
 
 export const metadata = {
   title: "Contact | Himspring",

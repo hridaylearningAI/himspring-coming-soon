@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import {
   COMPANY,
   CONTACT_EMAIL,
+  FOOTER_LINKS,
   LEGAL_LINKS,
-  SECTION_LINKS,
   SOCIAL_LINKS,
   type NavLink,
   type SocialLink,
@@ -12,20 +12,21 @@ import { Logo } from "./Logo";
 
 /* [10] footer — three ruled columns over a baseline strip.
 
-   Explore takes the same prop the nav does, and for the same reason: these are
-   in-page anchors, so they belong to the page, not to the furniture.
+   One navigation column, not two. It briefly had both an About column of the
+   five internal pages and an Explore column of the homepage's anchors, which
+   named three of the same topics twice over; see FOOTER_LINKS in lib/content
+   for what was duplicated and the rule that settles which link wins.
 
-   What makes this the production footer rather than the layout one it replaced:
-   every href resolves, and resolves to something built in this design. Six did
-   not — three in About, the Instagram button, Privacy and Terms — and a footer
-   is where people look for exactly those, so a dead one here is worse than a
-   dead one anywhere else.
+   The list is the same on every page, which is the other half of the fix. It
+   used to take the nav's per-page prop, on the reasoning that in-page anchors
+   belong to the page rather than to the furniture — true of the bar, where the
+   links scroll the document you are reading, and false of the footer, where
+   they are a map of the site. The prop survives with a default rather than
+   being removed outright: /v1 is the archived homepage and its sections are its
+   own, so it is the one page that still overrides.
 
-   Four columns became three when About was dropped; see the note in lib/content
-   for what it held and why it is not simply pointed at the pages that exist. */
-
-/* Drawn on the same 24-unit grid and stroked, not filled, so both sit at the
-   same optical weight as each other and as the hairline rules around them. */
+   What makes this the production footer: every href resolves, and resolves to
+   something built in this design. */
 const ICON: Record<SocialLink["icon"], ReactNode> = {
   instagram: (
     <>
@@ -45,23 +46,11 @@ const ICON: Record<SocialLink["icon"], ReactNode> = {
 };
 
 export default function SiteFooter({
-  links = SECTION_LINKS,
+  links = FOOTER_LINKS,
 }: {
   readonly links?: readonly NavLink[];
 }) {
-  /* The year was hardcoded to 2026, which is right until it silently is not —
-     a stale copyright line being the classic tell of an unmaintained site.
-
-     Worth being precise about what this fixes, though: every page carrying this
-     footer prerenders as static, so the value is baked at build time and not per
-     request. It updates on the next deploy after New Year, not at midnight. That
-     is strictly better than a literal — a site that ships anything at all in a
-     year gets a correct footer for free — but it is not self-maintaining, and a
-     site left untouched for two years will say so. */
   const year = new Date().getFullYear();
-
-  /* An account with no URL yet is declared in content.ts and skipped here. The
-     alternative is href="#", which is the defect this footer exists to fix. */
   const socials = SOCIAL_LINKS.filter((social) => social.href);
 
   return (
@@ -72,12 +61,6 @@ export default function SiteFooter({
       <div className="hs-shell">
         <div className="hs-foot__grid">
           <div className="hs-foot__col hs-foot__col--brand">
-            {/* The full lockup, and no descriptor beside it. This used to pass
-                sub="Natural Himalayan Spring Water" under the monogram, which
-                the real artwork makes redundant and then contradicts — the
-                lockup carries "Natural Himalayan Water" and its Arabic setting
-                drawn into it, and two one-line descriptors stacked on top of
-                each other is one too many. */}
             <Logo lockup />
           </div>
 

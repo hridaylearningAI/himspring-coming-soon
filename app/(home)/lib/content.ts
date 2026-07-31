@@ -424,20 +424,36 @@ export const COMPANY = {
 
 export const CONTACT_EMAIL = "hello@himspring.com";
 
-/* The footer's About column is gone, and this is the note explaining why so it
-   is not re-added by someone reading a three-column footer as unfinished.
+/* The footer's one navigation column — every destination on the site, named
+   once.
 
-   It held three href="#" placeholders — Our Story, Craft & Design, Hospitality —
-   and was briefly pointed at /our-story, /the-source, /purity and
-   /sustainability, which do exist and do return 200. The trouble is what they
-   are: pre-redesign pages, navy palette, the retired hs monogram, the cloud
-   intro overlay. They were the only links on the new site that left it, and a
-   visitor following one landed somewhere that did not look like where they came
-   from.
+   This replaces a pair of columns, About and Explore, that were listing the
+   same site twice. About held the five internal pages; Explore held
+   SECTION_LINKS, the homepage's anchors. Three labels were in both — Our Story,
+   The Source, Why Himspring — so the footer showed each of them twice, side by
+   side, going to two different places, and a reader had no way to tell which
+   was the real one. "Contact Us" was a fourth repeat, of the Contact column
+   immediately to its right.
 
-   So the footer now links only to things built in the current design. Those four
-   pages stay reachable by URL and stay in the repo; when they are rebuilt, this
-   column comes back as a list here and a block in SiteFooter. */
+   The rule that resolves it: where a topic has both a page and a homepage
+   section, the page wins. It is the fuller treatment and it is the canonical
+   URL, and the homepage's own section is what the fixed bar above is for — a
+   footer is where you go to leave the page you are on, not to scroll it.
+
+   Six entries, not five plus five. Order is the nav bar's supplied order, with
+   Sustainability appended because it is the one topic the bar has no slot for.
+   The last two keep their anchors because they have no page to point at:
+   #family is the sizes and #founders is the board, and neither exists anywhere
+   but on the homepage. If either is ever given a page, it changes here and
+   nowhere else. */
+export const FOOTER_LINKS = [
+  { href: "/our-story", label: "Our Story" },
+  { href: "/the-source", label: "The Source" },
+  { href: "/purity", label: "Why Himspring" },
+  { href: "/#family", label: "Our Range" },
+  { href: "/#founders", label: "Founder" },
+  { href: "/sustainability", label: "Sustainability" },
+] as const satisfies readonly NavLink[];
 
 /* The baseline strip. Both of these resolve to real pages under (home) — see
    app/(home)/privacy and app/(home)/terms. */
@@ -476,13 +492,25 @@ export const SOCIAL_LINKS: readonly SocialLink[] = [
   },
 ];
 
-/* The in-page anchors as seen from a page that is not the homepage.
+/* The bar's link set as seen from a page that is not the homepage.
 
    `#formats` means "the formats section of this document", so on /privacy it
-   means nothing at all. Prefixing with / makes it a link to that section of the
-   homepage instead. The legal pages pass these to the nav and footer; the
-   homepage passes nothing and gets the bare anchors. */
-export const AWAY_SECTION_LINKS = SECTION_LINKS.map((link) => ({
-  href: `/${link.href}`,
-  label: link.label,
-})) as readonly NavLink[];
+   means nothing at all. This used to be SECTION_LINKS with a / prefixed onto
+   every href, which fixed that much — but it also meant the bar on /our-story
+   linked "Our Story" to the homepage's #formats, sending a reader off the very
+   page they had asked for. And with the footer below pointing the same label at
+   /our-story, one page was offering two destinations under one name.
+
+   Derived from FOOTER_LINKS instead, so the bar and the footer cannot disagree:
+   where a topic has a page the link is the page, and Our Range and Founder keep
+   their homepage anchors because they have nowhere else to go.
+
+   The slice is what keeps the bar to five. home.css measures .hs-nav__set
+   against exactly this set — five labels are about 389px of ink, which is what
+   makes them fit their column down to 1200px — so a sixth would break a fit
+   that was measured rather than guessed. Sustainability is last in FOOTER_LINKS
+   for that reason: it is the one topic the bar has no slot for, and putting it
+   at the end is what lets this be a slice rather than a second hand-kept list.
+   Reorder FOOTER_LINKS and this silently drops whatever falls off the end. */
+export const AWAY_SECTION_LINKS = FOOTER_LINKS.slice(0, 5) as readonly NavLink[];
+
