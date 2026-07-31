@@ -55,7 +55,7 @@ export default function Outro() {
           section rather than in the link list. */}
       <section className="hsv-return" id="commitment" ref={returnSection} aria-labelledby="hsv-return-t">
         <div className="hsv-return__pin" ref={pin}>
-          <Scene className="hsv-return__scene hsv-plate" src="/assets/sustain-valley.jpg" alt="">
+          <Scene className="hsv-return__scene hsv-plate" src="/assets/natures-finest-expression.jpg" alt="Himalayan mountain peak and pristine turquoise water source">
             {null}
           </Scene>
           <div className="hsv-return__veil" aria-hidden="true" />
@@ -74,7 +74,7 @@ export default function Outro() {
             {/* eslint-disable-next-line @next/next/no-img-element -- has to
                 object-fit cover the identical box as the plate it doubles, or
                 the ridge it masks stops registering with the one behind it */}
-            <img src="/assets/sustain-valley.jpg" alt="" decoding="async" loading="lazy" />
+            <img src="/assets/natures-finest-expression.jpg" alt="" decoding="async" loading="lazy" />
           </div>
         </div>
       </section>

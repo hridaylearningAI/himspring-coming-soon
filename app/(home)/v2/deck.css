@@ -165,20 +165,51 @@
     );
 }
 
-/* The plate is atmosphere here, not a view.
-
-   Blurred as well as washed, because the two do different jobs: the wash sets
-   how much of the plate survives, the blur sets whether what survives reads as
-   a place. Only the blur keeps the ridges from being legible as ridges at any
-   wash level — and they must not be, because the intro's whole payoff is
-   discovering that same ridgeline inside the bottle. A hero that already shows
-   the Shivalik spends that reveal before it happens.
-
-   Scaled slightly past the frame so the blur has material to sample at the
-   edges; without it a blurred cover image feathers into its own border. */
 .hsv-hero__scene > img {
-  filter: blur(7px);
-  transform: scale(1.05);
+  filter: blur(0px);
+  transform: scale(1.04);
+  will-change: transform, filter, opacity;
+  animation:
+    heroBackgroundReveal 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    heroBackgroundDrift 28s ease-in-out 2.4s infinite alternate;
+}
+
+@keyframes heroBackgroundReveal {
+  0% {
+    opacity: 0;
+    filter: blur(5px) brightness(0.88);
+    transform: scale(1.15) translate3d(0, 0, 0);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px) brightness(1);
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes heroBackgroundDrift {
+  0% {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.08) translate3d(-14px, -10px, 0);
+  }
+  100% {
+    transform: scale(1.05) translate3d(12px, -18px, 0);
+  }
+}
+
+.hsv-hero__veil {
+  animation: heroVeilFade 2s ease-out forwards;
+}
+
+@keyframes heroVeilFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 .hsv-hero__inner {
   position: relative; z-index: 2;
@@ -319,9 +350,30 @@
    40 + 76 was the last position that worked without the overlap, kept here in
    case it is wanted back: wordmark closing at ~87%, tagline at ~94%, and a 4vh
    gap under the title, at the cost of a noticeably smaller bottle. */
+/* 20 + 78 rather than 28 + 86, so the bottle ends inside the frame.
+
+   It used to sum to 114svh against a 100svh hero — the base hung 14svh below
+   the fold and roughly a sixth of the bottle was never visible. Gone by
+   instruction: every bottle on the site is to be fully visible.
+
+   Measured before moving anything, because the hero is crowded and there are
+   only two ways out. The nav is 94px, 10.5svh here; the eyebrow runs 16.0 to
+   18.6svh; the title 21.3 to 43.6; the foot 92.3 to 100.
+
+   Raising the bottle and keeping its size was the first choice and it does not
+   survive those numbers: a base at 91svh with 86svh of height puts the cap at
+   5svh, behind the bar. Clearing the bar at 12svh still lands the cap on the
+   eyebrow, which is centred exactly where the cap is.
+
+   So the cap holds its relationship to the type and the bottle gives up 8svh of
+   height — 9.3% smaller. At top: 20svh it enters the frame just above the
+   title's cap line and still passes in front of it, which is the overlap the
+   note above is about. The base at 98svh crosses the foot's band, but the foot
+   is space-between with its two items on the gutters and the bottle is ~195px
+   wide dead centre, so they do not meet at any width the bar itself survives. */
 .hsv-hero__stage {
-  position: absolute; left: 50%; top: 28svh; z-index: 3;
-  height: 86svh; transform: translateX(-50%);
+  position: absolute; left: 50%; top: 20svh; z-index: 3;
+  height: 78svh; transform: translateX(-50%);
   /* Rises into place on load, echoing the reference's own hero where the bottle
      enters from the bottom edge. 250ms slots it into the existing sequence —
      eyebrow at 0, title at 100 — so it arrives just behind the headline it
@@ -381,20 +433,49 @@
    identical size, so fading it up under a window that has already covered the
    frame changes nothing visible — which is the point. It means coverage never
    depends on a rotated capsule reaching all four corners. */
-/* The film fills the pin and is allowed to lose its edges — the shot is framed
-   16:9 and the pin is whatever the viewport is. `object-fit` on the canvas is
-   what makes the fixed 1920x1080 backing store safe: the bitmap never has to be
-   resized, so no frame is ever redrawn for a resize.
+/* The film fills the pin below the nav, and is allowed to lose its edges — the
+   shot is framed 16:9 and the pin is whatever the viewport is. `object-fit` on
+   the canvas is what makes the fixed 1920x1072 backing store safe: the bitmap
+   never has to be resized, so no frame is ever redrawn for a resize.
+
+   The top inset is the fix for the bottle's cap disappearing.
+
+   Worth recording what it was NOT, because the obvious diagnosis is wrong twice
+   over. The frames are not cropped: f001 carries the whole bottle with room
+   above and below it, and at 1920x1072 the shot is wider than any viewport, so
+   `cover` spends all its overflow on the sides and never takes a pixel off the
+   top. And nothing here was miscomposed. The cap was simply underneath the
+   fixed bar — in the pin's own coordinates it sits at about 50 to 96px, and the
+   bar is 94px of near-opaque white.
+
+   So the film is given the space that is actually visible rather than the space
+   the section occupies. It costs nothing and gains something: the shot's 1.791
+   ratio against a 1440x806 box is 1.787, near enough identical, so the
+   horizontal crop that `cover` was taking — 172px at this size — very nearly
+   disappears. More of the frame shows than before, not less.
+
+   Hiding the nav over this section was the other candidate and is worse: the
+   section is 3780px of scroll, so the site's only navigation would be gone for
+   four viewports, and it would have to be driven by an observer rather than by
+   a stylesheet.
+
+   --hsv-nav-h is the flat 93px measured for the wide bar. On a narrow screen
+   the real bar is about 81px, so this over-insets by ~12px — slack in the right
+   direction, and not worth a second breakpoint to reclaim.
 
    No transform and no will-change. The scale here used to be 1.2 to give the
    old drawn scene margin at the corners; the film needs none, and a promoted
    layer would pin the canvas raster the same way it pinned the portal's. */
 .hsv-intro__film {
-  position: absolute; inset: 0; z-index: 0;
-  width: 100%; height: 100%;
+  position: absolute; top: var(--hsv-nav-h); left: 0; right: 0; bottom: 0; z-index: 0;
+  width: 100%; height: calc(100% - var(--hsv-nav-h));
   object-fit: cover;
   display: block;
 }
+/* The band the inset leaves behind the bar. The bar is 95% white, so the 5% that
+   shows through has to be something — left as the page's default it was a hairline
+   of a different white against the film's own pale edge. */
+.hsv-intro__pin { background: var(--hs-white) }
 
 /* ---- the drawn portal: no longer rendered ----
 
@@ -853,92 +934,11 @@
   );
 }
 
-.hsv-jr__center {
-  position: absolute; inset: 0; z-index: 3;
-  display: flex; align-items: center; justify-content: center;
-  padding: 24px;
-  /* the rail behind stays hoverable — nothing in the panel is interactive */
-  pointer-events: none;
-}
-/* A defined plate, sized to the copy and no wider.
-
-   The live rail used a radial wash — `ellipse 130% 104%` fading to transparent.
-   Those percentages are gradient radii resolved against the box, so the
-   horizontal radius came out at 858px against a 330px half-width: the wash was
-   still ~90% opaque where the box clipped it, and it showed as a pale rectangle
-   with hard vertical edges wherever a dark card drifted behind. Softening it
-   into a real ellipse fixed the edge but left a visible blob floating over the
-   dark cards, which was worse.
-
-   So: an actual plate. Near-opaque rather than a wash, because the thing behind
-   it is moving — anything translucent enough to read the pictures through is
-   also translucent enough for the contrast under the text to change as they
-   drift, and type that gets harder to read every few seconds is not a choice.
-   Held to the copy's own width so it reads as a card set into the rail rather
-   than a scrim laid over it. */
-.hsv-jr__panel {
-  max-width: 640px; padding: 60px 68px; text-align: center;
-  border-radius: 28px;
-  background: color-mix(in srgb, var(--hs-white) 96%, transparent);
-  /* the same seating the cards get, so the plate belongs to the same stack */
-  box-shadow: 0 34px 60px -42px color-mix(in srgb, var(--hs-navy) 55%, transparent);
-
-  /* Resting state is away. ActionPanel.tsx swaps is-idle / is-in / is-out on
-     this element; the 200ms below is FADE_IN_MS there, and the hold is measured
-     from when it ends, so the two have to stay in step. Change one and the
-     dwell silently becomes wrong — leave them at 620 here while FADE_IN_MS says
-     200 and the plate holds for 520ms instead of 100. */
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 200ms ease, transform 200ms ease;
-  will-change: opacity;
-}
-.hsv-jr__panel.is-in { opacity: 1; transform: none }
-/* Leaves by fading only — no slide back down, which would read as the plate
-   being yanked away rather than clearing. Opacity alone, so the <h2> stays in
-   the accessibility tree and keeps naming the section.
-
-   300ms, down from 900 then 700, tracking HOLD_MS in ActionPanel.tsx as that
-   came down, then settled at 300 once HOLD_MS came back up. It outlasts the
-   200ms entrance on purpose: the plate arrives briskly and withdraws, rather
-   than blinking out the way a matched pair would. With the hold at 1500 these
-   two only shape the edges of the beat — HOLD_MS in ActionPanel.tsx is what
-   governs its length, so reach for that first. */
-.hsv-jr__panel.is-out {
-  opacity: 0; transform: none;
-  transition: opacity 300ms ease;
-}
-/* Without scripting the server-rendered class is is-idle, which is opacity 0 —
-   the section's only copy would never appear. ActionPanel handles reduced motion
-   itself; this covers the case where its effect never runs at all. */
-@media (scripting: none) {
-  .hsv-jr__panel { opacity: 1; transform: none; transition: none }
-}
-.hsv-jr__h {
-  font-family: var(--hs-display); font-weight: 400;
-  /* Devasia is condensed enough that this still sets "Purity, in its element."
-     on one line inside the plate's 504px of measure. */
-  font-size: clamp(52px, 6.2vw, 92px); line-height: 1;
-  color: var(--hs-ink);
-  margin-top: 1.25rem;
-  /* as .hsv-return__line and .hsv-hero__title — caps in CSS, sentence case in
-     the DOM, so the accessible name is still a sentence */
-  text-transform: uppercase;
-}
-/* "Purity, in its element." — the second half italic.
-
-   Times rather than a sheared Devasia, same as everywhere else. This one also
-   gains something from the swap beyond correctness: the heading is uppercase
-   Devasia, so the em now changes face as well as slant, which is the display
-   serif against text serif contrast a magazine deck actually uses. Slightly
-   larger for Times's x-height, and the tracking is opened because uppercase
-   italic serif closes up. */
-.hsv-jr__h em {
-  font-family: var(--hs-italic);
-  font-style: italic;
-  font-size: .92em; letter-spacing: .02em;
-}
-.hsv-jr__lede { margin: 1.4rem auto 0; max-width: 42ch }
+/* The copy plate that used to float here is gone — see InAction.tsx. With it
+   went .hsv-jr__center, .hsv-jr__panel and its is-idle/is-in/is-out states,
+   .hsv-jr__h, its italic em, .hsv-jr__lede, and the (scripting: none) fallback
+   that existed only to make sure the plate appeared without JS. None of it had
+   another user; the rail is now the cards and the mask over them.
 
 /* Sheds from the right as the viewport narrows, five columns down to two —
    the same order and the same breakpoints as the live rail. */
@@ -1145,19 +1145,42 @@
    Sized in vh, never to the panel. This is the one rule the section cannot
    survive breaking — a bottle scaled to fill its own column renders all three
    identically and the comparison the whole sequence is built on evaporates.
-   Shared `bottom` is the other half of it: every bottle is cropped on the same
+   Shared `bottom` is the other half of it: every bottle stands on the same
    line, so what differs between them is only height.
 
-   Centred under the copy, cropped by the panel's bottom edge, and upright —
-   this used to carry a 9deg tilt, which suited a bottle cropped into a corner
-   and cannot survive here, because a rotated bottle is shorter than an upright
-   one by a factor nobody can discount by eye. The whole section is a
-   measurement, so the subject stands up. */
+   Centred under the copy and upright — this used to carry a 9deg tilt, which
+   suited a bottle cropped into a corner and cannot survive here, because a
+   rotated bottle is shorter than an upright one by a factor nobody can discount
+   by eye. The whole section is a measurement, so the subject stands up.
+
+   And it now stands whole. This was bottom: -6svh, which hung every bottle 6svh
+   past the panel's lower edge — deliberate, and the sheet header still describes
+   the product being cropped by the frame as part of the ported structure. It is
+   gone by instruction: every bottle on the site is to be fully visible.
+
+   Un-cropping alone was not enough, and the reason is the format switch. It is
+   a 48px pill sitting 3.2svh off the panel's floor, so it occupies 91.5svh to
+   96.7svh — and a bottle merely inside the frame still had its base behind an
+   opaque control. Visible to a layout audit, not visible to a reader.
+
+   So the band is bounded at both ends, and both were measured rather than
+   guessed at 1440x900: the copy ends at 31.1svh and the switch starts at 91.5.
+   Allowing ~3svh under the copy and ~1.5 above the pill leaves about 57svh of
+   usable height, which is what sets these two numbers — base 56svh at bottom
+   10svh puts the tallest bottle's cap at 34svh and its foot at 90svh, clear at
+   both ends.
+
+   --hsv-base carries the whole cost, down from 64svh, because it has to: every
+   bottle is --hsv-scale x this one number, so shrinking here is the only change
+   that leaves the 1 : 0.874 : 0.761 ladder intact. Anything that adjusted the
+   three heights independently would break the comparison the section exists to
+   make. The bottles are 12.5% smaller and all three are still exactly as much
+   bigger than each other as they were. */
 .hsv-panel__bottle {
-  position: absolute; bottom: -6svh; left: 50%;
+  position: absolute; bottom: 10svh; left: 50%;
   transform: translateX(-50%);
   width: auto;
-  height: calc(var(--hsv-scale, 1) * var(--hsv-base, 64svh));
+  height: calc(var(--hsv-scale, 1) * var(--hsv-base, 56svh));
 
   /* Both formats are mounted in every panel and only one is shown. Hidden with
      opacity rather than display, because the two vessels are the same silhouette
@@ -1647,6 +1670,7 @@
      1.3:1 there — it reads as a wash, not as type. If it ever needs to carry
      again, the options are navy (the previous answer) or ~55% veil at the top. */
   color: #fff;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.75), 0 1px 4px rgba(0, 0, 0, 0.9);
   /* Both ends measured off the mask rather than guessed. Its alpha by row is
      nil to 38%, a haze transition from 40 to 56%, and effectively solid from
      60% down. The grid centres this line at 50vh, which is inside that
@@ -1937,8 +1961,9 @@
 
      Giving the panel the full frame moves the bottle's top from 0.28 of the
      height to 0.40 of it, and dropping the base to 62svh takes it to 0.46. The
-     bottle is smaller for it, and still cropped by the panel's bottom edge, which
-     is the part of the composition that was load-bearing. */
+     bottle is smaller for it, and it now stands whole rather than being cropped
+     by the panel's bottom edge — see .hsv-panel__bottle. The clearance this
+     block was protecting is unaffected: the bottle moved down, not up. */
   .hsv-panel {
     position: relative; min-height: 100svh;
     /* --hs-band bottoms out at 4.5rem on a phone, which is 72px against a fixed
@@ -1981,7 +2006,10 @@
     position: relative; inset: auto; z-index: 2;
     transform: none; width: auto; margin: 0 auto;
   }
-  .hsv-panel__bottle { bottom: -8svh }
+  /* Was -8svh. See the note on .hsv-panel__bottle for why nothing hangs past a
+     frame edge any more, and --hsv-base just above for the extra lift the
+     sticky switch needs here. */
+  .hsv-panel__bottle { bottom: 11svh }
   /* The ground is simply the ground here.
 
      --in is still written on a narrow screen — the scrub does not check width,
@@ -1998,7 +2026,12 @@
      one at a time rather than split between, these are compared from memory
      rather than side by side, and at 1:0.87:0.76 that is asking a lot of the
      reader; the larger base is what buys back a little of it. */
-  .hsv-panel { --hsv-base: 62svh }
+  /* 57svh, down from 62. The switch is sticky here rather than absolute — it
+     rides the viewport at 100svh - 4.6rem — so it sits over whatever is at the
+     foot of the frame, whichever panel that is. A base low enough to be inside
+     the panel was still behind the pill. Copy ends at 29.2svh here, so 57 at
+     bottom: 11svh puts the cap at 32 and the foot at 89, clear of both. */
+  .hsv-panel { --hsv-base: 57svh }
 
   /* Sticky rather than absolute, because there is no pin to be absolute inside —
      and the three panels are three full screens here, so a control that scrolls
@@ -2034,14 +2067,24 @@
     background: var(--hsv-snow);
   }
 
-  /* 70svh at 29vh landed the base 8px above the bottom edge: a whole bottle
-     floating in the middle of the frame, which is the catalogue photograph the
-     crop exists to avoid. 74svh at 30vh runs it off the edge by ~34px on a
-     390x844 screen — enough to read as cropped, and still shallow enough to
-     leave the mountain artwork at the foot of the label on screen. */
+  /* Back to 70svh at 29vh, which lands the base 8px above the bottom edge on a
+     390x844 screen — the whole bottle, inside the frame.
+
+     This is a straight reversal, and the note it replaces is worth keeping
+     because it was an argument rather than an oversight: this exact geometry
+     was built, and rejected for being "a whole bottle floating in the middle of
+     the frame, which is the catalogue photograph the crop exists to avoid". It
+     was replaced by 74svh at 30vh, running ~34px off the edge — cropped enough
+     to read as cropped, shallow enough to keep the label's mountain on screen.
+
+     The instruction is that every bottle on the site is fully visible, so the
+     crop goes and the catalogue-photograph risk is accepted. If it ever reads
+     that way, the fix is the ground rather than the crop: this bottle stands on
+     a plate with nothing under it, and the desktop hero does not have the
+     problem because the type wraps around it. */
   .hsv-hero__stage {
-    left: 50%; right: auto; top: 30svh; z-index: 3;
-    height: 74svh; transform: translateX(-50%);
+    left: 50%; right: auto; top: 29svh; z-index: 3;
+    height: 70svh; transform: translateX(-50%);
     animation: none; opacity: 1;
   }
   /* The line starts at the left gutter and runs across the bottle instead of
@@ -2222,8 +2265,9 @@
 
      Giving the panel the full frame moves the bottle's top from 0.28 of the
      height to 0.40 of it, and dropping the base to 62svh takes it to 0.46. The
-     bottle is smaller for it, and still cropped by the panel's bottom edge, which
-     is the part of the composition that was load-bearing. */
+     bottle is smaller for it, and it now stands whole rather than being cropped
+     by the panel's bottom edge — see .hsv-panel__bottle. The clearance this
+     block was protecting is unaffected: the bottle moved down, not up. */
   .hsv-panel {
     position: relative; min-height: 100svh; clip-path: none;
     padding: max(var(--hs-band), 7rem) var(--hs-gut) var(--hs-band);

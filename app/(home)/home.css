@@ -38,8 +38,33 @@
   --hs-gold-pale: #e5dac0;
   --hs-navy: #0b1a2a;
   --hs-navy-soft: #1e3a5f;
-  --hs-ink: #16191c;
-  --hs-ink-soft: #5e656b;
+  /* The label's own ink, sampled rather than picked.
+
+     public/assets/logo-wordmark.webp is cut from public/label.png — the actual
+     bottle label — and 97.9% of the wordmark's non-transparent pixels are
+     exactly this value. So "HIMSPRING" as printed on the glass and every
+     heading and paragraph on the site are now one colour, by measurement.
+
+     It replaces #16191c, a near-black that belonged to no part of the brand.
+     The cost is small and worth knowing: 14.95:1 on white against the old
+     17.41:1. Both are far past the 4.5 that 16px body copy needs, and past the
+     7:1 of AAA, so nothing on the site changes tier.
+
+     Note this is NOT --hs-navy. That one is #0b1a2a, a cool slate used as a
+     ground — the Experience band, the deck's return section, the hero veils.
+     This is an indigo and it is only ever ink. They never meet: type on a navy
+     ground is white. */
+  --hs-ink: #1e2155;
+  /* The soft tone follows the ink into the same family, or the page reads as
+     two systems — a warm-neutral grey sitting under an indigo heading picks up
+     a green cast by contrast, which is exactly what #5e656b did once the
+     heading above it moved.
+
+     Not a straight mix of --hs-ink with white: the label ink has R and G nearly
+     equal, so diluting it yields a lavender rather than a slate. This holds
+     R < G < B properly. 5.74:1 on white against the old 5.92 — the same tier,
+     and still clear of the 4.5 that 15-16px body copy needs. */
+  --hs-ink-soft: #5c6582;
 
   /* Brand book p.19: Times New Roman (Regular + Italic) and Gotham (Book + Bold
      Italic) are the two brand faces. Times carries the wordmark and everything

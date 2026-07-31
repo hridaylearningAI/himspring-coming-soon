@@ -1,8 +1,7 @@
 import type { CSSProperties } from "react";
 import { ACTION_COLUMNS, type ActionCard, type ActionColumn } from "../lib/action";
-import ActionPanel from "./ActionPanel";
 
-/* [03] Himspring in Action — columns of cards drifting behind a copy panel.
+/* [03] Himspring in Action — columns of cards drifting past a fading window.
 
    Ported from the live-site branch's #journey rail. The mechanism there was
    split between markup and JS: the markup authored a --dur per column, and a
@@ -96,12 +95,30 @@ function Column({ column }: { column: ActionColumn }) {
   );
 }
 
+/* No copy plate. It used to float over the middle of the rail — an eyebrow, a
+   heading and a lede — holding for a beat on arrival and then fading so the
+   pictures were unobstructed. Removed by instruction, and with it ActionPanel,
+   the client component that owned that timing.
+
+   Two consequences worth stating rather than leaving to be discovered.
+
+   The section is no longer named. It carried aria-labelledby pointing at that
+   heading, and a labelled <section> is a region landmark — one containing
+   nothing but aria-hidden pictures would be a landmark a screen reader can
+   enter and find empty, which is worse than not being a landmark at all. So the
+   attribute is gone rather than replaced with an aria-label: unnamed, this is
+   not exposed as a region, and the rail is what it now actually is, which is
+   decoration between two sections that do carry copy.
+
+   And this section is now silent to assistive technology, since the columns are
+   aria-hidden. That was already true whenever the plate had faded; it is simply
+   true from the start. Nothing here was information — the pictures are the
+   argument the surrounding sections make in words. */
 export default function InAction() {
   return (
-    <section className="hsv-jr" id="action" aria-labelledby="hsv-jr-t">
-      {/* The rail itself carries no information the panel does not state, and
-          reading every photo caption to get to it would be a penalty for using
-          a screen reader. */}
+    <section className="hsv-jr" id="action">
+      {/* Reading every photo caption would be a penalty for using a screen
+          reader, and there is nothing in them the page does not say elsewhere. */}
       <div className="hsv-jr__cols" aria-hidden="true">
         {ACTION_COLUMNS.map((column, i) => (
           <Column column={column} key={i} />
@@ -111,21 +128,6 @@ export default function InAction() {
       {/* top and bottom fade, so the columns arrive and leave rather than being
           cut off by the section edge */}
       <div className="hsv-jr__mask" aria-hidden="true" />
-
-      {/* Holds for a few seconds on arrival, then clears so the rail is
-          unobstructed. See ActionPanel — it owns the timing. */}
-      <div className="hsv-jr__center">
-        <ActionPanel>
-          <p className="hs-eyebrow">Himspring in Action</p>
-          <h2 className="hsv-jr__h" id="hsv-jr-t">
-            Purity, <em>in its element.</em>
-          </h2>
-          <p className="hsv-prose hsv-jr__lede">
-            A moving gallery of Himspring at home in the world&rsquo;s most considered spaces
-            from sunlit decks to candlelit tables.
-          </p>
-        </ActionPanel>
-      </div>
     </section>
   );
 }
