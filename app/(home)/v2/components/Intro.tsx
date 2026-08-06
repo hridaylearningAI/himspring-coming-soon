@@ -32,10 +32,31 @@ import WhyHimspring from "./WhyHimspring";
    happened after the pin released — a scroll boundary sitting exactly where the
    sequence should have been continuous. Folded in here it is one gesture. */
 
+/* The magazine spread is held before anything moves.
+
+   The section opens as a still page — the heading top left, the body bottom
+   right, and the film's own first frame between them, not advancing.
+
+   A matted cut-out of that frame briefly lived here so the heading could run
+   behind the bottle, which a canvas cannot allow. It is gone: with the title
+   set on two lines it ends around x 586 on a 1440 frame and the bottle starts
+   at 618, so there is nothing to pass behind and the transparency bought
+   nothing but an asset and a crossfade.
+
+   HOLD_END is a fraction of a section that grew from 420vh to 520vh to pay for
+   it, which keeps the film's own pace: it ran 0 to 0.66 of 420vh, about 277vh,
+   and now runs 0.18 to 0.72 of 520vh, about 281vh. The hold is the remaining
+   0.18, roughly one viewport — long enough to read the spread as a page rather
+   than as a slow start.
+
+   Every other beat is remapped by the same proportion rather than re-timed by
+   eye. The veil used to come up between 51% and 82% of the way through the
+   film; it still does, which in the new numbers is 0.46 to 0.62. */
+const HOLD_END = 0.18;
 /* where the film finishes and the frame is simply the landscape */
-const FILM_END = 0.66;
-const RISE_START = 0.72;
-const RISE_END = 0.95;
+const FILM_END = 0.72;
+const RISE_START = 0.78;
+const RISE_END = 0.97;
 
 /* The narrow timeline, written alongside the wide one every frame.
 
@@ -54,9 +75,9 @@ const RISE_END = 0.95;
    clamp, so writing both every frame is cheaper than a matchMedia read plus the
    resize listener and hydration ordering it would need, and CSS picks between
    them at the breakpoint. See --lede-eff / --rise-eff in deck.css. */
-const N_LEDE_IN: readonly [number, number] = [0.66, 0.73];
-const N_LEDE_OUT: readonly [number, number] = [0.84, 0.885];
-const N_RISE: readonly [number, number] = [0.86, 1];
+const N_LEDE_IN: readonly [number, number] = [0.72, 0.79];
+const N_LEDE_OUT: readonly [number, number] = [0.88, 0.92];
+const N_RISE: readonly [number, number] = [0.9, 1];
 
 export default function Intro() {
   const section = useRef<HTMLElement | null>(null);
@@ -74,7 +95,7 @@ export default function Intro() {
        because it is the one thing here that is not a style: a canvas has to be
        told which bitmap to put up. Everything else on this pin still goes out
        as a property and is composited by CSS. */
-    drawFilm(segment(p, 0, FILM_END));
+    drawFilm(segment(p, HOLD_END, FILM_END));
 
     /* The copy starts this section on white and ends it on a ridgeline, so the
        scrim has to be fully up by the time the ridgeline is what is behind it.
@@ -85,7 +106,7 @@ export default function Intro() {
        about 40%. Fine against the drawn scene, which was near-white everywhere;
        not fine against a photograph. Starting before the arc ends costs
        nothing, because until then the scrim is white over white. */
-    el.style.setProperty("--veil", segment(p, 0.34, 0.54).toFixed(3));
+    el.style.setProperty("--veil", segment(p, 0.46, 0.62).toFixed(3));
     /* and hands over to the formats copy rather than sharing the frame with it */
     el.style.setProperty("--lede", (1 - segment(p, FILM_END, RISE_START + 0.06)).toFixed(3));
     el.style.setProperty("--rise", segment(p, RISE_START, RISE_END).toFixed(3));
@@ -129,27 +150,48 @@ export default function Intro() {
             press-release habit, and it would be the only all-caps word in any
             body text on the page, which reads as a defect rather than as stress.
             One word to change back if that is wanted. */}
+        {/* One block became two, and the split is the layout.
+
+            A magazine spread puts the title in one corner and the text in the
+            opposite one, with the subject standing between them — so the head
+            goes top left and the body bottom right, and the head sits at a lower
+            z than the cut-out so the bottle crosses in front of it. Both still
+            carry --lede-eff together, so they arrive and leave as one block and
+            nothing here has to know about the other.
+
+            The wrapper is display: contents on a wide screen, so the two blocks
+            position themselves against the pin and the cut-out can sit in z
+            between them. It becomes a real box again on a narrow one, where the
+            beats take turns and the whole story is a single panel at the foot of
+            the frame — that layout needs the two stacked in normal flow, which
+            is exactly what a wrapper gives and two positioned siblings could
+            not. */}
         <div className="hsv-intro__copy">
-          <p className="hsv-label">Our Story</p>
-          <h2 className="hsv-intro__h" id="hsv-intro-t">
-            Born above the ordinary
-          </h2>
-          {/* The hook, set larger than what follows — it is one line and it is
-              the claim, so it carries the step down from the heading rather than
-              the body having to start at full size. */}
-          <p className="hsv-intro__lede">
-            Deep within the Shivalik Himalayas lies a source untouched by time.
-          </p>
-          <p className="hsv-prose">
-            Himspring flows from protected high-altitude aquifers, patiently acquiring its
-            unique mineral balance as it trickles through ancient mountain strata over
-            centuries.
-          </p>
-          <p className="hsv-prose">
-            We do not alter what nature has perfected; we preserve it. Every bottle
-            delivers the raw purity, balance, and timeless character of its Himalayan
-            origin, elevating every sip into an extraordinary experience.
-          </p>
+          <div className="hsv-intro__head">
+            <p className="hsv-label">Our Story</p>
+            <h2 className="hsv-intro__h" id="hsv-intro-t">
+              Born above the ordinary
+            </h2>
+          </div>
+
+          <div className="hsv-intro__body">
+            {/* The hook, set larger than what follows — it is one line and it is
+                the claim, so it carries the step down from the heading rather
+                than the body having to start at full size. */}
+            <p className="hsv-intro__lede">
+              Deep within the Shivalik Himalayas lies a source untouched by time.
+            </p>
+            <p className="hsv-prose">
+              Himspring flows from protected high-altitude aquifers, patiently acquiring
+              its unique mineral balance as it trickles through ancient mountain strata
+              over centuries.
+            </p>
+            <p className="hsv-prose">
+              We do not alter what nature has perfected; we preserve it. Every bottle
+              delivers the raw purity, balance, and timeless character of its Himalayan
+              origin, elevating every sip into an extraordinary experience.
+            </p>
+          </div>
         </div>
 
         {/* The family, climbing into the landscape. Staggered so the three do
@@ -171,7 +213,9 @@ export default function Intro() {
                 base — it does not read `ml`, so these three are a fixed group. */}
             {FAMILIES.glass.map((m, i) => (
               <span className={`hsv-rise__item hsv-rise__item--${i + 1}`} key={m.id}>
-                <FormatBottle variant="glass" />
+                {/* the outdoor render: this ladder climbs into the film's
+                    landscape, not onto a plate — see BottleGroundId */}
+                <FormatBottle variant="glass" ground="rise" />
               </span>
             ))}
           </div>

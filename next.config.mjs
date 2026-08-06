@@ -1,5 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  /* Journal covers are uploaded to Supabase Storage from /admin, so next/image
+     has to be told this host is allowed to serve them — without it every post
+     with a cover throws at render. Scoped to the public object path: nothing
+     else in that bucket API is an image. */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "eugflgkmcujzsswjcaqs.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
+  },
+
   async redirects() {
     return [
       /* /v2 was where the homepage was built and reviewed. It is `/` now, so

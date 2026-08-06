@@ -1,10 +1,9 @@
 "use client";
 
 import { useRef, useState, type CSSProperties } from "react";
-import { FAMILIES, PANEL_GROUNDS, scaleFor } from "../lib/family";
+import { FAMILIES, PANEL_GROUNDS, groundScaleFor } from "../lib/family";
 import { FORMATS, type FormatId } from "../lib/formats";
 import { segment, useScrub } from "../lib/useScrub";
-import FormatBottle from "./FormatBottle";
 
 /* [04] family — one panel that subdivides into three, 750 then 500 then 330.
 
@@ -93,8 +92,10 @@ export default function Family() {
   /* Built as a literal 3-tuple rather than indexed in the loop: under
      noUncheckedIndexedAccess a variable index into the family tuples returns
      `FamilyMember | undefined`, and three panels that might not exist is not a
-     thing this section can render. Each row carries both formats' entries
-     because both bottles are mounted at once — see the crossfade note below. */
+     thing this section can render. Each row still carries both formats' entries
+     even though only one is read: the pair is what the panel is, and dropping
+     the unread one would mean re-deriving it the next time anything here needs
+     to know what the other vessel says. */
   const rows = [
     { ref: first, ground: PANEL_GROUNDS[0], glass: FAMILIES.glass[0], pet: FAMILIES.pet[0] },
     { ref: second, ground: PANEL_GROUNDS[1], glass: FAMILIES.glass[1], pet: FAMILIES.pet[1] },
@@ -152,6 +153,13 @@ export default function Family() {
                 {
                   "--hsv-tone": row.ground.tone,
                   "--hsv-ground-pos": row.ground.focus,
+                  /* The ladder, on the panel rather than on either plate: both
+                     formats' plates were shot to the same framing, so the scale
+                     that makes 500 shorter than 750 is a property of the station
+                     and not of the vessel standing in it. Derived from `ml` via
+                     lib/family, so the volumes remain the only place a size is
+                     written down. */
+                  "--hsv-scale": groundScaleFor(m.ml, FAMILIES[format]).toFixed(4),
                 } as CSSProperties
               }
             >
@@ -166,63 +174,47 @@ export default function Family() {
                   moment the section mounts — a lazy plate would be requested at
                   the instant its panel is uncovered, which is the one moment it
                   must already be there. */}
-              {/* eslint-disable-next-line @next/next/no-img-element -- a
-                  full-bleed cover plate with no authored px size for next/image
-                  to build a srcset against; the sources are 1448-1535px and
-                  already WebP, so there is nothing a resize pipeline would add */}
-              <img
-                className="hsv-ground"
-                src={row.ground.src}
-                alt=""
-                aria-hidden="true"
-                decoding="async"
-              />
+              {/* The wrapper carries the arrival, the plates inside it carry the
+                  format. Two signals that must not fight: --in is written every
+                  frame by the scrub, while the switch is a one-off transition,
+                  and a single element cannot both track a scroll position and
+                  ease between two states on the same property. */}
+              <div className="hsv-grounds" aria-hidden="true">
+                {FORMATS.map((f) => (
+                  /* eslint-disable-next-line @next/next/no-img-element -- a
+                      full-bleed cover plate with no authored px size for
+                      next/image to build a srcset against; the sources are
+                      2200px and already WebP, so there is nothing a resize
+                      pipeline would add */
+                  <img
+                    key={f.id}
+                    className={`hsv-ground${f.id === format ? " is-on" : ""}`}
+                    src={row.ground.src[f.id]}
+                    alt=""
+                    decoding="async"
+                  />
+                ))}
+              </div>
 
               <div className="hsv-panel__stack">
                 <div className="hsv-panel__inner">
                   <p className="hsv-label">
                     {formatLabel} &middot; {m.label}
                   </p>
-                  {/* The note under the volume is gone by instruction — "The
-                      shared bottle. Set down in the middle of the table…" and
-                      its two siblings. The panel is now the label, the volume
-                      and the bottle. See lib/family for why PET's three went
-                      with them. */}
                   <p className="hsv-panel__name">{m.name}</p>
                 </div>
 
-                {/* Both vessels mounted, one visible, crossfaded between.
+                {/* The bottle used to be mounted here, twice, scaled by
+                    scaleFor(ml). It is in the photograph now — each plate was
+                    shot with its own vessel standing on its own ground, so the
+                    glass carries that ground's light and reflections rather than
+                    being lit for one plate and reused on three.
 
-                    Swapping the src instead would flash: the shots are lazy, so
-                    the first switch would show an empty panel for as long as
-                    88KB takes to arrive, at the exact moment the reader is
-                    looking to see what changed. Mounting both costs one extra
-                    lazy image per panel and makes the switch instant.
-
-                    It also happens to be the right gesture. The two vessels are
-                    the same silhouette in different material, so a dissolve
-                    holds the shape still and changes only what the shape is made
-                    of — which is the entire difference between them.
-
-                    --hsv-scale is the ladder, a number per bottle rather than
-                    three CSS rules keyed to three size ids. Those rules could
-                    not survive a second family: the ids change with the format,
-                    so the heights would have had to be duplicated per format and
-                    kept in step with the volumes by hand. This is the cube root
-                    of the volume ratio and nothing else — see lib/family.ts. */}
-                {FORMATS.map((f) => {
-                  const member = f.id === "glass" ? row.glass : row.pet;
-                  return (
-                    <FormatBottle
-                      key={f.id}
-                      variant={f.id}
-                      className={`hsv-panel__bottle${f.id === format ? " is-on" : ""}`}
-                      style={
-                        { "--hsv-scale": scaleFor(member.ml).toFixed(4) } as CSSProperties
-                      }
-                    />
-                  );
-                })}
+                    The ladder came with it rather than being lost. All six
+                    plates frame their bottle identically, so the step between
+                    the three is put back by scaling the photograph — see
+                    --hsv-scale on this panel, and .hsv-ground in deck.css for
+                    why that is bounded rather than free. */}
               </div>
             </div>
           );

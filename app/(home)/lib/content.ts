@@ -453,6 +453,11 @@ export const FOOTER_LINKS = [
   { href: "/#family", label: "Our Range" },
   { href: "/#founders", label: "Founder" },
   { href: "/sustainability", label: "Sustainability" },
+  /* Seventh, and after Sustainability for the same reason it is last: the bar
+     above takes the first five, so anything appended here is a footer entry
+     only. The journal is writing rather than a pillar of the site, which is the
+     right weight for it. */
+  { href: "/blog", label: "Journal" },
 ] as const satisfies readonly NavLink[];
 
 /* The baseline strip. Both of these resolve to real pages under (home) — see

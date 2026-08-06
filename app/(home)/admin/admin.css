@@ -1,0 +1,289 @@
+/* A tool, not a page. The chrome — fields, buttons, the card grid — is a system
+   stack with one accent and nothing to maintain. The two places the site's own
+   typography belongs are the body editor and the preview, and both get it by
+   wearing .hsb-article rather than by this sheet imitating it. */
+
+.ad {
+  --ad-line: #dcdfe6;
+  --ad-ink: #1e2155;
+  --ad-soft: #5c6582;
+  --ad-gold: #7e6224;
+  min-height: 100svh;
+  padding: 2rem clamp(1rem, 4vw, 3rem) 4rem;
+  background: #fbfbfa;
+  color: var(--ad-ink);
+  font: 14px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.ad h1 { font-size: 1.1rem; letter-spacing: .18em; text-transform: uppercase; margin: 0 }
+.ad h2 { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--ad-soft); margin: 0 }
+
+.ad__bar {
+  display: flex; align-items: center; gap: 1rem;
+  padding-bottom: 1.25rem; margin-bottom: 1.75rem;
+  border-bottom: 1px solid var(--ad-line);
+}
+.ad__who { margin-left: auto; color: var(--ad-soft) }
+
+.ad button {
+  font: inherit; cursor: pointer;
+  padding: .5rem .9rem;
+  border: 1px solid var(--ad-line); background: #fff; color: var(--ad-ink);
+  border-radius: 2px;
+}
+.ad button:hover { border-color: var(--ad-gold); color: var(--ad-gold) }
+
+/* ---- the index ----
+
+   One view or the other, never both: the grid is the whole width when nothing
+   is being edited, and the form is the whole width when something is. A
+   permanent sidebar list would cost the form its measure to show a column of
+   titles you are not currently working on. */
+
+.ad__indexhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem }
+.ad__new { background: var(--ad-ink) !important; color: #fff !important; border-color: var(--ad-ink) !important }
+.ad__new:hover { background: var(--ad-gold) !important; border-color: var(--ad-gold) !important }
+
+.ad__cards {
+  list-style: none; margin: 0; padding: 0;
+  display: grid;
+  /* auto-fill, so the row count follows the window rather than a breakpoint
+     list — three across on a laptop, one on a phone, nothing to maintain. */
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.5rem;
+}
+
+.ad__card {
+  position: relative;
+  display: flex; flex-direction: column;
+  background: #fff; border: 1px solid var(--ad-line); border-radius: 3px;
+  overflow: hidden;
+  transition: border-color .2s, box-shadow .2s;
+}
+.ad__card:hover { border-color: var(--ad-gold); box-shadow: 0 6px 18px rgb(30 33 85 / .06) }
+
+.ad__cardface {
+  flex: 1;
+  display: grid; gap: .5rem; align-content: start;
+  text-align: left;
+  padding: 0 0 .9rem !important;
+  border: 0 !important; border-radius: 0 !important; background: none !important;
+}
+.ad__cardface:hover { color: inherit !important }
+
+.ad__thumb {
+  position: relative; display: block;
+  aspect-ratio: 3 / 2; background: #eef0f4;
+  border-bottom: 1px solid var(--ad-line);
+}
+.ad__thumb img { width: 100%; height: 100%; object-fit: cover; display: block }
+.ad__thumb--empty {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--ad-soft);
+}
+
+.ad__pill {
+  justify-self: start; margin: .9rem .9rem 0;
+  padding: .18rem .5rem;
+  font-size: 9px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--ad-soft); background: #f0f1f4; border-radius: 999px;
+}
+.ad__pill.is-live { color: #2f6b3d; background: #e6f2e9 }
+
+.ad__cardtitle { margin-inline: .9rem; font-size: 15px; line-height: 1.3; font-weight: 500 }
+.ad__cardbody {
+  margin-inline: .9rem;
+  color: var(--ad-soft); font-size: 12.5px; line-height: 1.5;
+  /* two lines, then ellipsis — an excerpt is a fixed job and the cards keep
+     their heights close without a fixed height that could clip a title */
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.ad__cardactions { display: flex; align-items: center; justify-content: space-between; padding: 0 .55rem .55rem }
+.ad__publish {
+  padding: .35rem .55rem !important;
+  font-size: 10px !important; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ad-gold) !important;
+}
+.ad__publish.is-live { color: #2f6b3d !important; border-color: #9bcaa5 !important }
+.ad__del {
+  border: 0 !important; padding: .35rem .35rem !important;
+  font-size: 11px; color: var(--ad-soft);
+}
+.ad__del:hover { color: #a4331f !important }
+.ad__none { color: var(--ad-soft) }
+
+.ad__back { border: 0 !important; padding-left: 0 !important; color: var(--ad-soft) }
+
+/* ---- the form, and the preview beside it ---- */
+
+.ad__split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.ad__form { display: grid; gap: 1.1rem; min-width: 0 }
+.ad__ghost { color: var(--ad-soft) }
+
+/* Sticky, with its own scroll: the body field is long and the point of the
+   preview is to be readable while you are typing into the bottom of it. */
+.ad__preview {
+  position: sticky; top: 1.5rem;
+  display: grid; gap: .5rem;
+  min-width: 0;
+  max-height: calc(100svh - 3rem);
+}
+.ad__previewhead {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+  margin: 0;
+  font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--ad-soft);
+}
+.ad__previewhead span { letter-spacing: 0; text-transform: none; opacity: .75 }
+
+.ad__sheet {
+  overflow: auto;
+  border: 1px solid var(--ad-line); border-radius: 3px;
+  background: var(--hs-white);
+
+  /* The composition scaled to a panel, done in the site's own tokens rather
+     than by rewriting its rules: the hero clears a fixed nav that is not here,
+     and the bands and gutters are sized for a 1360px page. Four values, and
+     everything measured against them follows. */
+  --hsi-nav-h: 0px;
+  --hs-band: 2.25rem;
+  --hs-gut: 1.5rem;
+  --hs-shell: 100%;
+}
+
+/* The type is the other half. These sizes are clamped against the viewport on
+   the real page — correct there, far too large in a half-width panel, and a
+   container query would still need every one of them restated. */
+.ad__sheet .hsi-hero { min-height: 220px }
+.ad__sheet .hsi-hero__title { font-size: 1.5rem; margin-bottom: .6rem }
+.ad__sheet .hsi-hero__lede { font-size: 13px; line-height: 1.6 }
+.ad__sheet .hs-eyebrow { margin-bottom: .9rem }
+.ad__sheet .hsb-article { font-size: 14px; max-width: none }
+.ad__sheet .hsb-article h2 { font-size: 1.25rem }
+.ad__sheet .hsb-article h3 { font-size: 1.05rem }
+.ad__sheet .hsb-article h4 { font-size: .92rem }
+.ad__sheet .hsb-article blockquote { font-size: 1.05rem }
+
+/* The plate drifts for 30s on the real page — a considered entrance there, a
+   distraction in a panel that redraws on every keystroke. */
+.ad__sheet .hsi-hero__scene img { animation: none }
+
+@media (max-width: 1100px) {
+  .ad__split { grid-template-columns: 1fr }
+  .ad__preview { position: static; max-height: none }
+  .ad__sheet { max-height: 70svh }
+}
+.ad__form label { display: grid; gap: .4rem; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ad-soft) }
+.ad__form small { font-size: 11px; letter-spacing: 0; text-transform: none; color: var(--ad-soft); opacity: .8 }
+.ad__form input[type="text"],
+.ad__form input:not([type]),
+.ad__form input[type="email"],
+.ad__form input[type="password"],
+.ad__form textarea {
+  font: 14px/1.6 inherit; font-family: inherit;
+  padding: .6rem .7rem;
+  border: 1px solid var(--ad-line); border-radius: 2px; background: #fff; color: var(--ad-ink);
+  letter-spacing: 0; text-transform: none;
+}
+.ad__form textarea { resize: vertical }
+.ad__legend { margin: 0 0 -.6rem; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ad-soft) }
+
+/* ---- the body editor ----
+   The surface is .hsb-article, so what is typed is already the article. These
+   rules are only what a page's prose column is not: a frame, a working measure,
+   and a toolbar above it. */
+
+.ad__editor { border: 1px solid var(--ad-line); border-radius: 2px; background: #fff }
+
+.ad__tools {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; flex-wrap: wrap; align-items: center; gap: .25rem;
+  padding: .4rem;
+  background: #fbfbfa; border-bottom: 1px solid var(--ad-line);
+}
+.ad__tool {
+  display: inline-flex; align-items: center;
+  min-width: 2rem; justify-content: center;
+  padding: .3rem .5rem !important;
+  border-color: transparent !important;
+  font-size: 12px; line-height: 1;
+}
+.ad__tool.is-on { background: var(--ad-ink) !important; color: #fff !important }
+.ad__tool--file { position: relative; overflow: hidden; cursor: pointer; border: 1px solid transparent; border-radius: 2px }
+.ad__tool--file:hover { color: var(--ad-gold) }
+.ad__tool--file input { position: absolute; inset: 0; opacity: 0; cursor: pointer }
+.ad__toolsep { width: 1px; align-self: stretch; margin: .15rem .35rem; background: var(--ad-line) }
+
+.ad__rt {
+  max-width: none;
+  min-height: 26rem;
+  padding: 1.5rem clamp(1rem, 2vw, 2rem);
+  font-size: 15px;
+}
+.ad__rt:focus-visible { outline: 0 }
+.ad__rt--loading { min-height: 26rem; background: #fff }
+/* The caret needs somewhere to sit in an empty document, and the first
+   paragraph of .hsb-article has no top margin to give it one. */
+.ad__rt > :first-child { min-height: 1.5em }
+/* The article lets a body image bleed past the measure on a wide screen. That
+   rule keys off the viewport, which is the page's width and not this column's,
+   so both halves of this screen opt out of it. */
+.ad__rt img,
+.ad__sheet .hsb-article img { width: 100%; margin-inline: 0 }
+.ad__rt img.ProseMirror-selectednode { outline: 2px solid var(--ad-gold) }
+/* Still on this machine only. A blob: src is exactly the window between the
+   file being chosen and the bucket having it, so no extra state says so. */
+.ad__rt img[src^="blob:"],
+.ad__sheet .hsb-article img[src^="blob:"] { opacity: .45; filter: grayscale(1) }
+
+/* The Image control is a <label> so it can carry the file input, and .ad__form
+   label — meant for the field captions — otherwise makes it small, uppercase
+   and grey, so it reads as a caption rather than as the button beside it. */
+.ad__form .ad__tool--file {
+  display: inline-flex; gap: 0;
+  font-size: 12px; letter-spacing: 0; text-transform: none;
+  color: var(--ad-ink);
+}
+.ad__form input:focus-visible,
+.ad__form textarea:focus-visible { outline: 1px solid var(--ad-gold); outline-offset: 1px }
+
+.ad__cover { max-width: 280px; height: auto; border: 1px solid var(--ad-line) }
+/* Held back until the bucket has it: the picture is on screen from the moment
+   it is chosen, and reads as not-yet-yours until the upload lands. */
+.ad__cover.is-uploading { opacity: .45; filter: grayscale(1) }
+
+.ad button:disabled { opacity: .5; cursor: progress }
+.ad button:disabled:hover { border-color: var(--ad-line); color: inherit }
+
+.ad__check { display: flex !important; align-items: center; gap: .5rem }
+.ad__check input { width: 16px; height: 16px }
+
+.ad__actions { display: flex; align-items: center; gap: 1rem }
+.ad__actions a { color: var(--ad-gold); font-size: 11px; letter-spacing: .14em; text-transform: uppercase }
+.ad__status { margin: 0; color: var(--ad-gold) }
+
+/* the sign-in screen */
+.ad--gate { display: grid; place-items: center }
+.ad__gate {
+  display: grid; gap: 1rem;
+  width: min(22rem, 100%);
+  padding: 2rem;
+  background: #fff; border: 1px solid var(--ad-line); border-radius: 3px;
+}
+.ad__gate label { display: grid; gap: .4rem; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ad-soft) }
+.ad__gate input {
+  font: 14px/1.6 inherit; font-family: inherit; letter-spacing: 0; text-transform: none;
+  padding: .6rem .7rem; border: 1px solid var(--ad-line); border-radius: 2px;
+}
+
+@media (max-width: 720px) {
+  .ad__bar { flex-wrap: wrap }
+  .ad__who { width: 100%; margin-left: 0; order: 3 }
+}

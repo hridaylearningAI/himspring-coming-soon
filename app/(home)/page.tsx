@@ -7,8 +7,17 @@ import Founders from "./v2/components/Founders";
 import HeroV2 from "./v2/components/HeroV2";
 import InAction from "./v2/components/InAction";
 import Intro from "./v2/components/Intro";
+import Journal from "./v2/components/Journal";
 import Outro from "./v2/components/Outro";
+import { listPosts, type PostSummary } from "./lib/posts";
 import "./v2/deck.css";
+/* The journal band renders /blog's cards, so it needs /blog's card rules.
+   Imported after deck.css, and everything in it is prefixed hsb- — the only
+   names it could collide with are its own. */
+import "./blog/blog.css";
+
+/* The journal list is read fresh after an editor publishes a post. */
+export const dynamic = "force-dynamic";
 
 /* The homepage.
 
@@ -42,7 +51,23 @@ import "./v2/deck.css";
    turning Detail back on means adding "The Source" back to that list. */
 const SHOW_ANALYSIS = false;
 
-export default function HomePage() {
+/* The journal band's posts. Caught rather than thrown: lib/posts raises on a
+   non-200, and the homepage is the last page on the site that should go down
+   because the blog database is having a moment. No posts is a state this page
+   already handles — it renders no journal band — so an outage degrades to the
+   page as it was before the band existed. */
+async function latestPosts(): Promise<PostSummary[]> {
+  try {
+    return await listPosts();
+  } catch (error) {
+    console.error("homepage journal:", error);
+    return [];
+  }
+}
+
+export default async function HomePage() {
+  const posts = await latestPosts();
+
   return (
     <>
       <a className="hs-skip" href="#main">
@@ -73,6 +98,7 @@ export default function HomePage() {
         <Founders />
         {SHOW_ANALYSIS ? <Detail /> : null}
         <Outro />
+        <Journal posts={posts} />
         <Contact />
       </main>
 

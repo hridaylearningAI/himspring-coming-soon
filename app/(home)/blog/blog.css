@@ -1,0 +1,143 @@
+/* The journal. internal.css carries the opener, the bands and the shell — this
+   file is only the two things the other pages have no equivalent of: an index
+   of cards that are links, and a column of prose the editor writes rather than
+   the design places.
+
+   Loaded after internal.css by both blog routes, and after deck.css by the
+   homepage — whose journal band renders the same cards — so anything here that
+   shares a name with a rule in either wins. Nothing does today; the hsb- prefix
+   keeps it that way. */
+
+/* ---- the index ---- */
+
+.hsb-list {
+  list-style: none; margin: 0; padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(2rem, 4vw, 3.25rem);
+}
+
+.hsb-card__link {
+  display: grid;
+  gap: .9rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* The plate. A fixed ratio rather than the image's own, so a row of cards holds
+   its baseline whatever the editor uploads — and a post with no cover leaves an
+   empty frame rather than collapsing the card into its neighbours' shape. */
+.hsb-card__shelf {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--hs-mist);
+  border: 1px solid color-mix(in srgb, var(--hs-ink) 10%, transparent);
+}
+.hsb-card__shelf img {
+  object-fit: cover;
+  transition: transform 1.2s var(--hs-ease);
+}
+.hsb-card__link:hover .hsb-card__shelf img { transform: scale(1.04) }
+
+.hsb-card__date {
+  display: block;
+  font-size: 10px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--hs-gold-ink);
+}
+
+.hsb-card__title {
+  display: block;
+  font-family: var(--hs-display); font-weight: 400;
+  font-size: clamp(1.15rem, 1.7vw, 1.45rem); line-height: 1.24; letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--hs-ink);
+}
+.hsb-card__link:hover .hsb-card__title { color: var(--hs-gold-ink) }
+
+.hsb-card__body {
+  display: block;
+  color: var(--hs-ink-soft); font-size: 15px; line-height: 1.66;
+}
+
+.hsb-empty { max-width: 46ch }
+
+/* ---- the article ---- */
+
+/* 68ch, not the shell: a measure this long is set by the reading, and the band
+   around it is what the shell is for. */
+.hsb-article {
+  max-width: 68ch;
+  margin-inline: auto;
+  color: var(--hs-ink-soft);
+  font-size: 17px;
+  line-height: 1.85;
+}
+
+.hsb-article > * + * { margin-top: 1.4em }
+
+.hsb-article h2,
+.hsb-article h3,
+.hsb-article h4 {
+  font-family: var(--hs-display); font-weight: 400;
+  line-height: 1.2; letter-spacing: .03em; text-transform: uppercase;
+  color: var(--hs-ink);
+  margin-top: 2.4em;
+}
+.hsb-article h2 { font-size: clamp(1.5rem, 2.6vw, 2rem) }
+.hsb-article h3 { font-size: clamp(1.2rem, 2vw, 1.45rem) }
+.hsb-article h4 { font-size: 1.05rem; letter-spacing: .12em }
+.hsb-article > :first-child { margin-top: 0 }
+
+.hsb-article strong { color: var(--hs-ink); font-weight: 500 }
+.hsb-article em { font-family: var(--hs-italic); font-style: italic }
+
+.hsb-article a {
+  color: var(--hs-gold-ink);
+  text-decoration: underline;
+  text-underline-offset: .18em;
+  text-decoration-thickness: 1px;
+}
+
+.hsb-article ul,
+.hsb-article ol { padding-left: 1.1rem }
+.hsb-article li + li { margin-top: .5em }
+.hsb-article li::marker { color: var(--hs-gold) }
+/* A list item is a block in the editor's schema, so its paragraph would
+   otherwise take the 1.4em the article gives every other sibling pair. */
+.hsb-article li > p { margin: 0 }
+
+/* Images placed in the body from the editor. Full measure, and allowed past it
+   on a wide screen so a photograph is a photograph rather than a column of
+   text's width of one. */
+.hsb-article img {
+  display: block;
+  width: 100%; height: auto;
+  margin-block: 2em;
+}
+@media (min-width: 1100px) {
+  .hsb-article img { width: calc(100% + 8rem); max-width: 100vw; margin-inline: -4rem }
+}
+
+.hsb-article blockquote {
+  margin-inline: 0;
+  padding-left: clamp(1.25rem, 3vw, 2rem);
+  border-left: 1px solid var(--hs-gold);
+  font-family: var(--hs-display); font-size: clamp(1.15rem, 2vw, 1.4rem);
+  line-height: 1.4; letter-spacing: .02em;
+  color: var(--hs-ink);
+}
+
+.hsb-back {
+  max-width: 68ch;
+  margin: clamp(3rem, 6vw, 4.5rem) auto 0;
+  font-size: 11px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase;
+}
+.hsb-back a { color: var(--hs-gold-ink); text-decoration: none }
+.hsb-back a:hover { text-decoration: underline; text-underline-offset: .3em }
+
+@media (max-width: 860px) {
+  .hsb-list { grid-template-columns: 1fr }
+  .hsb-article { font-size: 16px }
+}

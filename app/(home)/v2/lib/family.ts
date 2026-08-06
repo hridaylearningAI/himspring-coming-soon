@@ -30,6 +30,7 @@ export type FamilyMember = {
   readonly name: string;
   /* millilitres */
   readonly ml: number;
+  readonly note?: string;
 };
 
 export type Family = readonly [FamilyMember, FamilyMember, FamilyMember];
@@ -55,8 +56,18 @@ export type Family = readonly [FamilyMember, FamilyMember, FamilyMember];
    before the plate has decoded, and it is what shows underneath while the plate
    fades up on --in. A grey there would make every panel flash cool before
    settling warm. */
+/* Which plate this is. Named for the volume the panel happens to carry, but it
+   identifies the GROUND — it is what keys the per-ground bottle renders in
+   FormatBottle, and two panels on one plate would share a render. */
+export type PanelGroundId = "750" | "500" | "330";
+
 export type PanelGround = {
-  readonly src: string;
+  readonly id: PanelGroundId;
+  /* One plate per vessel, because the bottle is now photographed into the
+     plate rather than composited over it. The pair per station is what makes
+     the format switch possible at all — see Family.tsx, which mounts both and
+     crossfades. */
+  readonly src: Readonly<Record<FormatId, string>>;
   /* the plate's mean colour, as the flat ground beneath it */
   readonly tone: string;
   /* object-position. Framing, chosen against the third this plate ends up in —
@@ -75,10 +86,30 @@ export type PanelGround = {
    which next to two busy neighbours reads as a gap rather than as quiet. Framed
    from the bottom it brings its gold contours and dotted line up into the third
    and the set holds together. */
+/* All three are centred now, where the 500 used to be framed from its bottom
+   edge. That framing was chosen against a bare plate, to bring the gold contours
+   up into the third the panel ends on. These plates are not bare: the bottle
+   stands in the middle of each one, and any focus but centre walks it out of a
+   panel that is only a third of the viewport wide. */
 export const PANEL_GROUNDS: readonly [PanelGround, PanelGround, PanelGround] = [
-  { src: "/assets/family-ground-750.webp", tone: "#eae5df", focus: "50% 50%" },
-  { src: "/assets/family-ground-500.webp", tone: "#ecdecb", focus: "50% 100%" },
-  { src: "/assets/family-ground-330.webp", tone: "#e6cfaf", focus: "50% 50%" },
+  {
+    id: "750",
+    src: { glass: "/assets/family-750-glass.webp", pet: "/assets/family-750-pet.webp" },
+    tone: "#eae5df",
+    focus: "50% 50%",
+  },
+  {
+    id: "500",
+    src: { glass: "/assets/family-500-glass.webp", pet: "/assets/family-500-pet.webp" },
+    tone: "#ecdecb",
+    focus: "50% 50%",
+  },
+  {
+    id: "330",
+    src: { glass: "/assets/family-330-glass.webp", pet: "/assets/family-330-pet.webp" },
+    tone: "#e6cfaf",
+    focus: "50% 50%",
+  },
 ];
 
 /* The ladder is anchored here rather than per family, so the two formats share
@@ -101,6 +132,23 @@ export const PANEL_GROUNDS: readonly [PanelGround, PanelGround, PanelGround] = [
 export const LADDER_BASE_ML = 750;
 
 export const scaleFor = (ml: number) => Math.cbrt(ml / LADDER_BASE_ML);
+
+/* The same ladder, renormalised for a plate rather than a cut-out.
+
+   The bottle is photographed into its ground now, so the only way to change its
+   height on screen is to scale the whole photograph — and a photograph scaled
+   below 1 stops covering the panel it is supposed to fill. So the smallest
+   volume sits at exactly 1 and the others scale up from it, which puts every
+   plate at or over full coverage and keeps the 1 : 0.874 : 0.761 relationship
+   between them untouched: dividing all three by the smallest changes what the
+   numbers are, not what they say about each other.
+
+   The ceiling is the other end. A plate at scale k shows its bottle at k times
+   the fraction of frame it was shot at, and past 1 that bottle is taller than
+   the panel. The plates carry 20% added headroom for exactly this reason — see
+   the note on .hsv-ground in deck.css and the script that made them. */
+export const groundScaleFor = (ml: number, family: Family) =>
+  scaleFor(ml) / scaleFor(Math.min(...family.map((m) => m.ml)));
 
 /* Ordered largest first. The section opens on the largest — the one the brand
    leads with — and works down, which is also the order the panels subdivide in.
@@ -127,18 +175,21 @@ export const FAMILIES: Readonly<Record<FormatId, Family>> = {
       label: "Size 01",
       name: "750 ml",
       ml: 750,
+      note: "The shared bottle. Set down in the middle of the table and poured from all evening.",
     },
     {
       id: "glass-500",
       label: "Size 02",
       name: "500 ml",
       ml: 500,
+      note: "The one you carry. Enough for a morning, small enough to hold in one hand.",
     },
     {
       id: "glass-330",
       label: "Size 03",
       name: "330 ml",
       ml: 330,
+      note: "The place setting. One glass, poured and finished, with nothing left standing.",
     },
   ],
   pet: [
@@ -147,18 +198,21 @@ export const FAMILIES: Readonly<Record<FormatId, Family>> = {
       label: "Size 01",
       name: "750 ml",
       ml: 750,
+      note: "The car door and kit bag. Pure water in a resilient vessel built to travel.",
     },
     {
       id: "pet-500",
       label: "Size 02",
       name: "500 ml",
       ml: 500,
+      note: "The everyday companion. Desk, gym, commute; effortless pure hydration.",
     },
     {
       id: "pet-330",
       label: "Size 03",
       name: "330 ml",
       ml: 330,
+      note: "The compact format. Lightweight, elegant, and perfectly proportioned.",
     },
   ],
 };

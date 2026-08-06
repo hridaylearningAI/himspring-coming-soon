@@ -403,7 +403,10 @@
 /* The scroll distance the whole sequence is spread over — arc, push, handover
    and the formats rising in. Was 320vh for the arc alone; the extra 100 is the
    rise, which needs room to be a movement rather than a jump. */
-.hsv-intro { position: relative; height: 420vh; background: var(--hs-white) }
+/* 390vh, cut from 520 for a shorter scroll — same fractions (HOLD_END,
+   FILM_END, RISE_START/END in Intro.tsx) so the choreography is identical,
+   just compressed into 25% less physical scroll. */
+.hsv-intro { position: relative; height: 390vh; background: var(--hs-white) }
 /* Defaults matter here: with no script — or under reduced motion, where useScrub
    bails — these are the values the composition is stated at. They live on the
    pin rather than the stage so the veil, which is the stage's sibling, sees
@@ -495,8 +498,11 @@
   position: absolute; inset: 0; z-index: 1;
   display: grid; place-items: center;
 }
-.hsv-intro__veil { position: absolute; inset: 0; opacity: var(--veil); z-index: 2 }
-.hsv-intro__copy { opacity: var(--lede-eff) }
+/* z 1, under the copy rather than over the film alone. The stack through this
+   pin is film 0, veil 1, head 2, cut-out 3, body 4, rise 5 — and the head being
+   below the cut-out is the whole magazine move: the bottle crosses in front of
+   the title. */
+.hsv-intro__veil { position: absolute; inset: 0; opacity: var(--veil); z-index: 1 }
 .hsv-intro__stage .hsv-bottle {
   height: 58vh;
   /* origin at the base, not the centre: scaling about the middle throws the
@@ -568,9 +574,88 @@
    characters the eye has to travel back across the picture to find the next line.
    The extra width comes out of the heading, which is set to run wider than the
    prose under it. */
-.hsv-intro__copy {
+/* display: contents, so the wrapper contributes no box and its two children
+   position themselves against the pin. That is what lets the cut-out sit in z
+   between them; a real wrapper would be one box on one side of the bottle and
+   both blocks would have to share whichever side that was.
+
+   It costs the wrapper its opacity — there is no box to apply it to — so
+   --lede-eff moves onto the children. The narrow block puts the box back and
+   takes the opacity with it. */
+.hsv-intro__copy { display: contents }
+
+/* Top left, and deliberately wide enough to run under the bottle. The bottle is
+   about 203px across at 1440 and centred, so it occupies roughly x 618 to 821;
+   a title starting at the gutter and allowed 52% of the frame crosses that with
+   room to spare, which is the point — the words go behind the product rather
+   than stopping politely short of it. */
+/* Top left, on the gutter, and wide enough that the line runs under the bottle
+   on its way across. The bottle is about 203px across at 1440 and centred, so
+   it occupies roughly x 618 to 821; a title starting at the gutter and allowed
+   56% of the frame crosses that with room to spare, which is the point — the
+   words go behind the product rather than stopping politely short of it. */
+/* Top left, on the gutter. 42% rather than 56: the measure is what breaks the
+   title after "THE" — "BORN ABOVE THE" is about 500px at 1440 and the whole
+   string 797, so anything between those two wraps it, and 42% (605px) sits in
+   the middle of that range with room for the fallback face to render wider
+   during a swap without regrouping the words. */
+.hsv-intro__head {
+  position: absolute; left: var(--hs-gut); top: calc(var(--hsv-nav-h) + clamp(1.5rem, 5svh, 3.5rem));
+  z-index: 2; max-width: 42%;
+  opacity: var(--lede-eff);
+}
+/* The magazine size, and it is a different instrument from the same face.
+
+   .hsv-intro__h is clamp(30px, 3.9vw, 62px), which was right when the heading
+   sat in a 38ch column beside the film. At the top left of a spread it has to
+   do two things that size cannot: carry the page on its own, and physically
+   reach the bottle. At 56px the line ended around x 405 on a 1440 frame and the
+   bottle starts at 618 — so "behind the bottle" was a description of something
+   that never touched it.
+
+   10vw is 144px there, which overruns the 56% measure and breaks the line in
+   two. That is wanted: two stacked lines of condensed caps running the width of
+   the column is the magazine gesture, and both lines cross the bottle. */
+/* The magazine size, and it is a different instrument from the same face.
+
+   .hsv-intro__h is clamp(30px, 3.9vw, 62px), which was right when the heading
+   sat in a 38ch column beside the film. At the top left of a spread it has to
+   do two things that size cannot: carry the page on its own, and physically
+   reach the bottle. At 56px the line ended around x 405 on a 1440 frame and the
+   bottle starts at 618 — so "behind the bottle" described something that never
+   touched it. At 10vw it is 144px.
+
+   Set on two lines, which is what the measure below is for. On one line it ran
+   to about 885 and crossed the bottle, which needed a matted cut-out to sit in
+   front of it; broken after "THE" it ends around 586 and the bottle starts at
+   618, so the title clears the product on its own and the cut-out is gone. It
+   also reads better — two stacked lines of condensed caps in the corner is the
+   magazine gesture, where one long line was a banner.
+
+   A version that pinned the "i" of "ordinary" to the frame's centre so the
+   bottle's neck stood in the letter's place was built and rejected. Kept as a
+   note because the idea is sound and the execution is the problem: it needs the
+   heading centred on the bottle rather than anchored left, and the letter has to
+   fade back in as the bottle leans away, which is a lot of machinery for a
+   coincidence that only reads at one size. */
+.hsv-intro__head .hsv-intro__h {
+  font-size: clamp(46px, 10vw, 190px);
+  line-height: .92;
+  letter-spacing: .005em;
+  margin-bottom: 0;
+}
+/* The gold rule under the title is a mark for a heading in a column, and at this
+   size it reads as an underline the title has outgrown. */
+.hsv-intro__head .hsv-intro__h::after { display: none }
+/* Bottom right — the opposite corner, which is the other half of the spread.
+   Above the cut-out rather than below it: it never overlaps the bottle, and if
+   the measure ever grows enough to reach it, text disappearing under glass at
+   the foot of the frame is a defect where the same thing at the title is a
+   composition. */
+.hsv-intro__body {
   position: absolute; right: var(--hs-gut); bottom: clamp(3rem, 9svh, 6rem);
-  z-index: 3; max-width: 38ch;
+  z-index: 4; max-width: 38ch;
+  opacity: var(--lede-eff);
 }
 /* The heading. Devasia caps, and sized off the viewport rather than fixed — this
    is the second-largest display type on the page after the hero, and it should
@@ -712,7 +797,7 @@
 
 /* ---- the family, rising into the landscape ---- */
 
-.hsv-rise { position: absolute; inset: 0; z-index: 4; pointer-events: none }
+.hsv-rise { position: absolute; inset: 0; z-index: 5; pointer-events: none }
 .hsv-rise__field { position: absolute; inset: 0 }
 .hsv-rise__item {
   /* Anchored from the bottom, on one shared line.
@@ -952,7 +1037,7 @@
    three. The per-split scroll distance has to stay roughly what a wipe got:
    compress it and the edge crosses the screen faster than the eye tracks it,
    which is the one thing that makes this kind of transition look cheap. */
-.hsv-family { position: relative; height: 400vh }
+.hsv-family { position: relative; height: 500vh }
 .hsv-family__pin { position: sticky; top: 0; height: 100svh; overflow: hidden }
 
 /* Every panel is full-bleed and merely clipped to its slice, so nothing ever
@@ -998,36 +1083,36 @@
    the offset that centres its content in that third. Family.tsx overwrites both
    per frame, so these are the no-script composition.
 
-   --hsv-key is the copy colour, and the plates forced it. Measured against each
-   plate's darkest region — the right test, because the copy travels the full
-   width of its panel on --cx and so crosses everything in it — ink lands at
-   9.6 / 9.1 / 7.6, ink-soft at 3.1 / 3.0 / 2.5, and gold at about 1.5 on all
-   three. So it goes to full ink on every panel.
+   --hsv-key is the copy colour, and it went white when the bottle moved into
+   the plate. It was full ink, measured at 9.6 / 9.1 / 7.6 against each plate's
+   darkest region back when the darkest region was stone. The copy has not
+   moved, but what is behind it has: it now sits over the bottle's shoulder and
+   the sunlit wall, both of which are the brightest things in the frame, and ink
+   on them reads as a smudge.
 
-   There were two, --hsv-key and --hsv-body, when the panel carried a note under
-   the volume. The note is gone and so is --hsv-body; the measurement above is
-   why the surviving one is not gold.
+   White alone would fail the same test in reverse — the wall it crosses is
+   near-white where the light shaft lands. So the copy carries its own contrast:
+   a soft dark shadow under it on .hsv-panel__inner, which is what makes white
+   hold over glass, over lit plaster and over the shaded plaster on the left,
+   none of which agree with each other. The shadow is doing the legibility work
+   and the colour is doing the styling.
 
-   That costs the gold label the 750 panel used to carry. It is not a loss worth
-   arguing over: gold on these plates is ~1.5:1, which is not a compliance
-   question but an illegibility one, and gold cannot be rescued by darkening
-   because the plates' whole character is that they are light and warm. The
-   accent that gold used to provide is now in the ground, which is decorative
-   and under no contrast obligation at all. */
+   There were two of these, --hsv-key and --hsv-body, when the panel carried a
+   note under the volume. The note is gone and so is --hsv-body. */
 .hsv-panel--p1 {
   --l: 0%; --r: 66.667%; --cx: -33.333vw;
-  background: var(--hsv-tone, var(--hsv-snow)); color: var(--hs-ink);
-  --hsv-key: var(--hs-ink);
+  background: var(--hsv-tone, var(--hsv-snow)); color: #fff;
+  --hsv-key: #fff;
 }
 .hsv-panel--p2 {
   --l: 33.333%; --r: 33.333%; --cx: 0vw;
-  background: var(--hsv-tone, var(--hsv-glacier)); color: var(--hs-ink);
-  --hsv-key: var(--hs-ink);
+  background: var(--hsv-tone, var(--hsv-glacier)); color: #fff;
+  --hsv-key: #fff;
 }
 .hsv-panel--p3 {
   --l: 66.667%; --r: 0%; --cx: 33.333vw;
-  background: var(--hsv-tone, var(--hsv-stone)); color: var(--hs-ink);
-  --hsv-key: var(--hs-ink);
+  background: var(--hsv-tone, var(--hsv-stone)); color: #fff;
+  --hsv-key: #fff;
 }
 
 /* The copy and the bottle, held together and slid into the middle of whatever
@@ -1061,10 +1146,30 @@
    rather than an oversight: these are out-of-focus paper and stone textures
    with no edge detail to lose, and there is no larger original. If sharper
    plates ever arrive, nothing here changes but the files. */
-.hsv-ground {
-  position: absolute; inset: 0; z-index: 0;
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: var(--hsv-ground-pos, 50% 50%);
+/* The arrival lives on the wrapper and the format lives on the plates inside
+   it, because the two cannot share a property. --in is rewritten every frame
+   from the scroll position; the switch is a .34s ease between two states. Put
+   both on one element and either the arrival lags the scroll by a third of a
+   second or the switch snaps. */
+/* Sized to the visible slice, not to the viewport.
+
+   This is the one thing that had to change when the bottle moved into the
+   photograph. The plate used to span the whole frame and simply be clipped, so
+   each panel showed a different part of one continuous texture — right for an
+   abstract relief map, and fatal for a photograph with its subject in the
+   middle: the outer two panels showed wall and no bottle at all.
+
+   Bounding it by the same --l / --r that clip the panel puts each plate's own
+   centre in the middle of whatever slice is currently showing, so every panel
+   keeps its bottle at every width. `cover` then re-crops as the slice narrows,
+   which reads as the camera pushing in rather than as anything sliding.
+
+   The cost is that this box resizes across the split where the old one held
+   still. It is one absolutely positioned element with no in-flow children, so
+   it repaints rather than reflowing the document. */
+.hsv-grounds {
+  position: absolute; z-index: 0;
+  top: 0; bottom: 0; left: var(--l, 0%); right: var(--r, 0%);
   pointer-events: none;
 
   /* The arrival, on the panel's own --in.
@@ -1084,11 +1189,66 @@
   will-change: opacity, transform;
 }
 
+/* Both vessels' plates mounted, one shown, crossfaded between.
+
+   Swapping one src instead would flash: the plate arriving is the one thing the
+   reader is looking at when they throw the switch, and it would be absent for as
+   long as 120KB takes. Mounting both costs one extra plate per panel and makes
+   the switch instant.
+
+   It is also the right gesture, and more so than when this fade was on two
+   bottle cut-outs: the whole photograph dissolves, so the ground stays put while
+   the vessel standing on it changes material. */
+/* No ladder here, and the reason is worth keeping.
+
+   This carried transform: scale(var(--hsv-scale)) about the bottle's foot, to
+   put the 1 : 0.874 : 0.761 step back by zooming each photograph. It measured
+   correctly at 1440x900 and clipped the 750's cap by 127px at 1800x760, which
+   is the bug: `cover` crops the plate vertically whenever the panel is wider
+   than the plate's own aspect, and that crop moves the bottle's base away from
+   the transform-origin. The origin is a fraction of the element box; the base
+   is a fraction of the picture inside it. Those two agree only at the viewport
+   ratio where no vertical crop happens.
+
+   No fixed origin can fix it, because how much is cropped depends on the
+   viewport. Anchoring the picture to the bottom instead only trades one drift
+   for another: the painted height still varies, so the cap still moves.
+
+   So the ladder went into the camera instead, and the glass plates now carry
+   it: the bottle stands at 70.5% of frame on the 750 and 54.1% on the 330,
+   measured, a ratio of 0.767 against the 0.761 the cube root asks for. The 500
+   is derived from the 750's own frame at 61.6% rather than shot separately, so
+   all three carry identically the same light. groundScaleFor() in lib/family.ts
+   is the arithmetic, unread by anything, kept as the check on a re-shoot.
+
+   The only thing left to hold is that the bottle survives `cover`, which crops
+   a plate vertically once the panel is wider than the plate. The whole bottle
+   stays in frame while the panel's aspect is under about 2.4 — measured against
+   2.37, which is where the older plates, with the bottle filling 84% of frame,
+   were clipping. Re-shooting these with the bottle filling the frame brings
+   that straight back; the bottle being small in frame IS the fix. */
+.hsv-ground {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: var(--hsv-ground-pos, 50% 50%);
+  opacity: 0;
+  transition: opacity .34s var(--hs-ease);
+}
+.hsv-ground.is-on { opacity: 1 }
+
+/* Stated for the no-script case: React never adds .is-on there, so without this
+   every panel would render two invisible plates and the section would be three
+   captions over bare tone. First-listed wins, which is glass. */
+@media (scripting: none) {
+  .hsv-ground { opacity: 1; transition: none }
+  .hsv-ground ~ .hsv-ground { opacity: 0 }
+}
+
 /* No arrival at all where motion is unwanted: the plate is simply the ground.
    Not a fade with a shorter duration — --in is scroll-position-driven, so
    softening it would still tie the ground's opacity to the scroll. */
 @media (prefers-reduced-motion: reduce) {
-  .hsv-ground { opacity: 1; transform: none; will-change: auto }
+  .hsv-grounds { opacity: 1; transform: none; will-change: auto }
 }
 
 /* Copy above, product below.
@@ -1100,97 +1260,37 @@
    only thing moving is position. Centred, because a left-aligned column adrift
    in a full-bleed panel has nothing to align to. */
 .hsv-panel__inner {
-  position: absolute; top: 13svh; left: 50%;
+  position: absolute; top: clamp(36px, 6svh, 72px); left: 50%;
   transform: translateX(-50%);
   width: min(26vw, 360px); max-width: none;
   text-align: center;
+  /* What makes white copy legible over a photograph rather than over a flat
+     ground — see the --hsv-key note above. Two shadows: a tight one that holds
+     the letterforms against glass, and a wide soft one that darkens the plaster
+     behind a whole word. Neither reads as a drop shadow at these sizes. */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .45), 0 2px 24px rgba(0, 0, 0, .35);
 }
 .hsv-panel__name {
   font-family: var(--hs-display); font-weight: 400;
   font-size: clamp(32px, 4vw, 66px); line-height: 1.12;
-  /* no margin-bottom: this was the gap down to .hsv-panel__note and the name is
-     the last thing in .hsv-panel__inner now */
 }
 /* Takes its colour from the panel, not from the shared class — see the --hsv-key
-   note above for why a flat rule did not survive measurement. It was two rules,
-   this and .hsv-panel__note; the note is gone (see Family.tsx) and took
-   --hsv-body with it, since nothing else ever read that token. */
+   note above for why a flat rule did not survive measurement. */
 .hsv-panel .hsv-label { color: var(--hsv-key, var(--hs-gold)) }
 
-/* The size ladder.
+/* The bottle element is gone; the ladder is not.
 
-   One rule, not three. This used to be .hsv-panel--s750/s500/s330 with a literal
-   height each, which worked exactly as long as there was one family: the
-   modifiers were size ids, so a second set of volumes would have meant a second
-   set of rules kept in step with the data by hand — and the failure mode of that
-   is a ladder that still looks deliberate and is no longer proportional.
+   This was .hsv-panel__bottle: an absolutely positioned cut-out per format,
+   height --hsv-scale x --hsv-base, sharing one `bottom` so the three stood on a
+   single line and differed only in height. The cut-outs went when each plate
+   became a photograph of its own vessel on its own ground, and there is nothing
+   left here to size.
 
-   --hsv-scale is the cube root of the volume ratio, written per bottle by
-   Family.tsx from lib/family.ts. A shape scaled in all three dimensions grows in
-   height by the cube root of its volume, which is what makes 750 / 500 / 330
-   comparable at all: .874 and .761 against the 64vh base, or 56vh and 48.7vh.
-
-   --hsv-base is 64vh, down from 96vh since the copy moved above the bottle
-   rather than beside it. It is the one number that sets the section's scale, and
-   the narrow layout overrides it rather than restating a ladder.
-
-   Sized in vh, never to the panel. This is the one rule the section cannot
-   survive breaking — a bottle scaled to fill its own column renders all three
-   identically and the comparison the whole sequence is built on evaporates.
-   Shared `bottom` is the other half of it: every bottle stands on the same
-   line, so what differs between them is only height.
-
-   Centred under the copy and upright — this used to carry a 9deg tilt, which
-   suited a bottle cropped into a corner and cannot survive here, because a
-   rotated bottle is shorter than an upright one by a factor nobody can discount
-   by eye. The whole section is a measurement, so the subject stands up.
-
-   And it now stands whole. This was bottom: -6svh, which hung every bottle 6svh
-   past the panel's lower edge — deliberate, and the sheet header still describes
-   the product being cropped by the frame as part of the ported structure. It is
-   gone by instruction: every bottle on the site is to be fully visible.
-
-   Un-cropping alone was not enough, and the reason is the format switch. It is
-   a 48px pill sitting 3.2svh off the panel's floor, so it occupies 91.5svh to
-   96.7svh — and a bottle merely inside the frame still had its base behind an
-   opaque control. Visible to a layout audit, not visible to a reader.
-
-   So the band is bounded at both ends, and both were measured rather than
-   guessed at 1440x900: the copy ends at 31.1svh and the switch starts at 91.5.
-   Allowing ~3svh under the copy and ~1.5 above the pill leaves about 57svh of
-   usable height, which is what sets these two numbers — base 56svh at bottom
-   10svh puts the tallest bottle's cap at 34svh and its foot at 90svh, clear at
-   both ends.
-
-   --hsv-base carries the whole cost, down from 64svh, because it has to: every
-   bottle is --hsv-scale x this one number, so shrinking here is the only change
-   that leaves the 1 : 0.874 : 0.761 ladder intact. Anything that adjusted the
-   three heights independently would break the comparison the section exists to
-   make. The bottles are 12.5% smaller and all three are still exactly as much
-   bigger than each other as they were. */
-.hsv-panel__bottle {
-  position: absolute; bottom: 10svh; left: 50%;
-  transform: translateX(-50%);
-  width: auto;
-  height: calc(var(--hsv-scale, 1) * var(--hsv-base, 56svh));
-
-  /* Both formats are mounted in every panel and only one is shown. Hidden with
-     opacity rather than display, because the two vessels are the same silhouette
-     in different material and a dissolve holds the shape still while changing
-     what it is made of — which is the whole difference between them, and the
-     only part of it a still photograph can carry. */
-  opacity: 0;
-  transition: opacity .34s var(--hs-ease);
-  pointer-events: none;
-}
-.hsv-panel__bottle.is-on { opacity: 1 }
-/* Stated for the no-script case: React never adds .is-on there, so without this
-   every panel would render two invisible bottles and the section would be three
-   captions over an empty ground. First-listed wins, which is glass. */
-@media (scripting: none) {
-  .hsv-panel__bottle { opacity: 1; transition: none }
-  .hsv-panel__bottle ~ .hsv-panel__bottle { opacity: 0 }
-}
+   --hsv-scale is not read anywhere now either. It was briefly moved onto
+   .hsv-ground to zoom each plate by the ratio; see the note there for the crop
+   interaction that made that unsound. It stays written on the panel, because
+   the moment the plates are re-shot at the ladder it is the number that says
+   whether they were. */
 
 /* ---- the format switch ---- */
 
@@ -1597,135 +1697,70 @@
    home.css on .hs-h2 and this block should go. */
 .hsv .hs-contact .hs-h2 { text-transform: uppercase }
 
-/* ---- [07] return + cta ---- */
+/* ---- [07] return banner ---- */
 
-/* Tall enough to give the climb somewhere to happen, with a pinned frame so the
-   ridge holds still while the line moves through it. */
-.hsv-return { position: relative; height: 210vh; background: var(--hs-cream) }
-.hsv-return__pin { position: sticky; top: 0; height: 100svh; overflow: hidden }
-/* darker than the hero's: this one is allowed to be a photograph, because the
-   product sequence is over by the time it arrives */
+/* A brief photographic handoff into the journal. The source moves more slowly
+   than the page while it enters and leaves the viewport, making the transition
+   feel dimensional without pinning the reader in another full-screen scene. */
+.hsv-return { position: relative; background: var(--hs-cream) }
+.hsv-return__frame {
+  position: relative; height: clamp(22rem, 52svh, 38rem); overflow: hidden;
+  --return-shift: 18svh;
+}
+.hsv-return__scene {
+  position: absolute; inset: calc(var(--return-shift) * -1) 0;
+  transform: translate3d(0, calc((.5 - var(--return-progress, 0)) * 2 * var(--return-shift)), 0) scale(1.04);
+  will-change: transform;
+}
 .hsv-return__veil {
   position: absolute; inset: 0; z-index: 1;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--hs-navy) 18%, transparent) 0%,
-    color-mix(in srgb, var(--hs-navy) 46%, transparent) 100%
-  );
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--hs-navy) 18%, transparent), color-mix(in srgb, var(--hs-navy) 52%, transparent));
 }
 .hsv-return__inner {
   position: absolute; inset: 0; z-index: 2;
   display: grid; place-items: center;
-  /* Narrow side padding, not the section gutter: this line is set to span the
-     measure, so the gutter would only be width taken away from it.
-
-     Flat 2vw rather than a clamp, so the space left for the line is the same
-     fraction at every width. Under a clamp it was 4% of a 1440 viewport but
-     6.2% of a 390 one, and a line sized in vw would have fitted at one end of
-     that range and been clipped at the other. */
-  padding: var(--hs-band) 2vw;
+  padding: var(--hs-gut);
 }
+/* One line on desktop. The size is vw-bound rather than clamped to a rem
+   ceiling because the constraint here is the sentence fitting the viewport,
+   not a maximum type size — 26 characters of the display face at 7.4vw fills
+   the width without touching the gutters. Under 900px it wraps instead.
+
+   The face is narrow enough that 26 characters run about 5.35× the font size,
+   so filling the band takes a figure far larger than the usual heading step. */
 .hsv-return__line {
-  font-family: var(--hs-display); font-weight: 400; text-align: center;
-  /* One line, spanning the measure.
-
-     Sized in vw with no clamp on purpose. A clamp would pin the size at some
-     viewport and the line would stop filling the width, which is the entire
-     brief; and because it is nowrap, a ceiling that is too high overflows the
-     frame rather than wrapping. So the size tracks the measure exactly and the
-     fit holds at every width.
-
-     Re-measured for "Nature's Finest Expression", which is 26 characters where
-     the previous line was 41: at the old 10.05vw it filled 57.7% of the measure
-     and read as stranded rather than as a line spanning the frame. 15.6vw brings
-     it to ~90%.
-
-     90%, not the 94% the old wording sat at. The trade is vertical: 16.4vw would
-     hit 94% but line-height 1.06 makes the block 250px on a 900px frame, and at
-     the rest position that pushes its lower edge to 41.9% — inside the ridge
-     mask's 40-56% haze transition, where the bottom of the type would sit
-     permanently half-dissolved. 15.6vw keeps the block clear of it. The rest
-     offset moved with it; see the transform below.
-
-     The two percent of daylight the old note describes still applies: Devasia's
-     advance widths set this, and a figure that fits exactly clips the moment the
-     fallback face renders first. Re-measure if the wording or the case changes
-     again — the fill percentage is what to measure, not the character count. */
-  font-size: 15.6vw; line-height: 1.06;
   white-space: nowrap;
-  /* Caps set in CSS, not typed into the markup, for the same reason as
-     .hsv-hero__title: the DOM text stays sentence case so a screen reader reads
-     a sentence rather than spelling it out letter by letter. */
+  font-family: var(--hs-display); font-size: 15vw;
+  font-weight: 400; line-height: .98; letter-spacing: -.015em; text-align: center;
   text-transform: uppercase;
-  /* White by instruction, over navy. Known trade: against the pale sky the top
-     of the frame measures ~187 luma through the 18% veil, so white sits near
-     1.3:1 there — it reads as a wash, not as type. If it ever needs to carry
-     again, the options are navy (the previous answer) or ~55% veil at the top. */
-  color: #fff;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.75), 0 1px 4px rgba(0, 0, 0, 0.9);
-  /* Both ends measured off the mask rather than guessed. Its alpha by row is
-     nil to 38%, a haze transition from 40 to 56%, and effectively solid from
-     60% down. The grid centres this line at 50vh, which is inside that
-     transition — parked there it would sit permanently half-dissolved.
-
-     It rested at -22vh while the block was 153px tall. The new wording is set
-     larger, so the block is 216px — 24vh of a 900px frame against 17 — and the
-     same offset would have hung its lower edge at 40.2%, in the haze. -25vh puts
-     it back between 13 and 37%, clear of the transition with the same margin the
-     measured -22vh had. It starts 51vh lower,
-     spanning 68 to 90%, well inside the solid part of the ridge and still on the
-     pin rather than below it: a line that begins off-frame has nothing to
-     emerge from.
-
-     The fallback lives in the var() and must stay there. Declaring `--climb: 0`
-     on this rule instead looks equivalent and is not: a local declaration wins
-     over the inherited one, so the line would read its own constant zero and
-     never move no matter what the scrub wrote to the pin above it. */
-  transform: translateY(calc(-25svh + (1 - var(--climb, 0)) * 51svh));
-  will-change: transform;
+  color: #fff; text-shadow: 0 2px 20px rgba(0, 0, 0, .45);
+}
+@media (max-width: 900px) {
+  /* Too narrow for the full sentence on one line — it wraps and shrinks. */
+  .hsv-return__line { white-space: normal; max-width: 13ch; font-size: clamp(3.5rem, 22vw, 8rem) }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hsv-return__scene { inset: 0; transform: scale(1.04) }
 }
 
-/* The ridge, painted over the type.
+/* ---- [08] journal ---- */
 
-   A second copy of the plate rather than a cut-out PNG. The RGB is identical to
-   the picture already on screen, so exporting it again with baked alpha cost
-   269KB of duplicated photograph; masking the same file instead costs a 22KB
-   greyscale and one extra paint of an image the browser has already downloaded.
-
-   The mask is that photograph's own luminance, ramped 206 (clear sky) to 150
-   (solid ridge). Its histogram is strongly bimodal — sky at 208-255, mountains
-   at 32-127 — so the two separate cleanly, and the thin population between them
-   is exactly the hazy distant ridgeline. That band lands at partial alpha, which
-   is why the line does not pop out from a hard edge: it dissolves up through the
-   haze and then clears it.
-
-   Mask and image are both `cover` on the same box, and the mask is exactly half
-   the plate's pixel dimensions, so the two register without any nudging. Any
-   other size and the ridge in the mask drifts against the ridge in the photo. */
-.hsv-return__ridge {
-  position: absolute; inset: 0; z-index: 3; pointer-events: none;
-  -webkit-mask-image: url("/assets/return-ridge-mask.webp");
-  mask-image: url("/assets/return-ridge-mask.webp");
-  -webkit-mask-size: cover;
-  mask-size: cover;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
+/* Snow, like Founders. The hillside above it ends on a dark photograph and the
+   contact band below opens on its own ground, so this reads as the page coming
+   back indoors between the two. */
+.hsv-journal {
+  background: var(--hsv-snow); color: var(--hs-ink);
+  padding-block: var(--hs-band);
 }
-.hsv-return__ridge > img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
+.hsv-journal__head { text-align: center; margin-bottom: clamp(2.5rem, 6svh, 4rem) }
+/* The section headings on this page are all one face at one step; this is
+   .hsv-fr__h's ramp, so the two unpinned bands open identically. */
+.hsv-journal__h {
+  font-family: var(--hs-display); font-weight: 400;
+  font-size: clamp(34px, 4.6vw, 68px); line-height: 1.14; letter-spacing: .01em;
+  text-transform: uppercase;
 }
-/* the same graduated wash the plate carries, so the occluder is not visibly
-   lighter than the picture it is doubling */
-.hsv-return__ridge::after {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--hs-navy) 18%, transparent) 0%,
-    color-mix(in srgb, var(--hs-navy) 46%, transparent) 100%
-  );
-}
+.hsv-journal__more { margin-top: clamp(2.5rem, 6svh, 4rem); text-align: center }
 
 .hsv-cta {
   position: relative; background: var(--hs-white);
@@ -1777,11 +1812,10 @@
      scrub, and on a real handset — where Safari's chrome takes a slice the
      emulator never does — that left the film about a quarter of the visible page.
 
-     And the section grows to 560vh, because three beats one after another need
-     more scroll than three beats stacked on top of each other. The film keeps its
-     0..0.66 share, which is 304vh of travel here against 211 on a desktop: a
-     slower scrub, which is the right way round for a thumb. */
-  .hsv-intro { height: 560vh }
+     And the section grows to 420vh, because three beats one after another need
+     more scroll than three beats stacked on top of each other — cut from 560
+     by the same 25% as the desktop height above. */
+  .hsv-intro { height: 420vh }
   .hsv-intro__pin {
     --lede-eff: var(--lede-n);
     --rise-eff: var(--rise-n);
@@ -1835,11 +1869,38 @@
      scrim stopped 76px short of the edge and that showed as a hard horizontal
      line across the ridge — a scrim has to end at an edge or in a gradient, and
      that ended in mid-air. */
+  /* The wrapper becomes a box again. On a wide screen it is display: contents so
+     its two blocks can take opposite corners with the bottle between them; there
+     is no room for that here, the beats take turns instead, and the whole story
+     is one panel at the foot of the frame — which needs the head and the body
+     stacked in normal flow inside a single positioned parent.
+
+     So the box, the position and the opacity come back to the wrapper, and the
+     children give up everything the magazine layout gave them. */
   .hsv-intro__copy {
-    left: 0; right: 0; bottom: 0; max-width: none;
+    display: block;
+    position: absolute; left: 0; right: 0; bottom: 0; max-width: none;
+    z-index: 4;
+    opacity: var(--lede-eff);
     padding: clamp(3.5rem, 9svh, 5rem) var(--hs-gut) clamp(3rem, 9svh, 6rem);
     background: linear-gradient(to top, rgba(255, 255, 255, .92), rgba(255, 255, 255, 0));
   }
+  .hsv-intro__head,
+  .hsv-intro__body {
+    position: static; max-width: none; z-index: auto; opacity: 1;
+  }
+  /* The spread's display size is a wide-screen device — 10vw is 39px on a 390
+     phone but the line still has to share the frame with a full-bleed film, and
+     the block below it is the whole story. Back to the size the section's other
+     headings use, with its gold rule restored. */
+  .hsv-intro__head .hsv-intro__h {
+    font-size: clamp(30px, 3.9vw, 62px); line-height: 1.04;
+    letter-spacing: .01em;
+    margin-bottom: 1.4rem;
+  }
+  .hsv-intro__head .hsv-intro__h::after { display: block }
+  /* the gap the two blocks used to have from being one block */
+  .hsv-intro__head { margin-bottom: clamp(1rem, 2.4svh, 1.6rem) }
   /* A panel, not a scrim. Our Story is the whole story again — label, display
      heading, lede and two paragraphs, about 435px on a 390px phone. On the
      gradient the top of that block sits where the wash is still nearly clear,
@@ -1957,13 +2018,8 @@
      by the panel's bottom edge — see .hsv-panel__bottle. The clearance this
      block was protecting is unaffected: the bottle moved down, not up. */
   .hsv-panel {
-    position: relative; min-height: 100svh;
-    /* --hs-band bottoms out at 4.5rem on a phone, which is 72px against a fixed
-       82px nav: stacked, every panel's top is a scroll position the reader will
-       land on, and the label was landing behind the bar. Floor it at the same
-       7rem the rise copy uses, so the two sections clear the nav by the same
-       margin rather than each guessing. Bottom keeps the band. */
-    padding: max(var(--hs-band), 7rem) var(--hs-gut) var(--hs-band);
+    position: relative; min-height: 120svh;
+    padding: max(var(--hs-band), 8rem) var(--hs-gut) var(--hs-band);
     clip-path: none;
   }
   /* will-change: auto is not tidying up — it is load-bearing. `will-change:
@@ -1998,32 +2054,31 @@
     position: relative; inset: auto; z-index: 2;
     transform: none; width: auto; margin: 0 auto;
   }
-  /* Was -8svh. See the note on .hsv-panel__bottle for why nothing hangs past a
-     frame edge any more, and --hsv-base just above for the extra lift the
-     sticky switch needs here. */
-  .hsv-panel__bottle { bottom: 11svh }
   /* The ground is simply the ground here.
 
-     --in is still written on a narrow screen — the scrub does not check width,
-     only reduced motion — but it no longer means anything: nothing is clipped,
-     so the split progress it tracks corresponds to no reveal. Left alone, the
-     third panel's plate would sit at opacity 0 until the scrub passed 0.58,
-     which is most of the way down a section the reader is already inside. The
-     flat --hsv-tone underneath means that failed quietly rather than visibly,
-     which is worse, not better. */
-  .hsv-ground { opacity: 1; transform: none; will-change: auto }
-  /* The ladder survives the stack at the same cube-root ratios, and now that is
-     one number rather than three restated heights — the ratios come out of the
-     volumes either way, so a narrow screen only changes the scale. Scrolled past
-     one at a time rather than split between, these are compared from memory
-     rather than side by side, and at 1:0.87:0.76 that is asking a lot of the
-     reader; the larger base is what buys back a little of it. */
-  /* 57svh, down from 62. The switch is sticky here rather than absolute — it
-     rides the viewport at 100svh - 4.6rem — so it sits over whatever is at the
-     foot of the frame, whichever panel that is. A base low enough to be inside
-     the panel was still behind the pill. Copy ends at 29.2svh here, so 57 at
-     bottom: 11svh puts the cap at 32 and the foot at 89, clear of both. */
-  .hsv-panel { --hsv-base: 57svh }
+     The scrub keeps writing on a narrow screen — it does not check width, only
+     reduced motion — and none of the four values it writes mean anything here.
+     --in: nothing is clipped, so the split progress it tracks corresponds to no
+     reveal; left alone the third panel's plate would sit at opacity 0 until the
+     scrub passed 0.58, which is most of the way down a section the reader is
+     already inside. The flat --hsv-tone underneath means that failed quietly
+     rather than visibly, which is worse, not better.
+
+     --l and --r are worse than meaningless: they are destructive. The grounds
+     box is bounded by them (left: var(--l); right: var(--r)) so that on the
+     desktop each plate's centre tracks its visible slice. Stacked, there is no
+     slice, and the desktop arithmetic still runs — the second and third panels'
+     boxes collapse to zero width (left: 100%) and the first narrows as the
+     scroll advances, so a panel was its flat tone with the photograph squeezed
+     out of it entirely. Pinned to the panel's own edges, the plate always fills
+     the panel it belongs to.
+
+     --cx needs no undoing: the stack it would translate is already transform:
+     none two rules up. */
+  .hsv-grounds {
+    opacity: 1; transform: none; will-change: auto;
+    left: 0; right: 0;
+  }
 
   /* Sticky rather than absolute, because there is no pin to be absolute inside —
      and the three panels are three full screens here, so a control that scrolls
@@ -2236,7 +2291,7 @@
   }
   /* The crossfade between the two vessels is a dissolve, not a movement, but it
      is still 340ms of the page changing under someone who asked it not to. */
-  .hsv-panel__bottle { transition: none }
+  .hsv-ground { transition: none }
   /* relative rather than static, for the containing-block reason set out in the
      narrow-layout block above. useScrub bails here, so --l/--r/--cx keep their
      resting values and every panel would sit clipped to a third with its copy
@@ -2274,17 +2329,8 @@
     transform: none; width: auto; margin: 0 auto;
   }
 
-  /* useScrub bails here, so --climb never leaves 0 and the line would stay
-     parked behind the ridge for good. Stated at its arrived position instead,
-     with the pin released — the ridge still occludes nothing it should not,
-     because the line is above the mask's transition band either way. */
-  .hsv-return { height: auto; min-height: 92svh }
-  .hsv-return__pin { position: static; height: auto; min-height: 92svh }
-  /* -25vh, tracking the rest offset in the main rule. These two are a pair: this
-     one states the arrived position for readers the scrub never runs for, so a
-     figure left behind here parks the line somewhere the scrubbed version never
-     stops — and with the larger wording that is inside the mask's haze band. */
-  .hsv-return__line { transform: translateY(-25svh) }
+  /* A still frame for readers who request reduced motion. */
+  .hsv-return__scene { inset: 0; transform: scale(1.04) }
 
   .hsv-plate > img { transition: none }
   /* stated, not skipped: the from-state is opacity 0, so merely disabling the

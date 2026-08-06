@@ -23,9 +23,10 @@ export const metadata: Metadata = {
    grounds the deck's family panels sit on. Rendered as product shots they came
    out as three flat cream rectangles.
 
-   The real cut-out is bottle-glass-clear.webp, 459x1800, and there is only one
-   of it — the deck draws all three sizes from that single artwork and gets the
-   difference from scaleFor(), which is the cube root of the volume ratio,
+   The real cut-out is bottle-glass-750.webp — the palest of the three
+   per-ground renders, which is the right neutral for this cool mist shelf — and
+   there is only one of it: all three sizes are drawn from that single artwork
+   and get their difference from scaleFor(), the cube root of the volume ratio,
    because a shape scaled in three dimensions grows in height by the cube root
    of its volume. Reusing that function rather than authoring three heights is
    what keeps this row and the homepage's family section telling the same story
@@ -171,10 +172,10 @@ export default function PurityPage() {
                     style={{ "--h": `${format.scale * 100}%` } as CSSProperties}
                   >
                     <Image
-                      src="/assets/bottle-glass-clear.webp"
+                      src="/assets/bottle-glass-750.webp"
                       alt={`Himspring ${format.name} glass bottle`}
-                      width={459}
-                      height={1800}
+                      width={534}
+                      height={1844}
                     />
                   </div>
                   <p className="hsi-format__size">{format.name}</p>
