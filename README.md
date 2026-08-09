@@ -38,3 +38,6 @@ _legacy/          Original static HTML source (pre-Next.js, gitignored)
   call where marked in `app/SignupForm.js`.
 - Set `NEXT_PUBLIC_SITE_URL` to your production URL so Open Graph image URLs
   resolve correctly (defaults to `https://himspring.com`).
+
+<!-- redeploy trigger -->
+
