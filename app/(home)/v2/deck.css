@@ -1169,7 +1169,7 @@
    it repaints rather than reflowing the document. */
 .hsv-grounds {
   position: absolute; z-index: 0;
-  top: 0; bottom: 0; left: var(--l, 0%); right: var(--r, 0%);
+  top: var(--hsv-nav-h); bottom: 0; left: var(--l, 0%); right: var(--r, 0%);
   pointer-events: none;
 
   /* The arrival, on the panel's own --in.
@@ -1260,7 +1260,7 @@
    only thing moving is position. Centred, because a left-aligned column adrift
    in a full-bleed panel has nothing to align to. */
 .hsv-panel__inner {
-  position: absolute; top: clamp(36px, 6svh, 72px); left: 50%;
+  position: absolute; top: calc(var(--hsv-nav-h) + clamp(36px, 6svh, 72px)); left: 50%;
   transform: translateX(-50%);
   width: min(26vw, 360px); max-width: none;
   text-align: center;
@@ -1506,38 +1506,6 @@
    text through it. */
 .hsv-fr__copy .hsv-prose { max-width: none }
 
-/* Gotham, not the display face. Devasia at 22px turns "01" into two vertical
-   strokes and a gap — a condensed face has nothing left to give at numeral size,
-   and this is the one element on the board whose entire content is two digits.
-
-   Ink rather than gold, and the gold moves to the rule beside it. Gold is a
-   light colour and --hs-gold-deep only reaches 4.21:1 on Snow White, which is
-   fine for large text and short of the 4.5 a 12px numeral needs. The rule is
-   decoration and carries nothing, so it can hold the warmth instead.
-
-   The rule now runs the full width of the copy block rather than stopping at
-   56px. It was worth trying to make it a pointer — flipping it to the seam side
-   per row, so a line always left the words heading for the face — and it is
-   worth recording why that was dropped rather than left as an idea somebody
-   re-proposes. Pointing it means the numeral changes ends between the two rows:
-   on one it opens the column, on the other it sits at the far right of a
-   left-aligned block with nothing under it. That is a worse thing to look at
-   than a symmetrical rule, and the adjacency above is already what binds the
-   pair. So this is a masthead rule, not an arrow: same shape on every row, and
-   the width comes from the block rather than a number. */
-.hsv-fr__index {
-  display: flex; align-items: center; gap: .95rem;
-  font-family: var(--hs-sans);
-  font-size: 12px; font-weight: 600; letter-spacing: .22em; line-height: 1;
-  color: var(--hs-ink);
-  margin-bottom: 1.6rem;
-}
-.hsv-fr__index::after {
-  content: ""; flex: 1 1 auto;
-  height: 1px; min-width: 56px;
-  background: var(--hs-gold);
-}
-
 /* No ch cap, for the reason given on .hsv-fr__h, and caps to match it.
 
    Re-measured after the change, because the note here was written against a
@@ -1697,50 +1665,134 @@
    home.css on .hs-h2 and this block should go. */
 .hsv .hs-contact .hs-h2 { text-transform: uppercase }
 
-/* ---- [07] return banner ---- */
+/* ---- [07] return + cta ---- */
 
-/* A brief photographic handoff into the journal. The source moves more slowly
-   than the page while it enters and leaves the viewport, making the transition
-   feel dimensional without pinning the reader in another full-screen scene. */
-.hsv-return { position: relative; background: var(--hs-cream) }
-.hsv-return__frame {
-  position: relative; height: clamp(22rem, 52svh, 38rem); overflow: hidden;
-  --return-shift: 18svh;
-}
-.hsv-return__scene {
-  position: absolute; inset: calc(var(--return-shift) * -1) 0;
-  transform: translate3d(0, calc((.5 - var(--return-progress, 0)) * 2 * var(--return-shift)), 0) scale(1.04);
-  will-change: transform;
-}
+/* Tall enough to give the climb somewhere to happen, with a pinned frame so the
+   ridge holds still while the line moves through it. */
+.hsv-return { position: relative; height: 210vh; background: var(--hs-cream) }
+.hsv-return__pin { position: sticky; top: 0; height: 100svh; overflow: hidden }
+/* darker than the hero's: this one is allowed to be a photograph, because the
+   product sequence is over by the time it arrives */
 .hsv-return__veil {
   position: absolute; inset: 0; z-index: 1;
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--hs-navy) 18%, transparent), color-mix(in srgb, var(--hs-navy) 52%, transparent));
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--hs-navy) 18%, transparent) 0%,
+    color-mix(in srgb, var(--hs-navy) 46%, transparent) 100%
+  );
 }
 .hsv-return__inner {
   position: absolute; inset: 0; z-index: 2;
   display: grid; place-items: center;
-  padding: var(--hs-gut);
-}
-/* One line on desktop. The size is vw-bound rather than clamped to a rem
-   ceiling because the constraint here is the sentence fitting the viewport,
-   not a maximum type size — 26 characters of the display face at 7.4vw fills
-   the width without touching the gutters. Under 900px it wraps instead.
+  /* Narrow side padding, not the section gutter: this line is set to span the
+     measure, so the gutter would only be width taken away from it.
 
-   The face is narrow enough that 26 characters run about 5.35× the font size,
-   so filling the band takes a figure far larger than the usual heading step. */
+     Flat 2vw rather than a clamp, so the space left for the line is the same
+     fraction at every width. Under a clamp it was 4% of a 1440 viewport but
+     6.2% of a 390 one, and a line sized in vw would have fitted at one end of
+     that range and been clipped at the other. */
+  padding: var(--hs-band) 2vw;
+}
 .hsv-return__line {
+  font-family: var(--hs-display); font-weight: 400; text-align: center;
+  /* One line, spanning the measure.
+
+     Sized in vw with no clamp on purpose. A clamp would pin the size at some
+     viewport and the line would stop filling the width, which is the entire
+     brief; and because it is nowrap, a ceiling that is too high overflows the
+     frame rather than wrapping. So the size tracks the measure exactly and the
+     fit holds at every width.
+
+     Re-measured for "Nature's Finest Expression", which is 26 characters where
+     the previous line was 41: at the old 10.05vw it filled 57.7% of the measure
+     and read as stranded rather than as a line spanning the frame. 15.6vw brings
+     it to ~90%.
+
+     90%, not the 94% the old wording sat at. The trade is vertical: 16.4vw would
+     hit 94% but line-height 1.06 makes the block 250px on a 900px frame, and at
+     the rest position that pushes its lower edge to 41.9% — inside the ridge
+     mask's 40-56% haze transition, where the bottom of the type would sit
+     permanently half-dissolved. 15.6vw keeps the block clear of it. The rest
+     offset moved with it; see the transform below.
+
+     The two percent of daylight the old note describes still applies: Devasia's
+     advance widths set this, and a figure that fits exactly clips the moment the
+     fallback face renders first. Re-measure if the wording or the case changes
+     again — the fill percentage is what to measure, not the character count. */
+  font-size: 15.6vw; line-height: 1.06;
   white-space: nowrap;
-  font-family: var(--hs-display); font-size: 15vw;
-  font-weight: 400; line-height: .98; letter-spacing: -.015em; text-align: center;
+  /* Caps set in CSS, not typed into the markup, for the same reason as
+     .hsv-hero__title: the DOM text stays sentence case so a screen reader reads
+     a sentence rather than spelling it out letter by letter. */
   text-transform: uppercase;
-  color: #fff; text-shadow: 0 2px 20px rgba(0, 0, 0, .45);
+  /* White by instruction, over navy. Known trade: against the pale sky the top
+     of the frame measures ~187 luma through the 18% veil, so white sits near
+     1.3:1 there — it reads as a wash, not as type. If it ever needs to carry
+     again, the options are navy (the previous answer) or ~55% veil at the top. */
+  color: #fff;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.75), 0 1px 4px rgba(0, 0, 0, 0.9);
+  /* Both ends measured off the mask rather than guessed. Its alpha by row is
+     nil to 38%, a haze transition from 40 to 56%, and effectively solid from
+     60% down. The grid centres this line at 50vh, which is inside that
+     transition — parked there it would sit permanently half-dissolved.
+
+     It rested at -22vh while the block was 153px tall. The new wording is set
+     larger, so the block is 216px — 24vh of a 900px frame against 17 — and the
+     same offset would have hung its lower edge at 40.2%, in the haze. -25vh puts
+     it back between 13 and 37%, clear of the transition with the same margin the
+     measured -22vh had. It starts 51vh lower,
+     spanning 68 to 90%, well inside the solid part of the ridge and still on the
+     pin rather than below it: a line that begins off-frame has nothing to
+     emerge from.
+
+     The fallback lives in the var() and must stay there. Declaring `--climb: 0`
+     on this rule instead looks equivalent and is not: a local declaration wins
+     over the inherited one, so the line would read its own constant zero and
+     never move no matter what the scrub wrote to the pin above it. */
+  transform: translateY(calc(-25svh + (1 - var(--climb, 0)) * 51svh));
+  will-change: transform;
 }
-@media (max-width: 900px) {
-  /* Too narrow for the full sentence on one line — it wraps and shrinks. */
-  .hsv-return__line { white-space: normal; max-width: 13ch; font-size: clamp(3.5rem, 22vw, 8rem) }
+
+/* The ridge, painted over the type.
+
+   A second copy of the plate rather than a cut-out PNG. The RGB is identical to
+   the picture already on screen, so exporting it again with baked alpha cost
+   269KB of duplicated photograph; masking the same file instead costs a 22KB
+   greyscale and one extra paint of an image the browser has already downloaded.
+
+   The mask is that photograph's own luminance, ramped 206 (clear sky) to 150
+   (solid ridge). Its histogram is strongly bimodal — sky at 208-255, mountains
+   at 32-127 — so the two separate cleanly, and the thin population between them
+   is exactly the hazy distant ridgeline. That band lands at partial alpha, which
+   is why the line does not pop out from a hard edge: it dissolves up through the
+   haze and then clears it.
+
+   Mask and image are both `cover` on the same box, and the mask is exactly half
+   the plate's pixel dimensions, so the two register without any nudging. Any
+   other size and the ridge in the mask drifts against the ridge in the photo. */
+.hsv-return__ridge {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  -webkit-mask-image: url("/assets/return-ridge-mask.webp");
+  mask-image: url("/assets/return-ridge-mask.webp");
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
-@media (prefers-reduced-motion: reduce) {
-  .hsv-return__scene { inset: 0; transform: scale(1.04) }
+.hsv-return__ridge > img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+/* the same graduated wash the plate carries, so the occluder is not visibly
+   lighter than the picture it is doubling */
+.hsv-return__ridge::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--hs-navy) 18%, transparent) 0%,
+    color-mix(in srgb, var(--hs-navy) 46%, transparent) 100%
+  );
 }
 
 /* ---- [08] journal ---- */
@@ -2300,8 +2352,8 @@
      entirely: unpinned, the copy starts at the panel's own top edge, and the nav
      is fixed and 94px tall on a wide screen. Measured at panel top, the label
      sat at y=0 and the size at y=39 — both behind the bar, with only the note
-     clearing it. The pinned layout never needed padding because the stack is
-     absolute at 13vh inside it. */
+     clearing it. The pinned layout has the same fix now, via --hsv-nav-h on
+     .hsv-panel__inner and .hsv-grounds — it was missing there too. */
   /* 100svh, up from 88.
 
      The bottle's top edge is (min-height + 8svh - --hsv-base) down the panel, a
@@ -2329,8 +2381,17 @@
     transform: none; width: auto; margin: 0 auto;
   }
 
-  /* A still frame for readers who request reduced motion. */
-  .hsv-return__scene { inset: 0; transform: scale(1.04) }
+  /* useScrub bails here, so --climb never leaves 0 and the line would stay
+     parked behind the ridge for good. Stated at its arrived position instead,
+     with the pin released — the ridge still occludes nothing it should not,
+     because the line is above the mask's transition band either way. */
+  .hsv-return { height: auto; min-height: 92svh }
+  .hsv-return__pin { position: static; height: auto; min-height: 92svh }
+  /* -25vh, tracking the rest offset in the main rule. These two are a pair: this
+     one states the arrived position for readers the scrub never runs for, so a
+     figure left behind here parks the line somewhere the scrubbed version never
+     stops — and with the larger wording that is inside the mask's haze band. */
+  .hsv-return__line { transform: translateY(-25svh) }
 
   .hsv-plate > img { transition: none }
   /* stated, not skipped: the from-state is opacity 0, so merely disabling the

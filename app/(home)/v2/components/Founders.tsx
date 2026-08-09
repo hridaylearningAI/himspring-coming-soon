@@ -85,9 +85,6 @@ export default function Founders() {
                 style={at(copyCol)}
               >
                 <div className="hsv-fr__copy">
-                  <Reveal as="p" className="hsv-fr__index" aria-hidden="true">
-                    {String(i + 1).padStart(2, "0")}
-                  </Reveal>
                   <Reveal as="h3" className="hsv-fr__name hsv-blur" delay={70}>
                     {f.name}
                     {f.alias ? <span className="hsv-fr__alias">{f.alias}</span> : null}
