@@ -188,7 +188,7 @@ export default function Family() {
                       pipeline would add */
                   <img
                     key={f.id}
-                    className={`hsv-ground${f.id === format ? " is-on" : ""}`}
+                    className={`hsv-ground hsv-ground--${f.id}${f.id === format ? " is-on" : ""}`}
                     src={row.ground.src[f.id]}
                     alt=""
                     decoding="async"

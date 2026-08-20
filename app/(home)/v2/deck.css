@@ -419,6 +419,9 @@
   --scene: 0;
   --lede: 1;
   --rise: 0;
+  --spin: 0;
+  /* 3D clone-fan progress. Wide uses --rise; narrow rebinds to --rise-n below. */
+  --fan: var(--rise);
   /* The narrow timeline's pair, and the indirection the composition actually
      reads. Everything below consumes --lede-eff / --rise-eff, and the only thing
      the breakpoint does is repoint those at the other pair — so there is one
@@ -474,6 +477,18 @@
   width: 100%; height: calc(100% - var(--hsv-nav-h));
   object-fit: cover;
   display: block;
+}
+
+/* 3D bottle stage — full pin under the nav. Stays opaque through the rise so
+   the clone-and-fan ladder can finish in the same Canvas. */
+.hsv-intro__bottle {
+  position: absolute; top: var(--hsv-nav-h); left: 0; right: 0; bottom: 0; z-index: 0;
+  width: 100%; height: calc(100% - var(--hsv-nav-h));
+  opacity: 1;
+  pointer-events: none;
+}
+.hsv-intro__bottle canvas {
+  display: block; width: 100% !important; height: 100% !important;
 }
 /* The band the inset leaves behind the bar. The bar is 95% white, so the 5% that
    shows through has to be something — left as the page's default it was a hairline
@@ -798,46 +813,10 @@
 /* ---- the family, rising into the landscape ---- */
 
 .hsv-rise { position: absolute; inset: 0; z-index: 5; pointer-events: none }
-.hsv-rise__field { position: absolute; inset: 0 }
-.hsv-rise__item {
-  /* Anchored from the bottom, on one shared line.
-
-     This used to anchor from the top at two different heights, with the pair
-     rotated -24 and +17 — a still life of two vessels, where the offset tops
-     and the angles were the composition. Three volumes of one bottle are not a
-     still life, they are a comparison, and a comparison needs a floor: the only
-     thing that may differ between these three is how far up from it they reach.
-     Anchoring from the top instead would make every bottle's base sit somewhere
-     different, and the ladder would read as an arrangement rather than a size. */
-  position: absolute; bottom: 12svh;
-  /* Each bottle's own 0..1 out of the shared --rise, offset by --d so the three
-     do not arrive as a single block. x2.4 is the reciprocal of the ~0.42 each
-     takes to travel, so they overlap for most of it. */
-  --d: 0;
-  --v: clamp(0, calc((var(--rise-eff) - var(--d)) * 2.4), 1);
-  /* enough travel to start below the frame from a resting bottom of 12vh. At
-     --v = 1 the translate is zero, so the group settles on exactly the geometry
-     above and nothing else. */
-  transform: translateY(calc((1 - var(--v)) * 96svh));
-  /* the fade trails the movement, so they are visible while still climbing
-     rather than appearing in place */
-  opacity: clamp(0, calc(var(--v) * 1.6), 1);
-  will-change: transform, opacity;
-}
-/* Height drives, width follows the shot's own ratio. All three are the same
-   glass shot, so height is the only thing carrying the difference. */
-.hsv-rise__item > img { display: block; height: 100%; width: auto }
-
-/* The ladder, cube-rooted off 52vh exactly as in [04]: 500 is .874 -> 45vh,
-   330 is .761 -> 40vh. Left offsets are spaced so the three sit as one group
-   with even gaps rather than as three separate objects — at 52vh the widest is
-   about 8vw across, so 10vw steps leave roughly 2vw of air between them.
-
-   Largest first, left to right, matching the order the panels subdivide in
-   further down the page. */
-.hsv-rise__item--1 { --d: 0; left: 7vw; height: 52svh }
-.hsv-rise__item--2 { --d: 0.12; left: 17vw; height: 45svh }
-.hsv-rise__item--3 { --d: 0.24; left: 26vw; height: 40svh }
+/* Photo ladder retired — sizes are the 3D clone-fan inside IntroBottle.
+   Field kept as an empty hook so older selectors do not 404 the cascade. */
+.hsv-rise__field { display: none }
+.hsv-rise__item { display: none }
 
 /* The frame splits down the middle: the ladder climbs on the left, the four
    claims stand on the right.
@@ -901,7 +880,6 @@
     transparent 88%
   );
 }
-.hsv-rise__field { z-index: 1 }
 .hsv-rise__copy { z-index: 2 }
 /* Zero-height scroll marker, at the depth where the rise is on screen. Not
    display:none — a target with no box is not scrolled to. */
@@ -1235,6 +1213,53 @@
   transition: opacity .34s var(--hs-ease);
 }
 .hsv-ground.is-on { opacity: 1 }
+
+/* PET cannot share glass's centred crop, and the reason is the plates.
+
+   Glass was re-shot with the bottle small in frame — cap at 16% of the 750,
+   31% of the 330 — so a centred `cover` crop on a wide short pin still leaves
+   the cap below --hsv-nav-h. PET was not: the three plates are 2200×1559 (1.41,
+   against glass at 1.77 / 1.55), and the 750's cap sits at 12% of frame. At
+   1440×900 that crop leaves 16px of plate above the cap, flush with the nav.
+   At 1800×760 it takes the cap entirely, which is the same disappearance the
+   nav-inset on .hsv-grounds already fixed for glass.
+
+   Anchored to the top of the plate so the crop comes off the foot, not the cap.
+   The grounds box already starts at --hsv-nav-h, so the plate's own 12% of
+   wall is now the air under the bar. On a tall panel `cover` crops the sides
+   instead and this does nothing, which is the right nothing: the whole bottle
+   is already in frame. */
+.hsv-ground--pet { object-position: 50% 0% }
+
+/* Still outstanding on this plate, and it is not a CSS problem.
+
+   The panel copy ends at a fixed y — nav plus 54px, so 250 at 1440x900 — and
+   whether it clears the cap is decided by the photograph, not by anything here.
+   Glass clears because it was re-shot with the bottle small in frame: its cap
+   sits at 18.2% of frame on the 750, 25% on the 500, 35% on the 330, which in
+   the three-up puts the cap at 240, 300 and 375. The PET 500 and 330 clear the
+   same way, at 29% and 30%. The PET 750 does not: its cap is at 11.4%, which
+   lands at 185, and the 750 ml is printed across the gold.
+
+   The rule above is the whole of what CSS can do about it, and only in the
+   full-bleed state. Once the panel is a third of the viewport the box is taller
+   than it is wide, `cover` scales the plate to height, there is no vertical
+   crop left to move, and object-position is inert. Pushing the cap down by
+   zoom instead needs about 1.8x, which is not a framing, it is a different
+   photograph.
+
+   So it is fixed on the plate, when the plates are next made: add about 131px
+   of wall above the existing 2200x1559 frame — the top band is wall only, the
+   cap starts 177px down — which takes the cap to 18.2% and matches glass.
+   Cropping the bottom to the same ratio instead would need 586px and would cut
+   into the label.
+
+   Two neighbouring things worth doing in the same pass. The glass 750 loses its
+   cap entirely at 1800x760, where the panel is wide enough that `cover` crops
+   350px vertically off a plate whose cap is only 163px down — the same failure,
+   the other format. And the PET 500 and 330 are framed within a percentage
+   point of each other, so PET's ladder reads as two sizes and a repeat where
+   glass's reads as three. */
 
 /* Stated for the no-script case: React never adds .is-on there, so without this
    every panel would render two invisible plates and the section would be three
@@ -1827,6 +1852,41 @@
 .hsv-cta__copy { position: relative; max-width: 34ch }
 .hsv-cta__copy .hs-btn { margin-top: clamp(1.75rem, 4svh, 2.5rem) }
 
+/* [04b] sparkling invitation — unpinned rest between the still family and the
+   founders board.
+
+   White rather than snow: Family ends on warm sand plates and Founders opens on
+   --hsv-snow, so another snow band here would erase both edges. White is the
+   step between them, and it is the studio ground the mockup was shot on. */
+.hsv-spark {
+  background: var(--hs-white); color: var(--hs-ink);
+  padding-block: var(--hs-band);
+}
+.hsv-spark__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .85fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: center;
+}
+.hsv-spark__copy { max-width: 36ch }
+.hsv-spark__h {
+  font-family: var(--hs-display); font-weight: 400;
+  font-size: clamp(34px, 4.6vw, 68px); line-height: 1.14; letter-spacing: .01em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.hsv-spark__copy .hsv-prose { margin-bottom: clamp(1.75rem, 4svh, 2.5rem) }
+.hsv-spark__plate {
+  display: flex; justify-content: center;
+  background: var(--hsv-snow);
+  border: 1px solid var(--hs-gold-pale);
+  border-radius: 16px;
+}
+.hsv-spark__plate img {
+  width: min(100%, 380px); height: auto;
+  object-fit: contain; display: block;
+}
+
 /* ============================================================
    responsive
    ============================================================ */
@@ -1871,6 +1931,7 @@
   .hsv-intro__pin {
     --lede-eff: var(--lede-n);
     --rise-eff: var(--rise-n);
+    --fan: var(--rise-n);
   }
 
   /* [02] is pinned and scrubbed here too, by instruction — the same sequence as
@@ -2211,39 +2272,9 @@
     background: linear-gradient(to top, rgba(255, 255, 255, .92), rgba(255, 255, 255, 0));
   }
 
-  /* The rise climbs here as well, now that there is a pin for it to climb into
-     — so the whole "stated rather than animated" fallback is gone with the one
-     above it, and --rise drives the same transform it drives on a desktop.
+  /* Ladder is 3D clone-fan inside IntroBottle; photo-item layout retired.
+     Why Himspring copy still fades on --rise-eff above the stage. */
 
-     What does not survive is the desktop staging. There the ladder occupies the
-     left third and the copy sits bottom-right; at 390px the three bottles off a
-     52vh base are ~122, 106 and 94px wide against 342px of usable width, and
-     10vw left steps are 39px, so they would sit on top of each other with no
-     room left for a paragraph beside them.
-
-     So the frame is split horizontally instead of vertically: the ladder owns
-     the baseline across the full width, and its copy moves to the top of the
-     pin. The lede it takes over from is at the bottom, so the two never share a
-     band even during the six-hundredths of the scrub where both are up.
-
-     The first bottle's left edge is on the gutter rather than a step in from it,
-     so the group hangs off the same line the copy above it starts on and the
-     ladder descends away to the right — which is the order it is in.
-
-     Base is 27svh and the group stands on 8svh rather than 12.
-
-     Same arithmetic as the family panels: the ladder's top edge is a fraction of
-     the frame while the claims' bottom is a fixed ~300px of type under a 112px
-     nav floor, so the gap closes as the screen shortens. At 31svh on 12svh it
-     measured 70px clear at 402x874 and -10px at 402x700 — a collision on any
-     short phone. At 27svh on 8svh it is clear at both ends of that range.
-
-     The cube-root ratios are unchanged: .874 of 27 is 23.6, .761 is 20.5. The
-     ladder still says the one thing it exists to say. */
-  .hsv-rise__item { bottom: 8svh }
-  .hsv-rise__item--1 { left: 6vw; height: 27svh }
-  .hsv-rise__item--2 { left: 36vw; height: 23.6svh }
-  .hsv-rise__item--3 { left: 64vw; height: 20.5svh }
   /* The board becomes a column, which is the only honest thing a checkerboard
      can do on a phone: two 190px squares are not a portrait and not a paragraph.
      What survives is the alternation — glacier, snow, glacier, snow down the
@@ -2254,6 +2285,9 @@
      founder's copy would sit in row 2 column 1 of a one-column grid and its
      portrait in row 2 column 2, which does not exist — the browser would open an
      implicit second column and the layout would silently stay two-up at 380px. */
+  .hsv-spark__grid { grid-template-columns: 1fr }
+  .hsv-spark__copy { max-width: none; text-align: center }
+  .hsv-spark__plate { order: -1 }
   .hsv-fr__board { grid-template-columns: 1fr }
   .hsv-fr__cell {
     grid-column: 1; grid-row: auto;
@@ -2291,7 +2325,16 @@
      through it, the formats are simply present, and the three sizes are simply
      stacked. */
   .hsv-intro { height: auto }
-  .hsv-intro__pin { position: static; height: auto; padding: var(--hs-band) 0 }
+  .hsv-intro__pin {
+    position: static; height: auto; padding: var(--hs-band) 0;
+    /* useScrub bails — land on the post-fan ladder, not the pre-climb hero. */
+    --spin: 1;
+    --fan: 1;
+    --rise: 1;
+    --rise-n: 1;
+    --lede: 0;
+    --lede-n: 0;
+  }
   .hsv-intro__stage { position: static; height: 56vh }
 
   /* Same reasoning as the narrow layout: unpinned, so the film goes in the flow
@@ -2301,6 +2344,11 @@
     position: relative; inset: auto;
     width: 100%; height: auto;
     aspect-ratio: 16 / 9;
+  }
+  .hsv-intro__bottle {
+    position: relative; inset: auto;
+    width: 100%; height: min(70svh, 640px);
+    opacity: 1;
   }
   .hsv-intro__stage .hsv-bottle { height: 100%; transform: rotate(8deg) }
   /* The narrow layout's scrim and its padding come off with the pin, and this
@@ -2320,9 +2368,7 @@
   .hsv-jr__col { animation: none !important }
 
   .hsv-rise { position: static }
-  /* tall enough to contain the tallest item standing on the field's own floor */
-  .hsv-rise__field { position: relative; height: 58svh; margin-top: var(--hs-band) }
-  .hsv-rise__item { bottom: 0; transform: none; opacity: 1 }
+  .hsv-rise__field { display: none }
   .hsv-rise__copy { position: static; opacity: 1; margin: 2.5rem var(--hs-gut) 0 }
 
   .hsv-family { height: auto }

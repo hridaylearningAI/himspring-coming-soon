@@ -458,6 +458,11 @@ export const FOOTER_LINKS = [
      only. The journal is writing rather than a pillar of the site, which is the
      right weight for it. */
   { href: "/blog", label: "Journal" },
+  /* Eighth, and after Journal for the same reason Journal is after
+     Sustainability: the bar above takes the first five, so anything appended
+     here is a footer entry only. Sparkling is a sister line with its own page;
+     it does not steal a header slot from the still-water story. */
+  { href: "/sparkling", label: "Sparkling" },
 ] as const satisfies readonly NavLink[];
 
 /* The baseline strip. Both of these resolve to real pages under (home) — see

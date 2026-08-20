@@ -1,8 +1,8 @@
 /* ============================================================
    HIMSPRING — internal pages
 
-   The five long-form pages under (home): our-story, the-source, purity,
-   sustainability, contact. One sheet, imported by each of them.
+   The long-form pages under (home): our-story, the-source, purity,
+   sustainability, sparkling, contact. One sheet, imported by each of them.
 
    This file follows the same two rules deck.css sets for the homepage, because
    the point of it is that these pages read as the same site:
@@ -68,6 +68,44 @@
    picture — /contact, where the form is the page. */
 .hsi-hero--short { min-height: 56svh }
 
+/* Sparkling opens on snow rather than navy, so the clear glass and gold
+   mountains read. No plate, no veil, no ken-burns: the bottle is the picture,
+   shot on white, and blurring it would spend the one asset the page has.
+
+   The split inner puts type and bottle side by side. Centre-stacking a studio
+   cut-out under display type is a catalogue; a column of type with the bottle
+   standing beside it is a page. */
+.hsi-hero--snow {
+  background: #fefef6;
+  color: var(--hs-ink);
+  align-items: stretch;
+}
+.hsi-hero--snow .hsi-hero__title {
+  color: var(--hs-ink);
+  max-width: 16ch;
+  text-align: left;
+  margin-inline: 0;
+}
+.hsi-hero--snow .hsi-hero__lede {
+  color: var(--hs-ink-soft);
+  margin-inline: 0;
+  text-align: left;
+}
+.hsi-hero--snow .hs-eyebrow { color: var(--hs-gold-ink); text-align: left }
+
+.hsi-hero__inner.hsi-hero__inner--split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .9fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  text-align: left;
+}
+.hsi-hero__bottle { display: flex; justify-content: center }
+.hsi-hero__bottle img {
+  width: auto; height: min(72svh, 640px); max-width: 100%;
+  object-fit: contain;
+}
+
 /* --- the bar, reversed over the opener ---
 
    The homepage gets away with a dark bar over its hero because that hero is a
@@ -85,6 +123,12 @@
 .hsi .hs-nav:not(.is-stuck) { color: var(--hs-white) }
 .hsi .hs-nav:not(.is-stuck) .hs-logo img { filter: brightness(0) invert(1) }
 .hsi .hs-nav:not(.is-stuck) .hs-burger span { background: var(--hs-white) }
+
+/* Snow opener: take the reversal off. :has() is a fact about what is underneath
+   the bar, same as the navy rules above — ink on cream is already correct. */
+.hsi:has(.hsi-hero--snow) .hs-nav:not(.is-stuck) { color: var(--hs-ink) }
+.hsi:has(.hsi-hero--snow) .hs-nav:not(.is-stuck) .hs-logo img { filter: none }
+.hsi:has(.hsi-hero--snow) .hs-nav:not(.is-stuck) .hs-burger span { background: var(--hs-ink) }
 
 .hsi-hero__scene { position: absolute; inset: 0; z-index: 0 }
 .hsi-hero__scene img {
@@ -393,6 +437,22 @@
 /* ============================================================
    format showcase
    ============================================================ */
+/* The three-up studio plate on /sparkling. Not .hsi-frame: that crop is 4:3,
+   and this photograph is a portrait of three bottles on white — covering it
+   would cut the caps or the mountains. Contain, on the plate's own white, so
+   the mockup is the picture rather than a picture of the mockup. */
+.hsi-family {
+  display: flex; justify-content: center;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  background: var(--hs-white);
+  border: 1px solid var(--hs-gold-pale);
+  border-radius: 16px;
+}
+.hsi-family img {
+  width: min(100%, 420px); height: auto;
+  object-fit: contain; display: block;
+}
+
 .hsi-formats { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem, 3vw, 2.5rem) }
 .hsi-format {
   text-align: center;
@@ -490,6 +550,14 @@
   .hsi-duo > .hsi-frame { order: 1 }
   .hsi-hero { min-height: 68svh }
   .hsi-hero__title { max-width: none }
+  .hsi-hero__inner.hsi-hero__inner--split { grid-template-columns: 1fr; text-align: center }
+  .hsi-hero--snow .hsi-hero__title,
+  .hsi-hero--snow .hsi-hero__lede,
+  .hsi-hero--snow .hs-eyebrow { text-align: center }
+  .hsi-hero--snow .hsi-hero__title,
+  .hsi-hero--snow .hsi-hero__lede { margin-inline: auto }
+  .hsi-hero__bottle { order: -1 }
+  .hsi-hero__bottle img { height: min(52svh, 420px) }
 }
 
 @media (max-width: 768px) {
@@ -510,3 +578,51 @@
   }
   .hsi-quote { max-width: none }
 }
+
+/* ============================================================
+   /bottle — Three.js study stage
+
+   Snow/ink bar (not the navy reversal). Full-height canvas under a short
+   page head so the bottle is the page.
+   ============================================================ */
+.hsi--bottle .hs-nav:not(.is-stuck) { color: var(--hs-ink) }
+.hsi--bottle .hs-nav:not(.is-stuck) .hs-logo img { filter: none }
+.hsi--bottle .hs-nav:not(.is-stuck) .hs-burger span { background: var(--hs-ink) }
+
+.hsv-bottle-page {
+  min-height: 100svh;
+  background: #f7f8fa;
+  padding-top: calc(var(--hsi-nav-h) + 1.5rem);
+}
+
+.hsv-bottle-page__head {
+  text-align: center;
+  padding: 0 var(--hs-gut) 1rem;
+  max-width: 40ch;
+  margin-inline: auto;
+}
+
+.hsv-bottle-page__head .hs-eyebrow { color: var(--hs-gold-ink) }
+
+.hsv-bottle-page__title {
+  font-family: var(--hs-display); font-weight: 400;
+  font-size: clamp(34px, 4.6vw, 56px); line-height: 1.1; letter-spacing: .01em;
+  text-transform: uppercase;
+  color: var(--hs-ink);
+  margin: 0 0 .75rem;
+}
+
+.hsv-bottle-page__lede {
+  font-family: var(--hs-text);
+  font-size: 15px; line-height: 1.6;
+  color: var(--hs-ink-soft);
+  margin: 0;
+}
+
+.hsv-bottle-stage {
+  width: 100%;
+  height: min(78svh, 820px);
+  touch-action: none;
+}
+
+.hsv-bottle-stage--loading { background: #f7f8fa }

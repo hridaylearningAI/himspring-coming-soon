@@ -9,6 +9,7 @@ import InAction from "./v2/components/InAction";
 import Intro from "./v2/components/Intro";
 import Journal from "./v2/components/Journal";
 import Outro from "./v2/components/Outro";
+import SparklingInvite from "./v2/components/SparklingInvite";
 import { listPosts, type PostSummary } from "./lib/posts";
 import "./v2/deck.css";
 /* The journal band renders /blog's cards, so it needs /blog's card rules.
@@ -89,12 +90,17 @@ export default async function HomePage() {
             gives the eye somewhere to rest that is not another takeover. */}
         <InAction />
         <Family />
+        {/* The still sizes have made their case. Sparkling is a sister line, not
+            a fourth panel on that pin, so it is offered here as a door rather
+            than as another takeover. Founders follows, still the first person
+            on the page. */}
+        <SparklingInvite />
         {/* After the sizes and before the hillside. The product argument is
             finished by the time this lands, and the page has spent five sections
             on water, glass and landscape without a person in it — this is where
             somebody can be introduced without interrupting anything. It is also
-            the second unpinned section on the page, sitting between two that are
-            pinned, for the same reason InAction does. */}
+            an unpinned section sitting between two that are pinned, for the same
+            reason InAction does. */}
         <Founders />
         {SHOW_ANALYSIS ? <Detail /> : null}
         <Outro />
