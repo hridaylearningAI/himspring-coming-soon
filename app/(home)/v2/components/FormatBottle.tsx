@@ -117,6 +117,14 @@ const SRC: Readonly<Record<FormatId, Readonly<Partial<Record<BottleGroundId, str
        only edit. */
     "330": "/assets/bottle-pet-500.webp",
   },
+  /* No cut-outs for sparkling, deliberately. The family section stopped using
+     these when the bottle moved into the plate, and sparkling arrived after
+     that — so it has plates and no renders. The two places that still mount a
+     cut-out (the intro's rise and /purity) both name "glass" literally, so an
+     empty map here is not a hole waiting to be hit: it is the accurate statement
+     that this format was never shot as a cut-out. Fill it if one is ever
+     wanted. */
+  sparkling: {},
 };
 
 export default function FormatBottle({

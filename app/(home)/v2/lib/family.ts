@@ -1,6 +1,6 @@
 import type { FormatId } from "./formats";
 
-/* The family — the same water in three sizes, in each of the two vessels.
+/* The family — the same water in three sizes, in each of the three formats.
 
    Where the old Glass/PET pair argued "same water, different vessel", this
    argues "same vessel, different amount". That is a harder thing to show,
@@ -9,8 +9,8 @@ import type { FormatId } from "./formats";
    shared baseline. So the panels are deliberately anchored to the same bottom
    edge — the bottle grows upward across each split rather than being re-staged.
 
-   Two families now, keyed by format, because the section grew a switch. They are
-   never on screen together: the switch replaces one with the other in place.
+   Three families now, keyed by format, because the section grew a switch. They
+   are never on screen together: the switch replaces one with another in place.
 
    `ml` is the only number the ladder is derived from — see scaleFor below. It is
    not decoration and it is not the same thing as `name`: `name` is what the
@@ -94,25 +94,37 @@ export type PanelGround = {
 export const PANEL_GROUNDS: readonly [PanelGround, PanelGround, PanelGround] = [
   {
     id: "750",
-    src: { glass: "/assets/family-750-glass.webp", pet: "/assets/family-750-pet.webp" },
+    src: {
+      glass: "/assets/family-750-glass.webp",
+      pet: "/assets/family-750-pet.webp",
+      sparkling: "/assets/family-750-sparkling.webp",
+    },
     tone: "#eae5df",
     focus: "50% 50%",
   },
   {
     id: "500",
-    src: { glass: "/assets/family-500-glass.webp", pet: "/assets/family-500-pet.webp" },
+    src: {
+      glass: "/assets/family-500-glass.webp",
+      pet: "/assets/family-500-pet.webp",
+      sparkling: "/assets/family-500-sparkling.webp",
+    },
     tone: "#ecdecb",
     focus: "50% 50%",
   },
   {
     id: "330",
-    src: { glass: "/assets/family-330-glass.webp", pet: "/assets/family-330-pet.webp" },
+    src: {
+      glass: "/assets/family-330-glass.webp",
+      pet: "/assets/family-330-pet.webp",
+      sparkling: "/assets/family-330-sparkling.webp",
+    },
     tone: "#e6cfaf",
     focus: "50% 50%",
   },
 ];
 
-/* The ladder is anchored here rather than per family, so the two formats share
+/* The ladder is anchored here rather than per family, so all three formats share
    one scale and the switch is honest: if a PET size is bigger than any glass
    size, it stands taller on screen. Anchoring each family at its own largest
    would make both look identical and quietly throw that away.
@@ -213,6 +225,34 @@ export const FAMILIES: Readonly<Record<FormatId, Family>> = {
       name: "330 ml",
       ml: 330,
       note: "The compact format. Lightweight, elegant, and perfectly proportioned.",
+    },
+  ],
+
+  /* Sparkling stands on the glass volumes, and does so honestly: it is the same
+     glass bottle with a navy cap, so the three sizes are the glass three. If the
+     sparkling line ever ships a different set, this is the only place it is
+     written down. */
+  sparkling: [
+    {
+      id: "sparkling-750",
+      label: "Size 01",
+      name: "750 ml",
+      ml: 750,
+      note: "The table bottle. Poured into a glass and finished with the meal.",
+    },
+    {
+      id: "sparkling-500",
+      label: "Size 02",
+      name: "500 ml",
+      ml: 500,
+      note: "The everyday pour. Carbonated Himalayan water, kept close.",
+    },
+    {
+      id: "sparkling-330",
+      label: "Size 03",
+      name: "330 ml",
+      ml: 330,
+      note: "The single serve. One glass of sparkling, poured cold.",
     },
   ],
 };

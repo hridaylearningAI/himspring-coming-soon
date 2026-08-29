@@ -2341,7 +2341,7 @@
     width: max-content; margin-inline: auto;
     background: var(--hsv-snow);
   }
-  /* The crossfade between the two vessels is a dissolve, not a movement, but it
+  /* The crossfade between formats is a dissolve, not a movement, but it
      is still 340ms of the page changing under someone who asked it not to. */
   .hsv-ground { transition: none }
   /* relative rather than static, for the containing-block reason set out in the

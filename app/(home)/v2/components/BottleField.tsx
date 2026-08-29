@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 import { FIELD, MAX_DELAY } from "../lib/field";
-import type { FormatId } from "../lib/formats";
 import BottleSVG from "./BottleSVG";
 
 /* The scattered bottles behind a format panel.
@@ -24,7 +23,9 @@ export default function BottleField({
      reveal starts. */
   reverse = false,
 }: {
-  readonly variant: FormatId;
+  /* BottleSVG's own pair, not FormatId. These are drawn silhouettes and only
+     two were ever drawn; a third format has plates, not a path. */
+  readonly variant: "glass" | "pet";
   readonly reverse?: boolean;
 }) {
   return (
